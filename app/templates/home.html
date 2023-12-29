@@ -1,0 +1,12 @@
+{% include './include/header.html' %}
+<body>
+    <p>home</p>
+    {% for u in user %}
+        <p>User ID: {{ u.get_userid() }}</p>
+        <p>Username: {{ u.get_username() }}</p>
+        <p>Password: {{ u.get_password() }}</p>
+    {% endfor %}
+
+    <a href="/log/logout">Logout</a>
+</body>
+</html>

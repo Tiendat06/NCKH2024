@@ -1,0 +1,37 @@
+/* login */
+.login{
+    border-radius: 15px;
+    border: 1px solid #ccc;
+}
+
+.login-body{
+    height: 100vh;
+}
+
+.login-bg__img{
+    width: 100%;
+    height: 450px;
+    /* border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px; */
+}
+
+.login-form__title{
+    color: #4593b9;
+}
+
+.login-form__small{
+    color: var(--text-link);
+}
+
+.login-form__label{
+    color: var(--text-link);
+}
+
+.login-form__link{
+    text-decoration: underline;
+    color: var(--text-link);
+}
+
+.login-form__para{
+    color: #5c5c5c;
+}
