@@ -1,6 +1,14 @@
 {% include './include/header.html' %}
 
 <body>
-    <p>Hi world</p>
+
+    {% if content == 'home' %}
+        {% include './home/home.html' %}
+    {% endif %}
+
+
+    {% include './include/footer.html' %}
+
 </body>
+
 </html>

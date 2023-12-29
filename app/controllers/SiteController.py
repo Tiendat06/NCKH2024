@@ -1,13 +1,13 @@
 from flask import render_template, session, redirect
-from models.User import UserModel
+from models.Account import AccountModel
 
 class SiteController:
     def __init__(self):
-        self.user = UserModel()
+        self.account = AccountModel()
         
     # [GET]
     def home(self):
-        if 'user' not in session:
+        if 'account' not in session:
             return redirect('/log/login')
-        user = self.user.get_user()
-        return render_template("home.html", user = user);
+        account = self.account.get_account()
+        return render_template("index.html", account = account, content = 'home');

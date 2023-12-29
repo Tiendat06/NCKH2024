@@ -21,4 +21,8 @@ def logout():
 def register():
     return LogController().register()
 
+@log.route('/log/register', methods=['post'])
+def registerPost():
+    return LogController().registerPost()
+
 # log.add_url_rule('/log/login', 'loginPost', LogController.loginPost(), methods=['POST'])

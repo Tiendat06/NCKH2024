@@ -1,7 +1,7 @@
 
 {% include './include/header.html' %}
 <body class="bg--outside {% if not register %} login-body {% endif %}  d-flex justify-content-center align-items-center m-auto">
-    <form method="post" action="">
+    <form method="post" action="{% if register %}/log/register{% endif %}">
         <div class="container p-5">
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="login col-lg-12 bg-white d-flex flex-wrap">
@@ -41,29 +41,29 @@
                         {% if register %}
                             <div class="form-group login-form--info">
                                 <label class="login-form__label" for="pwd">Fullname</label>
-                                <input class="form-control login-form__input" type="text" name="fullname" id="fullname" placeholder="Full name">
+                                <input class="form-control login-form__input" type="text" name="fullname" id="fullname" placeholder="Full name" required>
                             </div>
 
                             <div class="form-group login-form--info">
                                 <label class="login-form__label" for="pwd">Phone number</label>
-                                <input class="form-control login-form__input" type="number" name="phone" id="phone" placeholder="Phone number">
+                                <input class="form-control login-form__input" type="number" name="phone" id="phone" placeholder="Phone number" required>
                             </div>
                         {% endif %}
 
                         <div class="form-group login-form--info">
                             <label class="login-form__label" for="email">Email address</label>
-                            <input class="form-control login-form__input" type="text" name="email" id="email" placeholder="Email address">
+                            <input class="form-control login-form__input" type="email" name="email" id="email" placeholder="Email address" required>
                         </div>
     
                         <div class="form-group login-form--info">
                             <label class="login-form__label" for="pwd">Password</label>
-                            <input class="form-control login-form__input" type="password" name="pwd" id="pwd" placeholder="Password">
+                            <input class="form-control login-form__input" type="password" name="pwd" id="pwd" placeholder="Password" required>
                         </div>
 
                         {% if register %}
                             <div class="form-group login-form--info">
-                                <label class="login-form__label" for="pwd">Date of Birth</label>
-                                <input class="form-control login-form__input" type="date" name="date" id="date">
+                                <label class="login-form__label" for="date">Date of Birth</label>
+                                <input class="form-control login-form__input" type="date" name="date" id="date" required>
                             </div>
 
                             <!-- <div class="form-group login-form--info">
@@ -71,9 +71,9 @@
                                 <input class="form-control login-form__input" type="checkbox" name="pwd" id="pwd" placeholder="Password">
                             </div> -->
                             
-                            <div class="form-group text-right d-flex">
-                                <label class="login-form__label mr-auto mt-auto mb-auto" style="float: left;">Gender</label>
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="form-group text-right login-form--info">
+                                <label class="login-form__label mr-auto mt-auto mb-auto" for="gender" style="float: left;">Gender</label> 
+                                <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                     <label class="btn btn-primary mr-1">
                                       <input class="login-form__input" type="radio" name="male" id="male"> Male
                                     </label>
@@ -81,7 +81,12 @@
                                     <label class="btn btn-primary">
                                       <input class="login-form__input" type="radio" name="female" id="female"> Female
                                     </label>
-                                </div>
+                                </div> -->
+                                <select class="form-control" name="gender" id="gender" required>
+                                    <option value="none">--Choose gender--</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
                             </div>
                         {% endif %}
 
@@ -100,6 +105,14 @@
                         <div class="form-group login-form--error text-center alert alert-danger">
                             <p class="login-form__para mb-0 text-danger">
                                     {{error}}
+                            </p>
+                        </div>
+                        {% endif %}
+
+                        {% if result %}
+                        <div class="form-group login-form--error text-center alert alert-info">
+                            <p class="login-form__para mb-0 text-info">
+                                    {{result}}
                             </p>
                         </div>
                         {% endif %}
