@@ -8,6 +8,18 @@
     .login-bg__img{
         height: 300px;
     }
+
+    .home-img{
+        display: none;
+    }
+
+    .header-right__items{
+        display: none !important;
+    }
+
+    .header-right__bar{
+        display: block;
+    }
 }
 
 /* Tablet */
@@ -20,9 +32,23 @@
     .login-bg__img{
         height: 480px;
     }
+
+    .home-img{
+        display: none;
+    }
+
+    .header-right__items{
+        display: none !important;
+    }
+
+    .header-right__bar{
+        display: block;
+    }
 }
 
 /* PC */
 @media only screen and (min-width: 64em){
-
+    .header-right__bar{
+        display: none;
+    }
 }

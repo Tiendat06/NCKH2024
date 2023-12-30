@@ -1,7 +1,8 @@
 {% include './include/header.html' %}
 
-<body>
-
+<body class="bg-light">
+    {% include './bar/main_navbar.html' %}
+    
     {% if content == 'home' %}
         {% include './home/home.html' %}
     {% endif %}

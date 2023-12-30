@@ -38,7 +38,7 @@ class LogController:
     def register(self):
         return render_template('/log/login.html', register="register")
     
-    #[POST]
+    # [POST]
     def registerPost(self):
         fullname = request.form.get('fullname');
         phone = request.form.get('phone')
@@ -52,8 +52,8 @@ class LogController:
 
         user = User('', '', '', fullname, gender, email, date_to_db, phone)
         account = Account('', '', pwd, '', 'ROL0000002');
-        print(user)
-        print(account)
+        # print(user)
+        # print(account)
 
         result = self.user.add_user(user, account);
         return render_template('/log/login.html', register="register", result = result)

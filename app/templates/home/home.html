@@ -1,10 +1,65 @@
+<div class="container home-container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="home">
 
-<p>home</p>
-    {% for u in account %}
-        <p>User ID: {{ u.get_userid() }}</p>
-        <p>Username: {{ u.get_username() }}</p>
-        <p>Password: {{ u.get_password() }}</p>
-    {% endfor %}
+            <div class="home-welcome position-absolute">
+                <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text"></h2>
+                <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text"></h1>
+                <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-secondary" id="exp-text"></p>
+                <button type="submit" class="btn d-none btn-primary pr-3 pl-3 pt-2 pb-2 mt-4 home-btn__main">
+                    Learn more
+                    <i class="fa-solid fa-angles-right text-light"></i>
+                </button>
+            </div>
 
-    <a href="/log/logout">Logout</a>
-</html>
+            <div class="home-img" style="position: absolute;">
+                <img style="height: 100%;" src="{{url_for('static', filename='img/main_doctor_img.png')}}" alt="" srcset="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function typeWriterEffect(text, element, speed, callback) {
+        let i = 0;
+  
+        function type() {
+            if (i < text.length) {
+                $(element).append(text.charAt(i));
+                i++;
+                setTimeout(type, speed);
+            }else{
+                if(callback){
+                    callback();
+                }
+            }
+        }
+  
+        type();
+    }
+
+    // Sử dụng hàm typeWriterEffect
+    const welcomeTextElement = '#welcome-text';
+    const medicalTextElement = '#medical-text';
+    const expTextElement = '#exp-text';
+    const welcomeText = 'Welcome to';
+    const medicalText = 'Syring Medical Center';
+    const expText = '12 years of experience';
+    const typingSpeed = 100;
+
+    function secondFunc(){
+        typeWriterEffect(medicalText, medicalTextElement, typingSpeed, thirdFunc);
+
+    }
+
+    function removeClass(){
+        $('.home-btn__main').removeClass('d-none')
+    }
+
+    function thirdFunc(){
+        typeWriterEffect(expText, expTextElement, typingSpeed, removeClass);
+    }
+
+    typeWriterEffect(welcomeText, welcomeTextElement, typingSpeed, secondFunc);
+
+  </script>
