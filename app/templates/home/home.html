@@ -1,8 +1,7 @@
 <div class="container home-container" style="margin-top: 80px;">
     <div class="row">
-        <div class="home">
-
-            <div class="home-welcome position-absolute">
+        <div class="home d-flex align-items-center w-100">
+            <div class="home-welcome col-lg-8">
                 <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text"></h2>
                 <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text"></h1>
                 <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-secondary" id="exp-text"></p>
@@ -12,11 +11,21 @@
                 </button>
             </div>
 
-            <div class="home-img" style="position: absolute;">
+            <div class="home-img col-lg-4 d-flex justify-content-end">
                 <img style="height: 100%;" src="{{url_for('static', filename='img/main_doctor_img.png')}}" alt="" srcset="">
             </div>
         </div>
+
+        
+        <!-- <div class="home-requirement col-lg-12 mt-5">
+            <div class="home-requirement__left">
+                <h1>Welcome to </h1>
+            </div>
+        </div> -->
+
+
     </div>
+
 </div>
 
 <script>

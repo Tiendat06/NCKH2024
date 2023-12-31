@@ -76,15 +76,16 @@
 }
 
 .home-img{
-    right: 150px;
-    bottom: -10px;
+
+    transform: translateY(28px);
+
     border-radius: 50%;
 }
 
 .home-welcome{
     font-family: Tahoma, sans-serif;
-    left: 13.5%;
-    top: 35%;
+    /* left: 13.5%;
+    top: 35%; */
 }
 
 .home-welcome__para{
