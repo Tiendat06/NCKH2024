@@ -5,7 +5,7 @@
             <nav class="main_navbar d-flex justify-content-between w-100 flex-wrap">
                 <header class="header-left col-lg-4 col-md-4 col-sm-4 mt-auto mb-auto">
                     <div class="header-left__img d-flex align-items-center">
-                        <img class="" style="width: 120px;" src="{{url_for('static', filename='img/main_logo.png')}}" alt="" srcset="">
+                        <img class="" style="width: 80px;" src="{{url_for('static', filename='img/main_logo.png')}}" alt="" srcset="">
                         <!-- <h2 class="mb-0">Syring</h2> -->
                     </div>
                 </header>
@@ -18,27 +18,29 @@
                             </a>
                         </li>
                         <li class="header-right__items">
-                            <a href="" class="header-right__link">
-                                Doctor
+                            <a href="#about" class="header-right__link">
+                                About
                             </a>
                         </li>
                         <li class="header-right__items">
-                            <a href="" class="header-right__link">
-                                Blog
+                            <a href="#appointment" class="header-right__link">
+                                Appointment
                             </a>
                         </li>
                         <li class="header-right__items">
-                            <a href="" class="header-right__link">
-                                Shop
+                            <a href="#tracking" class="header-right__link">
+                                Tracking
                             </a>
                         </li>
                         <li class="header-right__items">
-                            <a href="" class="header-right__link">
-                                Documents
+                            <a aria-haspopup="true" aria-expanded="false" href="#services" class="header-right__link">
+                                Services
                             </a>
                         </li>
                         <li class="header-right__items">
-                            <i class="fa-solid fa-bars"></i>
+                            <a href="/log/login" class="header-right__link">
+                                Login
+                            </a>
                         </li>
 
                         <li class="header-right__bar" style="font-size: 1.7rem; cursor:pointer">

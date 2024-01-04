@@ -1,7 +1,7 @@
-<div class="container home-container" style="margin-top: 80px;">
+<div class="container home-container" style="margin-top: 370px;">
     <div class="row">
-        <div class="home d-flex align-items-center w-100">
-            <div class="home-welcome col-lg-8">
+        <div class="home d-flex flex-wrap align-items-center w-100">
+            <div class="home-welcome col-lg-8 col-md-12 col-sm-12 flex-wrap position-absolute">
                 <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text"></h2>
                 <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text"></h1>
                 <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-secondary" id="exp-text"></p>
@@ -11,19 +11,264 @@
                 </button>
             </div>
 
-            <div class="home-img col-lg-4 d-flex justify-content-end">
+            <div class="home-img col-lg-4 col-md-12 col-sm-12 d-flex justify-content-end position-absolute">
                 <img style="height: 100%;" src="{{url_for('static', filename='img/main_doctor_img.png')}}" alt="" srcset="">
             </div>
         </div>
 
-        
-        <!-- <div class="home-requirement col-lg-12 mt-5">
-            <div class="home-requirement__left">
-                <h1>Welcome to </h1>
+        <section id="services" class="home-requirement col-lg-12 d-flex flex-wrap justify-content-center " style="margin-top: 20rem;">
+            
+            <div class="home-requirement__title col-lg-12 col-md-12 col-sm-12 text-center">
+                <small style="color: var(--para-link);">Syring center</small>
+                <h3 style="color: var(--para-link);">HELPING OUR PATIENTS</h3>
             </div>
-        </div> -->
 
+            <div class="home-requirement__left col-lg-4 col-md-12 col-sm-12" style="margin-top: 3rem;">
+                <ul class="home-requirement__list list-unstyled">
+                    <h5 class="home-requirement__items--title">HOW CAN WE HELP YOU?</h5>
+                    <li class="home-requirement__items">Find a doctor<i style="float: right; margin-top:4.8px;" class="fa-solid fa-caret-right"></i></li>
+                    <li class="home-requirement__items">Request Appointment<i style="float: right; margin-top:4.8px;" class="fa-solid fa-caret-right"></i></li>
+                    <li class="home-requirement__items">Location<i style="float: right; margin-top:4.8px;" class="fa-solid fa-caret-right"></i></li>
+                    <li class="home-requirement__items">Services<i style="float: right; margin-top:4.8px;" class="fa-solid fa-caret-right"></i></li>
+                </ul>
+            </div>
 
+            <div class=" d-flex flex-wrap home-requirement__right col-lg-8 col-md-12 col-sm-12" style="margin-top: 3rem;">
+                <div class="home-requirement__right-items col-lg-6 col-md-12 col-sm-12 mb-5">
+                    <a href="" class="d-block text-decoration-none home-requirement__right-items--inner">
+                        <div class="home-requirement__right-items--img">
+                            <img style="width: 100%;" src="{{url_for('static', filename='img/main-news-1.jpg')}}" alt="" srcset="">
+                        </div>
+
+                        <div class="home-requirement__right-items--title pt-3 pl-3 pr-3 pb-0">
+                            <h5 class="mb-0" style="font-weight: bolder;">Brigham Health Physicians Named 'Top Doctors'</h5>
+                        </div>
+
+                        <div style="border-bottom: 0.5px solid #e8e8e8" class="home-requirement__right-items--para p-3">
+                            <p class="mb-0">More than 275 Brigham Health physicians were included on Boston magazine’s 2019 list of "Top Doctors.” To prepare the annual list, Boston magazine partners with Castle Connolly Medical.</p>
+                        </div>
+
+                        <div class="home-requirement__tight-items--link p-3">
+                            <p class="home-requirement__tight-items--link--inner mb-0" href="">Learn more</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="home-requirement__right-items col-lg-6 col-md-12 col-sm-12">
+                    <a href="" class="d-block text-decoration-none home-requirement__right-items--inner">
+                        <div class="home-requirement__right-items--img">
+                            <img style="width: 100%;" src="{{url_for('static', filename='img/main-news-2.jpg')}}" alt="" srcset="">
+                        </div>
+
+                        <div class="home-requirement__right-items--title pt-3 pl-3 pr-3 pb-0">
+                            <h5 class="mb-0" style="font-weight: bolder;">BWH Named to US News & World Report's Honor Roll</h5>
+                        </div>
+
+                        <div style="border-bottom: 0.5px solid #e8e8e8" class="home-requirement__right-items--para p-3">
+                            <p class="mb-0">Brigham and Women’s Hospital has ranked among the top 20 best hospitals in the nation on #[em US News and World Report’s] US News and World Report’s </p>
+                        </div>
+
+                        <div class="home-requirement__tight-items--link p-3">
+                            <p class="home-requirement__tight-items--link--inner mb-0" href="">Learn more</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="about" class="home-requirement__about d-flex flex-wrap mb-5 col-lg-12 col-md-12 col-sm-12">
+
+            <div class="home-requirement__about--heading col-lg-12 col-md-12 col-sm-12">
+                <h3 style="color: var(--para-link); text-align: center;" class="mb-5">About us</h3>
+            </div>
+
+            <div class="home-requirement__about-left col-lg-6 col-sm-12 col-md-12 d-flex flex-wrap">
+
+                <!-- Image 1 -->
+                        <div class="col-6">
+                            <img style="width: 100%;" class="rounded" src="{{url_for('static', filename='img/about-1.jpg')}}" alt="">
+                        </div>
+    
+                        <!-- Image 2 -->
+                        <div class="col-6 mt-5 position-relative">
+                            <img style="width: 100%" class="rounded" src="{{url_for('static', filename='img/about-2.jpg')}}" alt="">
+                            <!-- SVG decoration -->
+                            <figure style="top: -50px;right: -20px;" class="position-absolute mb-5 mt-n4 d-none d-lg-block">
+                                <svg width="192.5px" height="89.4px" viewBox="0 0 192.5 89.4">
+                                    <path class="fill-primary" d="M170.2,0.5c-0.1,0-0.2,0-0.4,0c-2.6-0.1-5.2-0.4-7.8-0.5c-2.9-0.1-5.8,0-8.6,0.2c-1.4,0.1-2.9,0.3-4.3,0.5 c-0.5,0.1-1,0-1.5,0c-1-0.1-1.9,0.2-2.9,0.3c-5.6,0.9-11.1,2.1-16.5,3.6c-2.7,0.7-5.4,1.6-8.1,2.5c-0.6,0.2-1.2,0.4-1.8,0.5 c-0.4,0-0.8,0-1.2,0.1c-1.5,0.2-3,1.1-4.3,1.8c-3,1.5-5.9,3.2-8.6,5.2c-2,1.5-3.8,3.1-5.6,4.8c-0.9,0.9-1.7,1.8-2.5,2.7 c-0.4,0.4-1.1,0.7-1.4,1.2c-0.3,0.4-0.6,0.9-0.9,1.4c-0.9,1.2-1.7,2.3-2.7,3.4c-0.3,0.4-0.7,0.6-1.2,0.6c-1.4,0.1-2.8-0.1-4.2-0.1 c-0.7,0-1.2,0.2-1.9,0.2c-3.3,0.4-6.6,0.7-9.8,1.6c-1.7,0.5-3.4,0.9-5.1,1.4c-5.4,1.5-11,2.9-16,5.4c-4.6,2.2-8.7,5.2-12.7,8.3 c-2,1.6-4,3.2-5.9,4.9c-0.8,0.7-1.6,1.2-2.5,1.6c-0.9,0.5-1.7,1.3-2.4,2c-1.4,1.3-2.9,2.6-4.3,3.9c-1.2,1.1-2.5,2.1-3.6,3.3 c-0.9,1-2,1.9-3,2.8c-1,0.9-2.1,1.9-3.1,2.8c-0.8,0.7-1.6,1.2-2.3,1.9c-0.9,0.9-1.7,1.9-2.7,2.7c0-0.7,0.2-1.3,0.2-2 c0-1.8-0.2-3.7-0.7-5.5c-0.2-0.9-0.5-1.8-1.1-2.4c-0.6-0.7-1.7-1-2.4-0.6c-0.1,0.1-0.3,0.2-0.4,0.3c-0.1,0.2-0.1,0.4,0,0.6 c0.7,3.7,1.2,7.4,0.7,11.1c-0.2,2.4-0.9,4.9-2,7c-0.5,1-1.2,1.9-1.7,3c-0.4,1-1.4,1.8-2.1,2.7C0.3,86,0.1,86.3,0,86.6 c-0.1,0.4,0.1,0.7,0.2,1.1c0.3,0.8,0.8,1.6,1.6,1.7c0.5,0,0.9-0.2,1.3-0.5c0.9-0.5,1.7-1.1,2.6-1.6c0.4-0.2,0.7-0.5,1.1-0.7 c1.7-1.3,3.7-2.3,5.7-3.1c4.3-1.7,9.1-2.4,13.8-1.7c0.2,0,0.4,0.1,0.7,0c0.7-0.2,0.9-1.2,0.4-1.8c-0.4-0.6-1.2-0.8-1.9-1 c-2.7-0.8-5.4-1.5-8.2-1.8c-0.7-0.1-1.4-0.1-2.1-0.2c-0.3,0-0.6,0-0.8,0c-0.3,0-0.9,0.2-1.2,0.1C13,77,13,77.1,13,76.8 c0-0.4,0.6-0.8,0.9-1c0.5-0.4,0.9-0.8,1.4-1.2c1.1-1,2.3-1.9,3.4-2.9c0.6-0.5,1.1-1,1.7-1.5c0.3-0.3,0.5-0.7,0.9-1 c1.2-1.1,2.7-1.7,3.9-2.8c0.4-0.4,0.8-0.8,1.2-1.2c0.8-0.8,1.7-1.5,2.6-2.2c1-0.8,2.1-1.6,3.1-2.3c0.9-0.6,1.9-1.1,2.6-2 c0.8-1,2.1-1.7,3.1-2.5c1.1-0.9,2.2-1.8,3.3-2.6c3.9-3.1,7.9-6.2,12.3-8.6c5.2-2.7,10.6-4.9,16.3-6.4c5.5-1.4,11.2-1.8,16.8-2.7 c0.2,0,0.3-0.1,0.5-0.1c1.4-0.2,2.3-0.4,2,1.5c-0.8,4.9,2.3,7.5,5.8,9.8c4,2.5,8,5,12.7,5.8c5.2,0.9,10.4,2.7,15.9,0.8 c3-1,6.3-5,6.2-7.6c0-1.7-0.3-3.5-1-5.1c-0.6-1.4-1.5-3-2.8-3.7c-1-0.5-1.9-1.5-2.8-2.2c-1.1-0.8-2.2-1.5-3.3-2.1 c-2.3-1.2-4.8-2.1-7.3-2.8c-3.5-0.9-7.2-1.4-10.8-1.8c-0.9-0.1-1.7-0.2-2.6-0.2c-0.2,0-1.4,0-1.4-0.2c-0.1-0.2,0.3-0.5,0.4-0.6 c0.8-0.9,1.7-1.8,2.5-2.6c1.7-1.7,3.6-3.3,5.5-4.8c2-1.6,4.2-3,6.4-4.1c1.1-0.6,2.3-1.1,3.5-1.5c0.6-0.2,1.2-0.4,1.8-0.6 c0.4-0.2,0.7-0.5,1.1-0.7c1.2-0.6,2.7-0.9,4-1.3c1.4-0.4,2.8-0.8,4.2-1.2c2.8-0.8,5.6-1.5,8.4-2.2c3.4-0.8,6.9-1.6,10.3-2.4 c7.9-1.7,15.9-2.4,24-1.7c4.4,0.4,8.9,0.9,13.2,2.1c1.3,0.4,2.5,0.8,3.9,1.1c0.7,0.1,1.4,0.5,2,0.9c0.9,0.5,1.7,0.9,2.6,1.4 c0.3,0.2,0.7,0.3,0.9,0.1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.9-0.4-1.8-1-2.5c-0.5-0.6-1.2-1.4-1.9-1.8c-0.9-0.6-2.2-0.9-3.3-1.3 c-1.1-0.4-2.2-0.7-3.3-1c-2.8-0.8-5.6-1.4-8.5-1.9C173.1,0.9,171.6,0.6,170.2,0.5z M106.8,36c5,0.8,11.2,2,16.2,6.2 c1.1,0.9,2.8,1.6,2.3,3.4c-0.4,1.7-2.1,1.8-3.5,2.3c-5,1.5-9.9,0-14.5-1.2c-4.9-1.2-9.7-3.3-13.5-7c-0.6-0.6-1.2-1.3-1.5-2.1 c-0.1-0.3-0.1-0.7-0.2-1c-0.1-0.3-0.3-0.6,0-0.9c0.2-0.2,0.5-0.3,0.9-0.3c2.4-0.4,4.9-0.6,7.4-0.5c0.9,0,1.8,0.4,2.7,0.5 C104.5,35.6,105.7,35.8,106.8,36z"></path>
+                                </svg>
+                            </figure>
+                        </div>
+    
+                        <!-- Content -->
+                        <div style="top: 55px; left: 0" class="col-8 col-sm-5 mt-n6 align-items-end position-relative">
+                            <!-- SVG decoration -->
+                            <figure class="mt-n7 me-n7 position-absolute">
+                                <svg width="192px" height="190px">
+                                    <path stroke="#F99D2B" fill="none" stroke-width="10" d="M9.1,82.6C15.5,36,58.7,2.7,105.5,8.3c47.3,5.7,81.4,49.3,75.7,96.6c-5.8,47.2-49.4,81.4-96.6,75.7"></path>
+                                </svg>
+                            </figure>
+                            <div class="p-3 card card-body shadow rounded-3 d-inline-block position-relative mt-n2">
+                                <!-- Info -->
+                                <h6 class="mb-2">Aloha <span class="ms-1"><i class="fas fa-check-circle text-success"></i></span></h6>
+                                <p class="mb-0 small">How's the day going?</p>
+                                <!-- Icon -->
+                                <!-- <div style="border-radius: 50%; width: 55px; height: 55px; z-index: -1;" class="icon-lg p-3 bg-primary position-absolute translate-middle">
+                                    <i class="fas fa-check-circle text-white"></i>
+                                </div> -->
+                            </div>
+                        </div>    
+            </div>
+
+            <div class="home-requirement__about-right col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap">
+                <div class="col-lg-12 col-md-12 col-sm-12 pl-5">
+                    <h3 style="color: #000;" class="">Welcome to Syring Medical Center</h3>
+                    <p style="color: var(--para-link); font-size: 1.1rem">Syring Medical Center is a healthcare institution providing patient treatment with specialized health science and auxiliary healthcare staff and medical equipment</p>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                    <div class="home-requirement__about-icon col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap">
+                        <div class="col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap align-items-center" style="float: left;">
+                            <div style="font-size: 1.4rem; border-radius: 5px" class="col-lg-3 col-md-6 col-sm-6 d-flex flex-wrap justify-content-center p-3 bg-warning">
+                                <i class="fa-solid fa-envelope text-light"></i>
+                            </div>
+
+                            <div class="col-lg-9 col-md-6 col-sm-6">
+                                <p class="mb-0">Email</p>
+                                <p class="mb-0 home-requirement__about-right--para">syringmedical@gmail.com</p>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap align-items-center" style="float: left;">
+                            <div style="font-size: 1.4rem; border-radius: 5px" class="col-lg-3 col-md-6 col-sm-6 d-flex flex-wrap justify-content-center p-3 bg-danger">
+                                <i class="fa-solid fa-location-dot text-light"></i>
+                            </div>
+
+                            <div class="col-lg-9 col-md-6 col-sm-6">
+                                <p class="mb-0">Address</p>
+                                <p class="mb-0 home-requirement__about-right--para">19 Nguyen Huu Tho, Tan Phong, District 7</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="home-requirement__about-icon col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap mt-5">
+                        <div class="col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap align-items-center" style="float: left;">
+                            <div style="font-size: 1.4rem; border-radius: 5px" class="col-lg-3 col-md-6 col-sm-6 d-flex flex-wrap justify-content-center p-3 bg-info">
+                                <i class="fa-solid fa-globe text-light"></i>
+                            </div>
+
+                            <div class="col-lg-9 col-md-6 col-sm-6">
+                                <p class="mb-0">Website</p>
+                                <p class="mb-0 home-requirement__about-right--para">https://www.tiendatdev.top/</p>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap align-items-center" style="float: left;">
+                            <div style="font-size: 1.4rem; border-radius: 5px" class="col-lg-3 col-md-6 col-sm-6 d-flex flex-wrap justify-content-center p-3 bg-purple">
+                                <i class="fa-solid fa-envelope text-light"></i>
+                            </div>
+
+                            <div class="col-lg-9 col-md-6 col-sm-6">
+                                <p class="mb-0">Open</p>
+                                <p class="mb-0 home-requirement__about-right--para">Monday to Friday</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="appointment" class="home-requirement__appointment d-flex flex-wrap col-lg-12 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <h2 style="color: var(--para-link);">Make an appointment</h2>
+                    <p class="text-danger">Please arrive on time !</p>
+                    <p class="text-danger">Please wait for system confirmation !</p>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <img style="border-radius: 10px;" src="{{url_for('static', filename='img/main-appointment-1.jpg')}}" alt="" srcset="">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 ">
+                <form action="" method="post" class="col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap">
+                    <div class="home-requirement__appointment-form--title col-lg-12 col-md-12 col-sm-12 text-center">
+                        <h3 style="color: var(--para-link)">Medical registration form</h3>
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="id">Personal ID</label>
+                        <input type="text" name="id" class="form-control" id="id">
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="Fullname">Full name</label>
+                        <input type="text" name="Fullname" class="form-control" id="Fullname">
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="phone">Phone number</label>
+                        <input type="number" name="phone" class="form-control" id="phone">
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="gender">Gender</label>
+                        <select name="gender" class="form-control" id="gender">
+                            <option value="">--Chosose gender--</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="dob">Birthday</label>
+                        <input type="date" name="dob" class="form-control" id="dob">
+                    </div>
+
+                    
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                        <label for="address">Address</label>
+                        <input type="text" name="address" class="form-control" id="address">
+                    </div>
+
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <label for="reason">Health description</label>
+                        <textarea type="text" name="reason" class="form-control" rows="5" id="reason"></textarea>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button class="btn btn-primary w-100" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="tracking" class="home-requirement__tracking d-flex flex-wrap col-lg-12 col-md-12 col-sm-12">
+            <div class="home-requirement__tracking-title col-lg-12 col-md-12 col-sm-12 text-center">
+                <h2 style="color: var(--para-link);" class="col-lg-12 col-md-12 col-sm-12">Look up information</h2>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <img src="{{url_for('static', filename='img/main-tracking-2.png')}}" style="width: 300px;" alt="" srcset="">
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-sm-6 d-flex flex-wrap align-items-center">
+                <!-- <label for="pid"></label> -->
+                <input type="text" name="pid" id="pid" class="form-control w-75" placeholder="Personal ID">
+                <button type="submit" style="height: 40px;" class="btn btn-primary w-25">Search</button>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <img src="{{url_for('static', filename='img/main-tracking-2.png')}}" style="width: 300px;" alt="" srcset="">
+            </div>
+        </section>
     </div>
 
 </div>
@@ -47,7 +292,6 @@
         type();
     }
 
-    // Sử dụng hàm typeWriterEffect
     const welcomeTextElement = '#welcome-text';
     const medicalTextElement = '#medical-text';
     const expTextElement = '#exp-text';

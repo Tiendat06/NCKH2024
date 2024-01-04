@@ -9,8 +9,24 @@
         height: 300px;
     }
 
+    .home-welcome{
+        left: 0;
+    }
+
+    .home::after{
+        height: 30%;
+    }
+
     .home-img{
-        display: none;
+        display: none!important;
+    }
+
+    #welcome-text{
+        font-size: 2.5rem;
+    }
+
+    #medical-text{
+        font-size: 2.8rem;
     }
 
     .header-right__items{
@@ -33,8 +49,24 @@
         height: 480px;
     }
 
+    .home-welcome{
+        left: 0;
+    }
+
+    .home::after{
+        height: 30%;
+    }
+    
     .home-img{
-        display: none;
+        display: none!important;
+    }
+
+    #welcome-text{
+        font-size: 2.5rem;
+    }
+
+    #medical-text{
+        font-size: 2.8rem;
     }
 
     .header-right__items{
