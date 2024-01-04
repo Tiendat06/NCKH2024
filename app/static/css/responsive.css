@@ -9,16 +9,24 @@
         height: 300px;
     }
 
+    #pid{
+        width: 100%!important;
+    }
+
     .home-welcome{
         left: 0;
     }
 
     .home::after{
-        height: 30%;
+        height: 600px;
     }
 
     .home-img{
         display: none!important;
+    }
+
+    .home-requirement__about-right{
+        margin-top: 8rem;
     }
 
     #welcome-text{
@@ -49,12 +57,20 @@
         height: 480px;
     }
 
+    #pid{
+        width: 100%!important;
+    }
+
+    .home-requirement__about-right{
+        margin-top: 8rem;
+    }
+
     .home-welcome{
         left: 0;
     }
 
     .home::after{
-        height: 30%;
+        height: 600px;
     }
     
     .home-img{
