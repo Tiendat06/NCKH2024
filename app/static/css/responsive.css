@@ -99,4 +99,8 @@
     .header-right__bar{
         display: none;
     }
+
+    .dashboard{
+        margin-top: var(--header-height);
+    }
 }

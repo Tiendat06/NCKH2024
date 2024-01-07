@@ -1,19 +1,51 @@
 <div class="container home-container" style="margin-top: 370px;">
     <div class="row">
-        <div class="home d-flex flex-wrap align-items-center w-100">
-            <div class="home-welcome col-lg-8 col-md-12 col-sm-12 flex-wrap position-absolute">
-                <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text"></h2>
-                <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text"></h1>
-                <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-secondary" id="exp-text"></p>
-                <button type="submit" class="btn d-none btn-primary pr-3 pl-3 pt-2 pb-2 mt-4 home-btn__main">
-                    Learn more
-                    <i class="fa-solid fa-angles-right text-light"></i>
-                </button>
+        <div class="slide-container">
+
+            <div class="home d-flex flex-wrap align-items-center w-100 slide-show__img fadeIn">
+                <div class="home-welcome col-lg-8 col-md-12 col-sm-12 flex-wrap position-absolute">
+                    <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text">Welcome to</h2>
+                    <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text">Syring Medical Center</h1>
+                    <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-dark" id="exp-text">12 years of experience</p>
+                    <button type="submit" class="btn btn-primary pr-3 pl-3 pt-2 pb-2 mt-4 home-btn__main">
+                        Learn more
+                        <i class="fa-solid fa-angles-right text-light"></i>
+                    </button>
+                </div>
             </div>
 
-            <div class="home-img col-lg-4 col-md-12 col-sm-12 d-flex justify-content-end position-absolute">
-                <img style="height: 100%;" src="{{url_for('static', filename='img/main_doctor_img.png')}}" alt="" srcset="">
+            <div class="home home-2 d-flex flex-wrap align-items-center w-100 slide-show__img fadeIn d-none">
+                <div class="home-welcome home-welcome-2 col-lg-5 col-md-12 col-sm-12 flex-wrap justify-content-end position-absolute">
+                    <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text">Help is here</h2>
+                    <h1 style="font-size: 4rem; font-weight: bolder;" class="text-primary" id="medical-text">When You Need it</h1>
+                    <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-dark" id="exp-text">A&E average wait time: 30mins</p>
+                    <button type="submit" class="btn btn-primary pr-3 pl-3 pt-2 pb-2 mt-4 home-btn__main">
+                        Learn more
+                        <i class="fa-solid fa-angles-right text-light"></i>
+                    </button>
+                </div>
+    
             </div>
+
+            <div class="home home-3 d-flex flex-wrap align-items-center w-100 slide-show__img fadeIn d-none">
+                <div class="home-welcome home-welcome-3 mb-5 col-lg-5 col-md-12 col-sm-12 flex-wrap position-absolute">
+                    <h2 style="font-size: 3.5rem; color:#000" class="text-secondary" id="welcome-text">Small Injuries</h2>
+                    <h1 style="font-size: 3rem; font-weight: bolder;" class="text-primary" id="medical-text">May Lead to Big Problem</h1>
+                    <p style="font-size: 1.2rem; color: #000" class="home-welcome__para text-dark" id="exp-text">Your environment could affect your fertility</p>
+                    <button type="submit" class="btn btn-primary pr-3 pl-3 pt-2 pb-2 mt-4 home-btn__main">
+                        Learn more
+                        <i class="fa-solid fa-angles-right text-light"></i>
+                    </button>
+                </div>
+    
+            </div>
+
+            <!-- <a class="slider-prev" onclick="backImg()">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <a class="slider-next" onclick="nextImg()">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a> -->
         </div>
 
         <section id="services" class="home-requirement col-lg-12 d-flex flex-wrap justify-content-center " style="margin-top: 20rem;">
@@ -274,7 +306,7 @@
 </div>
 
 <script>
-    function typeWriterEffect(text, element, speed, callback) {
+    /*function typeWriterEffect(text, element, speed, callback) {
         let i = 0;
   
         function type() {
@@ -313,6 +345,58 @@
         typeWriterEffect(expText, expTextElement, typingSpeed, removeClass);
     }
 
-    typeWriterEffect(welcomeText, welcomeTextElement, typingSpeed, secondFunc);
+    typeWriterEffect(welcomeText, welcomeTextElement, typingSpeed, secondFunc);*/
 
-  </script>
+</script>
+
+<script>
+    let slideIndex = 0
+
+    function nextImg(){
+        if(slideIndex >= document.getElementsByClassName('slide-show__img').length - 1){
+            slideIndex = -1
+        }
+    
+        let imgItems = document.getElementsByClassName('slide-show__img')[++slideIndex];
+        // console.log(imgItems)
+    
+        for(let i = 0; i < document.getElementsByClassName('slide-show__img').length; i++){
+            let imgD_none = document.getElementsByClassName('slide-show__img')[i];
+            if(!imgD_none.classList.contains('d-none')){
+                imgD_none.classList.add('d-none');
+            }
+        }
+        
+        if(imgItems.classList.contains('d-none')){
+            imgItems.classList.remove('d-none');
+        }
+        
+    }
+    
+    function backImg(){
+        if(slideIndex <= 0){
+            slideIndex = document.getElementsByClassName('slide-show__img').length;
+        }
+    
+        let backImgItems = document.getElementsByClassName('slide-show__img')[--slideIndex];
+    
+        for(let i = 0; i < document.getElementsByClassName('slide-show__img').length; i++){
+            let imgD_none = document.getElementsByClassName('slide-show__img')[i];
+            if(!imgD_none.classList.contains('d-none')){
+                imgD_none.classList.add('d-none');
+            }
+        }
+    
+        if(backImgItems.classList.contains('d-none')){
+            backImgItems.classList.remove('d-none');
+        }
+        
+    }
+    
+    function setIntervalSlider(){
+        return setInterval(()=>{
+            nextImg()
+        }, 3000)
+    }
+    setIntervalSlider();
+</script>

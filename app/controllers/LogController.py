@@ -10,8 +10,8 @@ class LogController:
 
     # [GET]
     def login(self):
-        # if 'account' in session:
-        #     return redirect('/')
+        if 'account' in session:
+            return redirect('/')
         return render_template('/log/login.html');
 
     # [POST]
@@ -24,7 +24,7 @@ class LogController:
         }
         
         if self.account.checkLogin(data):
-            # session['account'] = email
+            session['account'] = email
             return redirect('/')
         else:
             return render_template("/log/login.html", error="Invalid email or password !")

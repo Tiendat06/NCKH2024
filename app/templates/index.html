@@ -1,10 +1,22 @@
 {% include './include/header.html' %}
 
 <body class="bg-light">
-    {% include './bar/main_navbar.html' %}
     
     {% if content == 'home' %}
+        {% include './bar/main_navbar.html' %}
         {% include './home/home.html' %}
+    {% endif %}
+
+    {% if content == 'index' %}
+    {% include './bar/dashboard_navbar.html' %}
+    <div class="dashboard d-flex">
+        {% include './bar/dashboard_sidebar.html' %}
+
+        {% if page == 'index' %}
+            {% include './dashboard/dashboard.html' %}
+        {% endif %}
+
+    </div>
     {% endif %}
 
 

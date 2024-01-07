@@ -2,6 +2,7 @@
     --main-color: #d2e4fa;
     --text-link: #939393;
     --para-link: #003e7d;
+    --header-height: 90px
 }
 
 *{
@@ -26,4 +27,18 @@ body{
 .bg--outside{
     background-color: var(--main-color);
 
+}
+
+.fadeIn {
+    animation: fade linear 1.5s;
+}
+
+
+@keyframes fade {
+    from {
+        opacity: 0.4
+    }
+    to {
+        opacity: 1
+    }
 }
