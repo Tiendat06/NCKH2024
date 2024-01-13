@@ -29,7 +29,7 @@ class Role:
     def _role_name(self, value):
         self.__role_name = value
 
-class RoleModel:
+class RoleModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
 

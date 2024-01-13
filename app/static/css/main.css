@@ -62,7 +62,62 @@
     color: #000;
 }
 
-/* side bar dashboard */
+/* side bar dashboard chart */
+
+.pie-chart-note{
+    display: flex;
+    width: 50%;
+    align-items: center;
+}
+
+.piechart-info{
+    margin-left: 10px;
+}
+
+.col-chart-note{
+    display: flex;
+    width: 60%;
+    align-items: center;
+}
+
+.column-chart-layout {
+    margin: 36px auto 0 auto;
+    padding: 32px 0;
+    height: 320px;
+    /* background-color: #fff; */
+    display: flex;
+    /* align-items: flex-end; */
+    justify-content: space-around;
+}
+
+.column-chart-layout__item {
+    align-self: flex-end;
+    width: 60px;
+    color: #fff;
+    text-align: center;
+    height: var(--percent);
+    background-color: #EF5122;
+    animation: growth ease-in 0.5s;
+}
+
+@keyframes growth {
+    from {
+        opacity: 0;
+        height: calc(var(--percent) - 50%);
+    }
+    to {
+        opacity: 1;
+        height: var(--percent);
+    }
+}
+
+.piechart-color{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 2px;
+    background-color: red;
+}
 
 .main-sidebar{
     /*width: 120px;*/

@@ -75,7 +75,7 @@ class User:
     def _phone(self, value):
         self.__phone = value
 
-class UserModel:
+class UserModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
 

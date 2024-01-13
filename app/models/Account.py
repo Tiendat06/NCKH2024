@@ -32,7 +32,7 @@ class Account:
     def set_password(self, password):
         self.__password = password
 
-class AccountModel:
+class AccountModel(DataBaseUtils):
     # __conn = DataBaseUtils.get_connection();
     def __init__(self):
         self.__conn = DataBaseUtils.get_connection();
