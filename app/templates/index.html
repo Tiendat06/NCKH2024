@@ -8,15 +8,18 @@
     {% endif %}
 
     {% if content == 'index' %}
-    {% include './bar/dashboard_navbar.html' %}
-    <div class="dashboard d-flex">
-        {% include './bar/dashboard_sidebar.html' %}
+        {% include './bar/dashboard_navbar.html' %}
+        <div class="dashboard d-flex position-relative" style="z-index: -1;">
+            {% include './bar/dashboard_sidebar.html' %}
 
-        {% if page == 'index' %}
-            {% include './dashboard/dashboard.html' %}
-        {% endif %}
+            {% if page == 'index' %}
+                {% include './dashboard/dashboard.html' %}
+            {% endif %}
+            {% if page == 'xray' %}
+                {% include './xray/xray.html' %}
+            {% endif %}
 
-    </div>
+        </div>
     {% endif %}
 
 

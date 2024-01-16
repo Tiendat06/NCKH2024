@@ -6,7 +6,15 @@
             </p>
         </div>
 
-        <div class="piechart col-lg-5 col-md-12 col-sm-12">
+        
+        <div id="pie-chart" style="height: 400px; width: 100%; float: left" class="pie_chart"></div>
+        <style>
+
+        </style>
+    
+
+
+        <!-- <div class="piechart col-lg-5 col-md-12 col-sm-12">
             <div style="background-image: conic-gradient( 
                 #19a3d5 0 54deg, 
                 #e44029 54deg 82.8deg, 
@@ -22,9 +30,9 @@
                 #f2b360 356.4deg 360deg
                 ); width: 400px; height: 400px; border-radius: 50%;"
                 class="piechart-diagram"></div> 
-        </div>
+        </div> -->
 
-        <div class="piechart-note col-lg-7 col-md-12 col-sm-12 d-flex flex-wrap mt-auto mb-auto">
+        <!-- <div class="piechart-note col-lg-7 col-md-12 col-sm-12 d-flex flex-wrap mt-auto mb-auto">
                 <div class="piechart-note-0 pie-chart-note">
                     <div style="background-color: #19a3d5;" class="piechart-color"></div>
                     <div class="piechart-info">Aortic enlargement</div>
@@ -84,17 +92,7 @@
                     <div style="background-color: #f2b360;" class="piechart-color"></div>
                     <div class="piechart-info">Pleural thickening</div>
                 </div>
-<!-- 
-                <div class="piechart-note-12 pie-chart-note">
-                    <div style="background-color: ;" class="piechart-color"></div>
-                    <div class="piechart-info">Pneumothorax</div>
-                </div>
-
-                <div class="piechart-note-13 pie-chart-note">
-                    <div style="background-color: ;" class="piechart-color"></div>
-                    <div class="piechart-info">Pulmonary fibrosis</div>
-                </div> -->
-        </div>
+        </div> -->
 
     </div>
 
@@ -105,7 +103,7 @@
             </p>
         </div>
 
-        <div class="piechart-note col-lg-3 col-md-12 col-sm-12 d-flex flex-wrap m-auto">
+        <!-- <div class="piechart-note col-lg-3 col-md-12 col-sm-12 d-flex flex-wrap m-auto">
             <div class="piechart-note-0 col-chart-note">
                 <div style="background-color: pink;" class="piechart-color"></div>
                 <div class="piechart-info">Aortic enlargement</div>
@@ -165,16 +163,6 @@
                 <div style="background-color: violet;" class="piechart-color"></div>
                 <div class="piechart-info">Pleural thickening</div>
             </div>
-<!-- 
-            <div class="piechart-note-12 pie-chart-note">
-                <div style="background-color: ;" class="piechart-color"></div>
-                <div class="piechart-info">Pneumothorax</div>
-            </div>
-
-            <div class="piechart-note-13 pie-chart-note">
-                <div style="background-color: ;" class="piechart-color"></div>
-                <div class="piechart-info">Pulmonary fibrosis</div>
-            </div> -->
         </div>
 
         <div class="column-chart-layout col-lg-7 col-md-12 col-sm-12">
@@ -190,10 +178,85 @@
             <div class="column-chart-layout__item" style="--percent: 96%; background-color: red;">96%</div>
             <div class="column-chart-layout__item" style="--percent: 60%; background-color: bisque;">60%</div>
             <div class="column-chart-layout__item" style="--percent: 88%; background-color: violet;">88%</div>
-        </div>
+        </div> -->
+
+    <div id="column-chart" class="column_chart" style="height: 400px; width: 100%; float: left;"></div>
 
     </div>
 </div>
 
+<script type="text/javascript">
+    window.onload = function () {
+    var pie_chart = new CanvasJS.Chart("pie-chart", {
+        exportEnabled: true,
+        animationEnabled: true,
+        title: {
+            text: "Rate chart of lung-related diseases"
+        },
+        legend: {
+          /*verticalAlign: "center",
+          horizontalAlign: "right",*/
+          //markerMargin: 50,
+        },
+        data: [{
+            type: "pie",
+            horizontalAlign: "left",
+            showInLegend: true,
+            legendText: "{label}",
+            toolTipContent: "<b>{label}</b>: {y}%",
+            dataPoints: [
+            { label: "Aortic enlargement", y: 12 },
+            { label: "Atelectasis", y: 8 },
+            { label: "Calcification", y: 3 },
+            { label: "Cardiomegaly", y: 7 },
+            { label: "Consolidation", y: 6 },
+            { label: "ILD", y: 10 },
+            { label: "Infiltration", y: 5 },
+            { label: "Lung Opacity", y: 11 },
+            { label: "Nodule/Mass", y: 9 },
+            { label: "Other lesion", y: 2 },
+            { label: "Pleural effusion", y: 10 },
+            { label: "Pleural thickening", y: 7 },
 
+            ]
+        }]
+    });
 
+        pie_chart.render();
+
+    var column_chart = new CanvasJS.Chart("column-chart", {
+        exportEnabled: true,
+        animationEnabled: true,
+        title: {
+            text: "Rate chart of lung-related diseases"
+        },
+            /*axisY: {
+              title: "Sales in USD"
+            },
+            legend: {
+              verticalAlign: "center",
+              horizontalAlign: "right"
+            },*/
+        data: [{
+            type: "column",
+
+            dataPoints: [
+            { label: "Aortic enlargement", y: 12 },
+            { label: "Atelectasis", y: 8 },
+            { label: "Calcification", y: 3 },
+            { label: "Cardiomegaly", y: 7 },
+            { label: "Consolidation", y: 6 },
+            { label: "ILD", y: 10 },
+            { label: "Infiltration", y: 5 },
+            { label: "Lung Opacity", y: 11 },
+            { label: "Nodule/Mass", y: 9 },
+            { label: "Other lesion", y: 2 },
+            { label: "Pleural effusion", y: 10 },
+            { label: "Pleural thickening", y: 7 },
+            ]
+       }]
+    });
+    
+    column_chart.render();
+}
+</script>
