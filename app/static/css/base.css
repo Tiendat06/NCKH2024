@@ -1,8 +1,10 @@
 :root{
     --main-color: #d2e4fa;
+    --main-color-update: #089bab;
+    --main-bg-color: #eff7f8;
     --text-link: #939393;
     --para-link: #003e7d;
-    --header-height: 90px
+    --header-height: 78px
 }
 
 *{
@@ -29,6 +31,54 @@ body{
 
 }
 
+#header-sidebar.collapsed, #sidebar.collapsed {
+    width: 15%!important;
+    transition: all linear .2s;
+
+}
+
+#sidebar, #header-sidebar {
+    transition: all linear .2s;
+}
+
+#header-content.collapsed, .content.collapsed{
+    width: 85%!important;
+    transition: all linear .2s;
+    #pie-chart{
+        width: 70%!important;
+    }
+    #column-chart{
+        width: 70%!important;
+    }
+    .canvasjs-chart-canvas, .pie_chart, .column_chart{
+        height: 350px!important;
+    }
+
+    .personality__background{
+        height: 75px!important;
+    }
+
+    .personality__info--details{
+        height: 275px!important;
+    }
+
+    .patient-progress{
+        height: 350px!important;
+    }
+
+    .personality__active{
+        padding-top: 13px!important;
+    }
+}
+    
+.content, #header-content {
+    transition: all linear .2s;
+}
+
+.canvasjs-chart-canvas{
+    width: 100%!important;
+}
+
 .fadeIn {
     animation: fade linear 1.5s;
 }
@@ -40,5 +90,16 @@ body{
     }
     to {
         opacity: 1
+    }
+}
+
+@keyframes growth {
+    from {
+        opacity: 0;
+        height: calc(var(--percent) - 50%);
+    }
+    to {
+        opacity: 1;
+        height: var(--percent);
     }
 }

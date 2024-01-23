@@ -62,7 +62,7 @@
     color: #000;
 }
 
-/* side bar dashboard chart */
+/* side bar, dashboard chart, personality */
 
 .pie-chart-note{
     display: flex;
@@ -106,17 +106,6 @@
     animation: growth ease-in 0.5s;
 }
 
-@keyframes growth {
-    from {
-        opacity: 0;
-        height: calc(var(--percent) - 50%);
-    }
-    to {
-        opacity: 1;
-        height: var(--percent);
-    }
-}
-
 .piechart-color{
     width: 20px;
     height: 20px;
@@ -125,30 +114,65 @@
     background-color: red;
 }
 
-.main-sidebar{
-    /*width: 120px;*/
-    /*height: 100vh;*/
+/* personality */
+
+.personality__info--details{
+    width: 80%; 
+    height: 300px; 
+    background-color: #fff; 
+    transform:translateY(-80px);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
+.personality__background{
+    width: 80%; 
+    height: 100px; 
+    background-color: var(--main-color-update);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.personality-description__para{
+    display: -webkit-box;
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 3; 
+    overflow: hidden;
+}
+
+
+/* patient-progress */
+.patient-progress--info::-webkit-scrollbar{
+    display: none;
+}
+
+/* side bar */
 .main-sidebar__list{
     list-style: none;
     padding-left: 0;
 }
 
 .main-sidebar__item{
-    padding: 20px;
+    /* padding-left: 5px; */
     text-align: center;
 }
 
 .main-sidebar__item--icon{
-    border-radius: 10px;
-    border: 0.5px solid #ccc;
+    /* border-radius: 10px; */
+    /* border: 0.5px solid #ccc; */
     cursor: pointer;
+    font-size: 1.6rem;
+    width: 60px;
 }
 
-.main-sidebar__item--icon:hover{
-    transform: scale(1.2);
+.main-sidebar__item:hover{
+    /* padding-left: 5px; */
+    transform: scale(1.1);
     transition: ease-in-out 0.3s;
+}
+
+.main-sidebar__item--disabled:hover{
+    transform: none;
 }
 
 /* home */

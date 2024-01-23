@@ -1,6 +1,6 @@
 {% include './include/header.html' %}
 
-<body class="bg-light">
+<body class="" id="body" style="background-color: var(--main-bg-color);">
     
     {% if content == 'home' %}
         {% include './bar/main_navbar.html' %}
@@ -10,14 +10,20 @@
     {% if content == 'index' %}
         {% include './bar/dashboard_navbar.html' %}
         <div class="dashboard d-flex position-relative" style="z-index: -1;">
-            {% include './bar/dashboard_sidebar.html' %}
+            <div id="sidebar" class="pl-0 pr-0" lang="en" style="width: 8.5%">
+                {% include './bar/dashboard_sidebar.html' %}
+            </div>
 
-            {% if page == 'index' %}
-                {% include './dashboard/dashboard.html' %}
-            {% endif %}
-            {% if page == 'xray' %}
-                {% include './xray/xray.html' %}
-            {% endif %}
+            <!-- col-lg-11 col-md-10 col-sm-10 -->
+            <div class="content" style="width: 91.5%;">
+
+                {% if page == 'index' %}
+                    {% include './dashboard/dashboard.html' %}
+                {% endif %}
+                {% if page == 'xray' %}
+                    {% include './xray/xray.html' %}
+                {% endif %}
+            </div>
 
         </div>
     {% endif %}
@@ -26,5 +32,10 @@
     {% include './include/footer.html' %}
 
 </body>
+
+<script>
+    collapsedSideBar()
+    fullScreen()
+</script>
 
 </html>

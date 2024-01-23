@@ -44,6 +44,58 @@
     .header-right__bar{
         display: block;
     }
+
+    .dashboard{
+        margin-top: calc(var(--header-height) - 15px);
+    }
+
+        /* collapsed */
+        #header-sidebar.collapsed, #sidebar.collapsed {
+            width: 25%!important;
+            transition: all linear .2s;
+        }
+        
+        #sidebar, #header-sidebar {
+            transition: all linear .2s;
+        }
+        
+        #header-content.collapsed, .content.collapsed{
+            width: 75%!important;
+            transition: all linear .2s;
+            #pie-chart, #column-chart{
+                width: 100%!important;
+            }
+            .canvasjs-chart-canvas, .pie_chart, .column_chart{
+                height: 320px!important;
+            }
+        }
+            
+        .content, #header-content {
+            transition: all linear .2s;
+        }
+        
+        .canvasjs-chart-canvas{
+            width: 100%!important;
+        }
+    
+        /* ========================== */
+
+        /* personality */
+        .personality{
+            width: 70%!important;
+        }
+
+        .personality__background{
+            width: 100%;
+        }
+
+        .personality__info--details{
+            width: 100%;
+        }
+
+        .personality__img{
+            width: 100%!important;
+        }
 }
 
 /* Tablet */
@@ -91,6 +143,58 @@
 
     .header-right__bar{
         display: block;
+    }
+
+    .dashboard{
+        margin-top: calc(var(--header-height) - 8px);
+    }
+
+    /* collapsed */
+    #header-sidebar.collapsed, #sidebar.collapsed {
+        width: 20%!important;
+        transition: all linear .2s;
+    }
+    
+    #sidebar, #header-sidebar {
+        transition: all linear .2s;
+    }
+    
+    #header-content.collapsed, .content.collapsed{
+        width: 80%!important;
+        transition: all linear .2s;
+        #pie-chart, #column-chart{
+            width: 100%!important;
+        }
+        .canvasjs-chart-canvas, .pie_chart, .column_chart{
+            height: 350px!important;
+        }
+    }
+        
+    .content, #header-content {
+        transition: all linear .2s;
+    }
+    
+    .canvasjs-chart-canvas{
+        width: 100%!important;
+    }
+
+    /* ========================== */
+
+    /* personality */
+    .personality{
+        width: 70%!important;
+    }
+
+    .personality__background{
+        width: 100%;
+    }
+
+    .personality__info--details{
+        width: 100%;
+    }
+
+    .personality__img{
+        width: 100%!important;
     }
 }
 

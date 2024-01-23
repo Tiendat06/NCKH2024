@@ -1,7 +1,6 @@
 from flask import render_template, session, redirect
 from models.Account import AccountModel
 import streamlit as st
-import yfinance as yf
 
 class SiteController:
     def __init__(self):
