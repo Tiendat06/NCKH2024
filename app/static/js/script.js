@@ -72,3 +72,31 @@ function fullScreen(){
     }
 
 }
+
+function handleUploadImg() {
+    const fileInput = document.getElementById('fileInput');
+    const img = document.getElementById('xray-img');
+
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function downloadImage() {
+    var imgElement = document.getElementById('xray-img--output');
+    
+    var a = document.createElement('a');
+    a.href = imgElement.src;
+    a.download = 'downloaded_image.jpg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}

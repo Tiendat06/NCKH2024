@@ -1,11 +1,40 @@
-<div class="xray d-flex flex-wrap p-5">
-    <div class="xray-inp-img col-lg-6 col-md-6 col-sm-12">
-        <!-- <img src="" alt="" srcset=""> -->
+<form method="post" class="xray d-flex w-100 flex-wrap p-5" enctype="multipart/form-data">
+    
+    <div class="xray-material d-flex flex-wrap w-100">
+        <div class="xray-inp-img col-lg-6 col-md-6 col-sm-12">
+            <div style="border-radius: 20px; border: 0.5px solid #ccc; overflow: hidden;" class="xray-inp-img--inner w-100">
+                <label for="fileInput" class="w-100">
+                    <img id="xray-img" style="width: 100%; height: 100%; z-index: 1; object-fit: cover" src="{{url_for('static', filename='img/xray-inp.jpg')}}" alt="" srcset="">
+                </label> 
+                <input type="file" name="fileImg" id="fileInput" style="display: none;" accept="image/*" onchange="handleUploadImg()">
+            </div>
+        </div>
+        
+        <div class="xray-out-info col-lg-6 col-md-6 col-sm-12">
+            <div style="background-color: #fff; border: 0.5px solid #ccc; border-radius: 20px" class="overflow-hidden xray-out-info--inner h-100 w-100">
+                <img id="xray-img--output" class="w-100 h-100" src="{{url_for('static', filename='img/bg_main_1.jpg')}}" alt="" srcset="">
+            </div>
+        </div>
     </div>
 
-    <div class="xray-out-info col-lg-6 col-md-6 col-sm-12">
-        <div class="xray-out-info__img col-lg-12 col-md-12 col-sm-12"></div>
-
-        <div class="xray-out-info__evaluation col-lg-12 col-md-12 col-sm-12"></div>
+    <div class="xray-result col-lg-12 col-md-12 col-sm-12 mt-3">
+        <div class="xray-result__form">
+            <div class="form-group">
+                <input readonly type="text" class="form-control w-100 text-center" style="font-size: 1.5rem;">
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="xray-btn d-flex flex-wrap justify-content-end col-lg-12 col-md-12 col-sm-12 mt-3">
+
+        <div class="xray-btn-download mr-3">
+            <div onclick="downloadImage();" class="btn btn-info">Download</div>
+        </div>
+
+        <div class="xray-btn-checking">
+            <button class="btn btn-success">Checking</button>
+        </div>
+
+    </div>
+
+</form>
