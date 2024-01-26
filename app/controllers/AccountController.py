@@ -7,7 +7,8 @@ class AccountController:
 
     # [GET]
     def index(self):
-        return render_template("index.html", content='index', page='account');
+        acc_list = self.account.get_account();
+        return render_template("index.html", content='index', page='account', acc_list = acc_list);
 
 
 

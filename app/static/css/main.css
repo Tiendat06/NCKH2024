@@ -297,3 +297,12 @@
 .home-requirement__about-right--para{
     font-size: 0.7rem;
 }
+
+/* account */
+
+.account-col{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 0.5px solid #ccc;
+}

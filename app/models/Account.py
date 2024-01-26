@@ -11,7 +11,7 @@ class Account:
         self.__acc_id = acc_id
         self.__role_id = role_id;
     
-    def get_userid(self):
+    def get_id(self):
         return self.___id;
     
     def get_username(self):

@@ -3,5 +3,49 @@
         <h5 class="account-heading">Account management</h5>
     </div>
 
-    
+    <!-- <div class="table-responsive"> -->
+        <table class="table table-hover table-bordered" style="border-collapse:collapse">
+            <thead class="text-white bg-info">
+                <tr class="">
+                    <th class="text-white">#</th>
+                    <th class="text-white">Name</th>
+                    <th class="text-center text-white">Manager</th>
+                    <th class="text-center text-white">Staff</th>
+                    <th class="text-center text-white">Lock</th>
+                    <th class="text-center text-white">Reset password</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acc in acc_list %}
+                <tr role="row" style="height: 50px;">
+                    <th scope="row" class="m-auto p-2">{{ loop.index }}</th>
+                    <td class=" p-2">
+                        <img style="width: 40px;" src="{{url_for('static', filename='img/user_profile.png')}}" alt="" srcset="">
+                        {{ acc.get_acc_id() }}
+                    </td>
+                    <td width="150px" class="text-center p-2">
+                        <a href="" class="btn text-center account-col">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </a>
+                    </td>
+                    <td width="150px" class="text-center p-2">
+                        <a href="" style="width: 51px; height: 44px" class="btn account-col">
+                            <i class="fa-solid fa-users"></i>
+                        </a>
+                    </td>
+                    <td width="150px" class="text-center p-2">
+                        <a href="" style="width: 47px; height: 43px" class="btn account-col">
+                            <i class="fa-solid fa-lock"></i>
+                        </a>
+                    </td>
+                    <td width="150px" class="text-center p-2">
+                        <a href="" class="btn account-col">
+                            <i class="fa-solid fa-key"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <!-- </div> -->
 </div>
