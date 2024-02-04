@@ -20,4 +20,3 @@ if __name__ == '__main__':
     routes(app)
     app.run(debug=True)
     # st.rerun()
-

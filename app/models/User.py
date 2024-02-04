@@ -1,5 +1,6 @@
 from config import DataBaseUtils
-from models.Account import AccountModel
+from models.Account import AccountModel, Account
+
 class User:
     def __init__(self, _id, user_id, acc_id, name, gender, email, dob, phone):
         self.___id = _id;
@@ -78,6 +79,44 @@ class User:
 class UserModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
+    
+    def resetPassword(self, acc_id):
+        user_data = self.__conn.get_collection('user').find_one({'acc_id': acc_id})
+        if user_data:
+            user_mail = user_data.get('email')
+            print(user_mail)
+        
+        result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'password': user_mail}})
+        if result:
+            return True
+        return False
+    
+    def get_account(self):
+        acc_data = self.__conn.get_collection('account').find();
+        acc_list = []
+        user_list = []
+        if acc_data:
+            for acc in acc_data:
+                _id = acc.get('_id')
+                acc_name = acc.get('username')
+                acc_pwd = acc.get('password')
+                acc_id = acc.get('acc_id')
+                role_id = acc.get('role_id')
+
+                user_data = self.__conn.get_collection('user').find_one({'acc_id': acc_id})
+                user_id = user_data.get('user_id')
+                user_name = user_data.get('name')
+                user_gender = user_data.get('gender')
+                user_mail = user_data.get('email')
+                user_dob = user_data.get('dob')
+                user_phone = user_data.get('phone')
+
+                acc_model = Account(_id, acc_name, acc_pwd, acc_id, role_id)
+                user_model = User('', user_id, acc_id, user_name, user_gender, user_mail, user_dob, user_phone)
+                acc_list.append(acc_model)
+                user_list.append(user_model)
+            return acc_list, user_list;
+        return None
 
     def add_user(self, user, account):
         user_id = self.AUTO_USE_ID();

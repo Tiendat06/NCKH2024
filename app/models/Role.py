@@ -1,4 +1,6 @@
 from config import DataBaseUtils;
+from models.User import UserModel
+
 class Role:
     def __init__(self, _id, role_id, role_name):
         self.___id = _id;

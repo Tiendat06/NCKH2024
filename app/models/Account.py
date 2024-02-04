@@ -10,9 +10,46 @@ class Account:
         self.__password = password
         self.__acc_id = acc_id
         self.__role_id = role_id;
-    
-    def get_id(self):
-        return self.___id;
+
+    @property
+    def __id(self):
+        return self.___id
+
+    @__id.setter
+    def __id(self, value):
+        self.___id = value
+
+    @property
+    def _username(self):
+        return self.__username
+
+    @_username.setter
+    def _username(self, value):
+        self.__username = value
+
+    @property
+    def _password(self):
+        return self.__password
+
+    @_password.setter
+    def _password(self, value):
+        self.__password = value
+
+    @property
+    def _acc_id(self):
+        return self.__acc_id
+
+    @_acc_id.setter
+    def _acc_id(self, value):
+        self.__acc_id = value
+
+    @property
+    def _role_id(self):
+        return self.__role_id
+
+    @_role_id.setter
+    def _role_id(self, value):
+        self.__role_id = value
     
     def get_username(self):
         return self.__username
@@ -36,21 +73,6 @@ class AccountModel(DataBaseUtils):
     # __conn = DataBaseUtils.get_connection();
     def __init__(self):
         self.__conn = DataBaseUtils.get_connection();
-
-    def get_account(self):
-        acc_data = self.__conn.get_collection('account').find();
-        acc_list = []
-        if acc_data:
-            for acc in acc_data:
-                _id = acc.get('_id')
-                acc_name = acc.get('username')
-                acc_pwd = acc.get('password')
-                acc_id = acc.get('acc_id')
-                role_id = acc.get('role_id')
-                acc_model = Account(_id, acc_name, acc_pwd, acc_id, role_id)
-                acc_list.append(acc_model)
-            return acc_list;
-        return None
     
     def checkLogin(self, data):
         acc_email = self.__conn.get_collection('account').find_one({'password': data['password']});
@@ -58,6 +80,16 @@ class AccountModel(DataBaseUtils):
         if acc_email and acc_pwd:
             return True
         return False
+    
+    def updateRole(self, role, acc_id):
+        print(acc_id)
+        print(role)
+        role_id = self.__conn.get_collection('role').find_one({'role_name': role}).get('role_id');
+        result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'role_id': role_id}})
+        if result:
+            return True
+        return False
+    
     
     def AUTO_ACC_ID(self):
         result = self.__conn.get_collection('account').find_one({}, sort=[("acc_id", -1)])  #asc
