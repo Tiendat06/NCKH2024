@@ -45,12 +45,16 @@ class LogController:
         email = request.form.get('email')
         pwd = request.form.get('pwd')
         # date = request.form.get('date')
-        date = datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
-        date_to_db = datetime(date.year, date.month, date.day)
+        date_to_db = datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
 
+        # get datetime no need format
+        # date_to_db = datetime(date.year, date.month, date.day)
+
+        # format to string because only datetime is allowed
+        date_formatted = date_to_db.strftime('%Y-%m-%d')
         gender = request.form.get('gender')
 
-        user = User('', '', '', fullname, gender, email, date_to_db, phone)
+        user = User('', '', '', fullname, gender, email, date_formatted, phone)
         account = Account('', '', pwd, '', 'ROL0000002');
         # print(user)
         # print(account)

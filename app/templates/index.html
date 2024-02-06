@@ -1,6 +1,6 @@
 {% include './include/header.html' %}
 
-<body class="" id="body" style="background-color: var(--main-bg-color);">
+<body class="" id="body" style="background-color: var(--main-bg-color); ">
     
     {% if content == 'home' %}
         {% include './bar/main_navbar.html' %}
@@ -10,12 +10,12 @@
     {% if content == 'index' %}
         {% include './bar/dashboard_navbar.html' %}
         <div class="dashboard d-flex position-relative" style="z-index: -1;">
-            <div id="sidebar" class="pl-0 pr-0" lang="en" style="width: 8.5%">
+            <div id="sidebar" class="pl-0 pr-0" lang="en" style="width: 8.5%; min-height: 100%">
                 {% include './bar/dashboard_sidebar.html' %}
             </div>
 
             <!-- col-lg-11 col-md-10 col-sm-10 -->
-            <div class="content" style="width: 91.5%;">
+            <div class="content" style="width: 91.5%; min-height: 1000px">
 
                 {% if page == 'index' %}
                     {% include './dashboard/dashboard.html' %}
@@ -25,6 +25,9 @@
                 {% endif %}
                 {% if page == 'account' %}
                     {% include './account/account.html' %}
+                {% endif %}
+                {% if page == 'user' %}
+                    {% include './user/user.html' %}
                 {% endif %}
             </div>
 

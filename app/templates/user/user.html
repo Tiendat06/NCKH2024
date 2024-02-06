@@ -1,0 +1,90 @@
+<div class="account d-flex flex-wrap w-100 p-5">
+    <div class="account-title col-lg-12 col-md-12 col-sm-12">
+        <h5 class="account-heading">User Management</h5>
+    </div>
+
+    <div class="w-100 p-3 pt-1">
+        <div class="row">
+            <div class="user-table pl-4 pr-4 col-lg-12 col-md-12 col-sm-12" style="background-color: #fff;">
+                <div class="">
+                    <h5 class="pb-2 pt-4" style="font-size: 1.1rem;">Information table</h5>
+                </div>
+        
+                <table class="table table-bordered table-hover overflow-scroll" style="border-collapse:collapse">
+                    <thead class="text-white bg-info">
+                        <tr class="p-2">
+                            <th scope="col" class="text-white">#</th>
+                            <th scope="col" class="text-white">Name</th>
+                            <th scope="col" class="text-centers text-white">Gender</th>
+                            <th scope="col" class="text-centers text-white">Email</th>
+                            <th scope="col" class="text-centers text-white">Birthday</th>
+                            <th scope="col" class="text-centers text-white">Phone</th>
+                            <th scope="col" class="text-centers text-white">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_list %}
+                        <tr  style="" class="">
+                            <th scope="row" class="m-auto ">{{ loop.index }}</th>
+                            <td class="p-2">
+                                <img style="width: 40px;" class="mr-1" src="{{url_for('static', filename='img/user_profile.png')}}" alt="" srcset="">
+                                {{ user._name }}
+                            </td>
+                            <td class="text-centers p-2">
+                                <!-- <a href="" class=" btn text-center account-col">
+                                    <i style="font-size: 0.8rem;" class="fa-solid fa-user-tie"></i>
+                                </a> -->
+                                {{user._gender}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._email}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._dob}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._phone}}
+                            </td>
+                            <td class="text-center p-2">
+                                <a href="" class=" btn text-center">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a href="" class=" btn text-center">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- {% if pages > 1 %}
+                    <a href="/account/{{pages-1}}">Previous</a>
+                {% endif %}
+                    <span>Page {{ pages }} of {{ total_pages }} </span>
+                {% if pages < total_pages %}
+                    <a href="/account/{{pages+1}}">Next</a>
+                {% endif %} -->
+        
+                <nav style="float: right;" aria-label="Page navigation">
+                    <ul class="pagination">
+                    {% if pages > 1 %}
+                        <li class="page-item"><a class="page-link" href="/user/{{pages-1}}">Previous</a></li>
+                    {% endif %}
+        
+                    {% for page_num in range(1, total_pages + 1) %}
+                        <li class="page-item {% if page_num == pages %} active {% endif %}"><a class="page-link" href="/user/{{page_num}}">{{ page_num }}</a></li>
+                    {% endfor %}
+        
+                    {% if pages < total_pages %}
+                        <li class="page-item"><a class="page-link" href="/user/{{pages+1}}">Next</a></li>
+                    {% endif %}
+                    
+                    </ul>
+                </nav>
+            
+            </div>
+        </div>
+
+    </div>
+    
+</div>

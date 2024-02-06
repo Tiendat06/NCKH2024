@@ -31,6 +31,10 @@ body{
 
 }
 
+.table td, .table th{
+    vertical-align: middle!important;
+}
+
 #header-sidebar.collapsed, #sidebar.collapsed {
     width: 15%!important;
     transition: all linear .2s;

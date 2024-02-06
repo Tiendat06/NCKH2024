@@ -91,6 +91,9 @@ class UserModel(DataBaseUtils):
             return True
         return False
     
+    def get_total_users(self):
+        return self.__conn.get_collection('account').count_documents({});
+    
     def get_account(self):
         acc_data = self.__conn.get_collection('account').find();
         acc_list = []
@@ -146,7 +149,7 @@ class UserModel(DataBaseUtils):
         return 'Register Failed';
 
     def AUTO_USE_ID(self):
-        result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #asc
+        result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #desc
 
         if result:
             max_user_id = result['user_id'];
