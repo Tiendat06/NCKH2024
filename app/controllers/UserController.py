@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, redirect
 from models.User import UserModel
 
 class UserController:
@@ -20,3 +20,6 @@ class UserController:
         items_on_page = user_list[start: end]
 
         return render_template("index.html", content='index', page='user', user_list=items_on_page, total_pages=total_pages, pages=pages)
+    
+    def add_user(self):
+        return redirect('/user')

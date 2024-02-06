@@ -26,22 +26,22 @@
                         {{ user._name }}
                     </td>
                     <td width="150px" class="text-center p-2">
-                        <a href="/account/changeRole/Manager/{{acc._acc_id}}" class="{% if acc._role_id == 'ROL0000001' %} bg-primary text-light {% endif %} btn text-center account-col">
+                        <a href="/account/changeRole/Manager/{{acc._acc_id}}" class="{% if acc._role_id == 'ROL0000001' %} bg-primary text-light {% endif %} btn text-center account-col mb-0">
                             <i style="font-size: 0.8rem;" class="fa-solid fa-user-tie"></i>
                         </a>
                     </td>
                     <td width="150px" class="text-center p-2">
-                        <a href="/account/changeRole/Staff/{{acc._acc_id}}" style="width: 49px; height: 41px" class="{% if acc._role_id == 'ROL0000002' %} bg-success text-light {% endif %} btn account-col">
+                        <a href="/account/changeRole/Staff/{{acc._acc_id}}" style="width: 49px; height: 41px" class="{% if acc._role_id == 'ROL0000002' %} bg-success text-light {% endif %} btn account-col mb-0">
                             <i style="font-size: 0.8rem;" class="fa-solid fa-users"></i>
                         </a>
                     </td>
                     <td width="150px" class="text-center p-2">
-                        <a href="/account/changeRole/Lock/{{acc._acc_id}}" style="width: 44px; height: 40px" class="{% if acc._role_id == 'ROL0000003' %} bg-danger text-light {% endif %} btn account-col">
+                        <a href="/account/changeRole/Lock/{{acc._acc_id}}" style="width: 44px; height: 40px" class="{% if acc._role_id == 'ROL0000003' %} bg-danger text-light {% endif %} btn account-col mb-0">
                             <i style="font-size: 0.8rem;" class="fa-solid fa-lock"></i>
                         </a>
                     </td>
                     <td width="150px" class="text-center p-2">
-                        <a href="/account/resetPassword/{{acc._acc_id}}" class="btn account-col">
+                        <a href="/account/resetPassword/{{acc._acc_id}}" class="btn account-col mb-0">
                             <i style="font-size: 0.8rem;" class="fa-solid fa-key"></i>
                         </a>
                     </td>

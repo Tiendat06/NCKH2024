@@ -1,13 +1,20 @@
 <div class="account d-flex flex-wrap w-100 p-5">
-    <div class="account-title col-lg-12 col-md-12 col-sm-12">
+    <div class="account-title col-lg-6 col-md-6 col-sm-12">
         <h5 class="account-heading">User Management</h5>
+    </div>
+
+    <div class="user-btn col-lg-6 col-md-6 col-sm-12">
+        <button data-toggle="modal" data-target="#add-user" style="float: right;" class="btn btn-info">
+            <i class="fa-solid fa-user-plus"></i>
+            Add User
+        </button>
     </div>
 
     <div class="w-100 p-3 pt-1">
         <div class="row">
             <div class="user-table pl-4 pr-4 col-lg-12 col-md-12 col-sm-12" style="background-color: #fff;">
                 <div class="">
-                    <h5 class="pb-2 pt-4" style="font-size: 1.1rem;">Information table</h5>
+                    <h4 class="pb-2 pt-4" style="font-size: 1.1rem;">Information table</h4>
                 </div>
         
                 <table class="table table-bordered table-hover overflow-scroll" style="border-collapse:collapse">
@@ -46,10 +53,10 @@
                                 {{user._phone}}
                             </td>
                             <td class="text-center p-2">
-                                <a href="" class=" btn text-center">
+                                <a data-toggle="modal" data-target="#edit-user" class=" btn text-center">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <a href="" class=" btn text-center">
+                                <a class=" btn text-center">
                                     <i class="fa-solid fa-trash"></i>
                                 </a>
                             </td>
@@ -88,3 +95,116 @@
     </div>
     
 </div>
+
+    <!--    add modal -->
+    <div class="modal fade" id="add-user">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/user/add" enctype="multipart/form-data" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="full_name_add">Full name</label>
+                                <input class="form-control" type="text" name="full_name_add" id="full_name_add" placeholder="Full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender_add">Gender</label>
+                                <select class="form-control" name="gender_add" id="gender_add">
+                                    <option value="">--Choose gender--</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email_add">Email</label>
+                                <input class="form-control" type="email" name="email_add" id="email_add" placeholder="Email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dob_add">Birthday</label>
+                                <input class="form-control" type="date" name="dob_add" id="dob_add">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_add">Phone number</label>
+                                <input class="form-control" type="number" name="phone_add" id="phone_add" placeholder="Phone number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    edit modal -->
+    <div class="modal fade" id="edit-user">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/user/edit" enctype="multipart/form-data" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="full_name_edit">Full name</label>
+                                <input class="form-control" type="text" name="full_name_edit" id="full_name_edit" placeholder="Full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender_edit">Gender</label>
+                                <select class="form-control" name="gender_edit" id="gender_edit">
+                                    <option value="">--Choose gender--</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email_edit">Email</label>
+                                <input class="form-control" type="email" name="email_edit" id="email_edit" placeholder="Email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dob_edit">Birthday</label>
+                                <input class="form-control" type="date" name="dob_edit" id="dob_edit">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_edit">Phone number</label>
+                                <input class="form-control" type="number" name="phone_edit" id="phone_edit" placeholder="Phone number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
