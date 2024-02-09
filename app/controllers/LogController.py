@@ -2,7 +2,6 @@ from flask import render_template, request, session, redirect
 from datetime import datetime
 from models.Account import Account, AccountModel
 from models.User import User, UserModel
-from config import DataBaseUtils
 class LogController:
     def __init__(self):
         self.account = AccountModel()

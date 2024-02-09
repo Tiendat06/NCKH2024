@@ -75,9 +75,14 @@ class AccountModel(DataBaseUtils):
         self.__conn = DataBaseUtils.get_connection();
     
     def checkLogin(self, data):
-        acc_email = self.__conn.get_collection('account').find_one({'password': data['password']});
-        acc_pwd = self.__conn.get_collection('user').find_one({'email': data['email']});
-        if acc_email and acc_pwd:
+        acc_pwd = self.__conn.get_collection('account').find_one({'password': data['password']});
+        acc_email = self.__conn.get_collection('user').find_one({'email': data['email']});
+        acc_id = self.__conn.get_collection('user').find_one({'acc_email': data['email']});
+        acc_role = self.__conn.get_collection('account').find_one({'acc_id': acc_id.get('role_id')});
+
+        print(acc_role)
+
+        if acc_email and acc_pwd and acc_role != "ROL0000003":
             return True
         return False
     

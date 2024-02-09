@@ -1,8 +1,6 @@
 from flask import render_template, request, session, redirect
 from models.Account import Account, AccountModel
 from models.User import User, UserModel
-from config import DataBaseUtils
-from flask_paginate import Pagination, get_page_args
 
 class AccountController:
     def __init__(self):
