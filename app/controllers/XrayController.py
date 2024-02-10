@@ -5,6 +5,7 @@ class XrayController:
     def __init__(self):
         self.account = AccountModel();
 
+    # [GET]
     def index(self):
 
         return render_template("index.html", content = 'index', page = 'xray')

@@ -5,6 +5,7 @@ class UserController:
     def __init__(self):
         self.user = UserModel()
 
+    # [GET]
     def index(self, pages):
         user_db = self.user;
         pages = int(pages);
@@ -21,5 +22,6 @@ class UserController:
 
         return render_template("index.html", content='index', page='user', user_list=items_on_page, total_pages=total_pages, pages=pages)
     
+    # [POST]
     def add_user(self):
         return redirect('/user')

@@ -21,12 +21,18 @@ class LogController:
             'email': email,
             'password': pwd
         }
+
+        error = '';
         
-        if self.account.checkLogin(data):
+        if self.account.checkLogin(data)[0]:
             session['account'] = email
             return redirect('/')
+        elif not self.account.checkLogin(data)[0] and self.account.checkLogin(data)[1] == 'ROL0000003':
+            error = 'Your account has been banned!';
+            return render_template("/log/login.html", error=error);
         else:
-            return render_template("/log/login.html", error="Invalid email or password !")
+            error = "Invalid email or password !";
+            return render_template("/log/login.html", error=error)
         
     # [GET]
     def logout(self):
@@ -39,9 +45,13 @@ class LogController:
     
     # [POST]
     def registerPost(self):
+        user_db = self.user;
         fullname = request.form.get('fullname');
         phone = request.form.get('phone')
         email = request.form.get('email')
+
+        if user_db.checkEmailIsContain(email): 
+            return render_template('/log/login.html', register="register", result = 'Your email has been contained !')
         pwd = request.form.get('pwd')
         # date = request.form.get('date')
         date_to_db = datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
@@ -58,7 +68,7 @@ class LogController:
         # print(user)
         # print(account)
 
-        result = self.user.add_user(user, account);
+        result = self.user.createAccount(user, account);
         return render_template('/log/login.html', register="register", result = result)
 
 

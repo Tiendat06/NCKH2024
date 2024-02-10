@@ -77,14 +77,16 @@ class AccountModel(DataBaseUtils):
     def checkLogin(self, data):
         acc_pwd = self.__conn.get_collection('account').find_one({'password': data['password']});
         acc_email = self.__conn.get_collection('user').find_one({'email': data['email']});
-        # acc_id = self.__conn.get_collection('user').find_one({'acc_email': data['email']});
+        # acc_id = self.__conn.get_collection('user').find_one({'email': data['email']}).get('acc_id');
+        # print(acc_email.get('acc_id'));
+        # print(acc_pwd.get('role_id'));
         # acc_role = self.__conn.get_collection('account').find_one({'acc_id': acc_id.get('role_id')});
 
         # print(acc_role)
 
-        if acc_email and acc_pwd:
-            return True
-        return False
+        if acc_email and acc_pwd and acc_pwd.get('role_id') != 'ROL0000003':
+            return True, acc_pwd.get('role_id');
+        return False, acc_pwd.get('role_id');
     
     def updateRole(self, role, acc_id):
         print(acc_id)

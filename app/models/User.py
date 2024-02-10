@@ -80,6 +80,12 @@ class UserModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
     
+    def checkEmailIsContain(self, email):
+        user_data = self.__conn.get_collection('user').find_one({'email': email})
+        if user_data:
+            return True
+        return False
+    
     def resetPassword(self, acc_id):
         user_data = self.__conn.get_collection('user').find_one({'acc_id': acc_id})
         if user_data:
@@ -121,7 +127,7 @@ class UserModel(DataBaseUtils):
             return acc_list, user_list;
         return None
 
-    def add_user(self, user, account):
+    def createAccount(self, user, account):
         user_id = self.AUTO_USE_ID();
         acc_id = AccountModel().AUTO_ACC_ID();
         user_json = {
