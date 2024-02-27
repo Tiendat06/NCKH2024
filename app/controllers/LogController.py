@@ -23,6 +23,7 @@ class LogController:
         }
 
         error = '';
+        print(self.account.checkLogin(data)[1])
         
         if self.account.checkLogin(data)[0]:
             session['account'] = email

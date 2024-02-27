@@ -1,8 +1,9 @@
 from config import DataBaseUtils
 from models.Account import AccountModel, Account
+from models.Role import Role, RoleModel
 
 class User:
-    def __init__(self, _id, user_id, acc_id, name, gender, email, dob, phone):
+    def __init__(self, _id, user_id, acc_id, name, gender, email, dob, phone, img_profile):
         self.___id = _id;
         self.__user_id = user_id;
         self.__acc_id = acc_id;
@@ -11,6 +12,7 @@ class User:
         self.__email = email;
         self.__dob = dob;
         self.__phone = phone;
+        self.__img_profile = img_profile;
     
     @property
     def __id(self):
@@ -76,6 +78,14 @@ class User:
     def _phone(self, value):
         self.__phone = value
 
+    @property
+    def _img_profile(self):
+        return self.__img_profile
+
+    @_img_profile.setter
+    def _img_profile(self, value):
+        self.__img_profile = value
+
 class UserModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
@@ -104,6 +114,7 @@ class UserModel(DataBaseUtils):
         acc_data = self.__conn.get_collection('account').find();
         acc_list = []
         user_list = []
+        role_list = []
         if acc_data:
             for acc in acc_data:
                 _id = acc.get('_id')
@@ -112,6 +123,9 @@ class UserModel(DataBaseUtils):
                 acc_id = acc.get('acc_id')
                 role_id = acc.get('role_id')
 
+                role_data = self.__conn.get_collection('role').find_one({'role_id': role_id})
+                role_name = role_data.get('role_name')
+
                 user_data = self.__conn.get_collection('user').find_one({'acc_id': acc_id})
                 user_id = user_data.get('user_id')
                 user_name = user_data.get('name')
@@ -119,12 +133,15 @@ class UserModel(DataBaseUtils):
                 user_mail = user_data.get('email')
                 user_dob = user_data.get('dob')
                 user_phone = user_data.get('phone')
+                user_img_profile = user_data.get('img_profile')
 
                 acc_model = Account(_id, acc_name, acc_pwd, acc_id, role_id)
-                user_model = User('', user_id, acc_id, user_name, user_gender, user_mail, user_dob, user_phone)
+                user_model = User('', user_id, acc_id, user_name, user_gender, user_mail, user_dob, user_phone, user_img_profile)
+                role_model = Role('', role_id, role_name);
                 acc_list.append(acc_model)
                 user_list.append(user_model)
-            return acc_list, user_list;
+                role_list.append(role_model)
+            return acc_list, user_list, role_list;
         return None
 
     def createAccount(self, user, account):

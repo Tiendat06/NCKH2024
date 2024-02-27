@@ -9,18 +9,24 @@ class UserController:
     def index(self, pages):
         user_db = self.user;
         pages = int(pages);
-        per_page = 10;
+        per_page = 8;
         start = (pages - 1) * per_page;
         end = start + per_page
 
         user_data = user_db.get_account();
         user_list = []
         if user_data:
-            user_list = user_data[1];
-        total_pages = (len(user_list) + per_page - 1) // per_page
-        items_on_page = user_list[start: end]
+            acc_list, user_list, role_list = user_data;
+        
+        zip_data = zip(acc_list, user_list, role_list)
+        zip_data_list = list(zip_data)
+        total_pages = (len(zip_data_list) + per_page - 1) // per_page
+        items_on_page = zip_data_list[start: end]
 
-        return render_template("index.html", content='index', page='user', user_list=items_on_page, total_pages=total_pages, pages=pages)
+        print(start)
+        print(end)
+
+        return render_template("index.html", content='index', page='user', zip_data=items_on_page, total_pages=total_pages, pages=pages)
     
     # [POST]
     def add_user(self):

@@ -1,0 +1,51 @@
+<!-- <table class="table table-bordered table-hover overflow-scroll" style="border-collapse: collapse">
+                    <thead class="text-white bg-info">
+                        <tr class="p-2">
+                            <th scope="col" class="text-white">#</th>
+                            <th scope="col" class="text-white">Name</th>
+                            <th scope="col" class="text-centers text-white">Gender</th>
+                            <th scope="col" class="text-centers text-white">Email</th>
+                            <th scope="col" class="text-centers text-white">Birthday</th>
+                            <th scope="col" class="text-centers text-white">Phone</th>
+                            <th scope="col" class="text-centers text-white">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_list %}
+                        <tr  style="" class="">
+                            <th scope="row" class="m-auto ">{{ loop.index }}</th>
+                            <td class="p-2">
+                                <img style="width: 40px;" class="mr-1" src="{{url_for('static', filename='img/user_profile.png')}}" alt="" srcset="">
+                                {{ user._name }}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._gender}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._email}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._dob}}
+                            </td>
+                            <td class="text-centers p-2">
+                                {{user._phone}}
+                            </td>
+                            <td class="text-center p-2">
+                                <a data-toggle="modal" data-target="#edit-user" class=" btn text-center">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a class=" btn text-center">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> -->
+                <!-- {% if pages > 1 %}
+                    <a href="/account/{{pages-1}}">Previous</a>
+                {% endif %}
+                    <span>Page {{ pages }} of {{ total_pages }} </span>
+                {% if pages < total_pages %}
+                    <a href="/account/{{pages+1}}">Next</a>
+                {% endif %} -->

@@ -1,4 +1,5 @@
 from config import DataBaseUtils
+from flask import redirect
 
 class Account:
     # ___id = ''
@@ -83,10 +84,12 @@ class AccountModel(DataBaseUtils):
         # acc_role = self.__conn.get_collection('account').find_one({'acc_id': acc_id.get('role_id')});
 
         # print(acc_role)
+        role_id = '';
 
         if acc_email and acc_pwd and acc_pwd.get('role_id') != 'ROL0000003':
-            return True, acc_pwd.get('role_id');
-        return False, acc_pwd.get('role_id');
+            role_id = acc_pwd.get('role_id');
+            return True, role_id;
+        return False, role_id;
     
     def updateRole(self, role, acc_id):
         print(acc_id)
