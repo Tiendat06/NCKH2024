@@ -306,3 +306,10 @@
     border-radius: 50%;
     border: 0.5px solid #ccc;
 }
+
+/* user */
+.user-items:hover{
+    transform: translateY(-4px);
+    transition: linear 0.2s;
+}
+

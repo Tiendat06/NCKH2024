@@ -20,7 +20,7 @@
 
                 {% for acc, user, role in zip_data %}
 
-                <div class="col-lg-3 user-items mb-4">
+                <div class="col-lg-3 user-items mb-5">
                     <div class="user-items__inner p-4" style="background-color: #fff; border-radius: 20px">
                         <div class="user-items__delete mb-2 w-100" style="text-align: right;">
                             <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
@@ -79,7 +79,7 @@
     <div class="modal fade" id="add-user">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/user/add" enctype="multipart/form-data" method="post">
+                <form onsubmit="return false" method="post">
 
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -92,12 +92,12 @@
                         <div class="form-group">
                             <div class="form-group">
                                 <label for="full_name_add">Full name</label>
-                                <input class="form-control" type="text" name="full_name_add" id="full_name_add" placeholder="Full name">
+                                <input class="form-control" type="text" name="full_name_add" id="full_name_add" placeholder="Full name" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="gender_add">Gender</label>
-                                <select class="form-control" name="gender_add" id="gender_add">
+                                <select class="form-control" name="gender_add" id="gender_add" required>
                                     <option value="">--Choose gender--</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -106,24 +106,31 @@
 
                             <div class="form-group">
                                 <label for="email_add">Email</label>
-                                <input class="form-control" type="email" name="email_add" id="email_add" placeholder="Email">
+                                <input class="form-control" type="email" name="email_add" id="email_add" placeholder="Email" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="dob_add">Birthday</label>
-                                <input class="form-control" type="date" name="dob_add" id="dob_add">
+                                <input class="form-control" type="date" name="dob_add" id="dob_add" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="phone_add">Phone number</label>
-                                <input class="form-control" type="number" name="phone_add" id="phone_add" placeholder="Phone number">
+                                <input class="form-control" type="number" name="phone_add" id="phone_add" placeholder="Phone number" required>
                             </div>
                         </div>
                     </div>
 
+                    <div id="error_adding_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_adding_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
+                    </div>
+
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        <button id="btn_add" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
@@ -187,3 +194,45 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#btn_add').click(function() {
+                let name_add = $('#full_name_add').val();
+                let gender_add = $('#gender_add').val();
+                let email_add = $('#email_add').val();
+                let dob_add = $('#dob_add').val();
+                let phone_add = $('#phone_add').val();
+
+                console.log(email_add)
+                console.log(name_add)
+                console.log(gender_add)
+                console.log(phone_add)
+                console.log(dob_add)
+                $.ajax({
+                    url: '/user/add',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(
+                        {
+                            name : name_add,
+                            gender: gender_add,
+                            email: email_add,
+                            dob: dob_add,
+                            phone: phone_add,
+                        }
+                    ),
+                    success: function(response) {
+                        $('#error_adding_user').html(response)
+                        $('#error_adding_user_outer').removeClass('d-none')
+                        //console.log(response);
+                        //alert(response.message);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>

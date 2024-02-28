@@ -13,8 +13,10 @@ def index_none_pagination():
 def index(pages):
     return UserController().index(pages)
 
-# [POST]
+# [POST, AJAX]
 @user.route('/user/add', methods=['post'])
 def add_user():
     return UserController().add_user()
+
+
 

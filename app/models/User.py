@@ -154,7 +154,8 @@ class UserModel(DataBaseUtils):
             'gender': user._gender,
             'email': user._email,
             'dob': user._dob,
-            'phone': user._phone
+            'phone': user._phone,
+            'img_profile': user._img_profile
         }
 
         account_json = {

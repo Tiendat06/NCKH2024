@@ -64,7 +64,9 @@ class LogController:
         date_formatted = date_to_db.strftime('%Y-%m-%d')
         gender = request.form.get('gender')
 
-        user = User('', '', '', fullname, gender, email, date_formatted, phone)
+        default_img_profile = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png'
+
+        user = User('', '', '', fullname, gender, email, date_formatted, phone, default_img_profile)
         account = Account('', '', pwd, '', 'ROL0000002');
         # print(user)
         # print(account)
