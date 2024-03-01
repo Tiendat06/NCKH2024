@@ -18,5 +18,10 @@ def index(pages):
 def add_user():
     return UserController().add_user()
 
+# [POST, AJAX]
+@user.route('/user/edit', methods=['post'])
+def edit_user():
+    return UserController().edit_user()
+
 
 

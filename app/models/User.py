@@ -100,7 +100,7 @@ class UserModel(DataBaseUtils):
         user_data = self.__conn.get_collection('user').find_one({'acc_id': acc_id})
         if user_data:
             user_mail = user_data.get('email')
-            print(user_mail)
+            # print(user_mail)
         
         result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'password': user_mail}})
         if result:
@@ -144,6 +144,12 @@ class UserModel(DataBaseUtils):
             return acc_list, user_list, role_list;
         return None
 
+    def get_user_by_id(self, user_id):
+        user_data = self.get_collection('user').find_one({'user_id': user_id})
+        if user_data:
+            return user_data;
+        return None;
+
     def createAccount(self, user, account):
         user_id = self.AUTO_USE_ID();
         acc_id = AccountModel().AUTO_ACC_ID();
@@ -171,6 +177,21 @@ class UserModel(DataBaseUtils):
         if result_user.acknowledged and result_acc.acknowledged:
             return 'Register Successfully';
         return 'Register Failed';
+
+    def edit_user(self, user):
+
+        result = self.__conn.get_collection('user').update_one({'user_id': user._user_id}, 
+                                                               {"$set": { 
+                                                                   'name': user._name,
+                                                                   'gender': user._gender,
+                                                                   'email': user._email,
+                                                                   'dob': user._dob,
+                                                                   'phone': user._phone,
+                                                                   'img_profile': user._img_profile
+                                                                }})
+        if result.modified_count > 0:
+            return True
+        return False
 
     def AUTO_USE_ID(self):
         result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #desc

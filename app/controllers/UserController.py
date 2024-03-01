@@ -1,6 +1,7 @@
 from flask import request, render_template, redirect, jsonify
 from models.User import UserModel, User
 from models.Account import Account, AccountModel
+import cloudinary.uploader
 
 class UserController:
     def __init__(self):
@@ -49,23 +50,10 @@ class UserController:
         email = data.get('email');
         dob = data.get('dob');
         phone = data.get('phone');
-
-        print(name)
-        print(gender)
-        print(email)
-        print(dob)
-        print(phone)
+        img_profile = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png'
         
         if not all([name, gender, email, dob, phone]):
             return jsonify(result.get('empty'))
-
-        # name = request.form.get('full_name_add');
-        # gender = request.form.get('gender_add');
-        # email = request.form.get('email_add');
-        # dob = request.form.get('dob_add');
-        # phone = request.form.get('phone_add');
-        img_profile = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png'
-
 
         if user_db.checkEmailIsContain(email):
             return jsonify(result.get('error'))
@@ -76,4 +64,68 @@ class UserController:
         user_db.createAccount(user, account);
         return jsonify(result.get('success'));
     
-            
+    def edit_user(self):
+        user_db = self.user;
+        result = {
+            'fail': 'Edit failed !',
+            'error': 'Your email has been contained !',
+            'empty': 'You must to fill out all fields except avatar !',
+            'success': 'Edit successfully !'
+        }
+
+        data = request.get_json();
+        name = data.get('name');
+        gender = data.get('gender');
+        email = data.get('email');
+        tmp_email = data.get('tmp_email');
+        dob = data.get('dob');
+        phone = data.get('phone');
+        # img_profile = request.files['file']
+        user_id = data.get('user_id');
+        acc_id = data.get('acc_id');
+        img = data.get('img');
+        # name = request.form['name']
+        # gender = request.form['gender']
+        # email = request.form['email']
+        # dob = request.form['dob']
+        # phone = request.form['phone']
+        # tmp_email = request.form['tmp_email']
+        # user_id = request.form['user_id']
+        # acc_id = request.form['acc_id']
+        
+        # img_profile = request.files['avatar']  # Lấy file từ yêu cầu
+
+        # print(name)
+        # print(gender)
+        # print(email)
+        # print(dob)
+        # print(phone)
+        # print(img_profile)
+        # avatar = None;
+        # still bugs
+        # if img_profile is None or img_profile == "":
+            # avatar = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png'
+        # else:
+        #     res = cloudinary.uploader.upload(img_profile);
+        #     avatar = res['secure_url'];
+        # 
+        # print(img_profile)
+        # print(user_id)
+        # print(acc_id)
+        # print(avatar);
+        
+
+        if not all([name, gender, email, dob, phone]):
+            return jsonify(result.get('empty'))
+
+        if user_db.checkEmailIsContain(email) and email != tmp_email:
+            return jsonify(result.get('error'))
+        
+        user = User('', user_id, acc_id, name, gender, email, dob, phone, img);
+        if not user:
+            return jsonify(result.get('fail'));
+        edit = user_db.edit_user(user)
+        if not edit:
+            return jsonify(result.get('fail'));
+
+        return jsonify(result.get('success'));

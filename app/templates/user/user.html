@@ -20,13 +20,16 @@
 
                 {% for acc, user, role in zip_data %}
 
-                <div class="col-lg-3 user-items mb-5">
+                <div class="col-lg-3 col-md-6 user-items mb-5">
                     <div class="user-items__inner p-4" style="background-color: #fff; border-radius: 20px">
                         <div class="user-items__delete mb-2 w-100" style="text-align: right;">
                             <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
                         </div>
                         <div class="user-items__img text-center">
-                            <img style="width: 80px;" src="{{user._img_profile}}" alt="" srcset="">
+                            <label for="fileInput">
+                                <img style="width: 80px; height: 80px; border-radius: 50%; object-fit:cover" src="{{user._img_profile}}" id="profile-img" alt="" srcset="">
+                            </label>
+                            <input type="file" style="display: none;" accept="image/*" onchange="handleUploadImg()" name="fileImg" id="fileInput">
                         </div>
                         <div class="user-items__info mt-2 text-center">
                             <p class="text-dark" style="font-size: 18px;">{{user._name}}</p>
@@ -43,7 +46,15 @@
                         </div>
                         
                         <div class="user-items__btn text-center">
-                            <button class="btn btn-primary" type="submit">Edit Profile</button>
+                            <button data-name="{{user._name}}"
+                                    data-dob="{{user._dob}}"
+                                    data-phone="{{user._phone}}"
+                                    data-email="{{user._email}}"
+                                    data-gender="{{user._gender}}"
+                                    data-user_id="{{user._user_id}}"
+                                    data-acc_id="{{user._acc_id}}"
+                                    data-img="{{user._img_profile}}"
+                            class="btn btn-primary btn-show-details" data-toggle="modal" data-target="#edit-user" type="submit">Edit Profile</button>
                         </div>
 
                     </div>
@@ -143,7 +154,7 @@
     <div class="modal fade" id="edit-user">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/user/edit" enctype="multipart/form-data" method="post">
+                <form onsubmit="return false" enctype="multipart/form-data" method="post">
 
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -154,14 +165,19 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <div class="form-group">
+                            <input type="hidden" name="tmp_email" id="tmp_email">
+                            <input type="hidden" name="user_id" id="user_id">
+                            <input type="hidden" name="acc_id" id="acc_id">
+                            <input type="hidden" name="img_edit" id="img_edit">
+
                             <div class="form-group">
                                 <label for="full_name_edit">Full name</label>
-                                <input class="form-control" type="text" name="full_name_edit" id="full_name_edit" placeholder="Full name">
+                                <input class="form-control" type="text" name="full_name_edit" id="full_name_edit" placeholder="Full name" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="gender_edit">Gender</label>
-                                <select class="form-control" name="gender_edit" id="gender_edit">
+                                <select class="form-control" name="gender_edit" id="gender_edit" required>
                                     <option value="">--Choose gender--</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -170,24 +186,35 @@
 
                             <div class="form-group">
                                 <label for="email_edit">Email</label>
-                                <input class="form-control" type="email" name="email_edit" id="email_edit" placeholder="Email">
+                                <input class="form-control" type="email" name="email_edit" id="email_edit" placeholder="Email" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="dob_edit">Birthday</label>
-                                <input class="form-control" type="date" name="dob_edit" id="dob_edit">
+                                <input class="form-control" type="date" name="dob_edit" id="dob_edit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="phone_edit">Phone number</label>
-                                <input class="form-control" type="number" name="phone_edit" id="phone_edit" placeholder="Phone number">
+                                <input class="form-control" type="number" name="phone_edit" id="phone_edit" placeholder="Phone number" required>
                             </div>
+
+                            <!-- <div class="form-group">
+                                <label for="avatar_edit">Avatar</label>
+                                <input type="file" name="avatar_edit" id="avatar_edit" class="form-control">
+                            </div> -->
                         </div>
+                    </div>
+
+                    <div id="error_editing_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_editing_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="btn_edit" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
@@ -196,43 +223,7 @@
     </div>
 
 
-    <script>
-        $(document).ready(function() {
-            $('#btn_add').click(function() {
-                let name_add = $('#full_name_add').val();
-                let gender_add = $('#gender_add').val();
-                let email_add = $('#email_add').val();
-                let dob_add = $('#dob_add').val();
-                let phone_add = $('#phone_add').val();
-
-                console.log(email_add)
-                console.log(name_add)
-                console.log(gender_add)
-                console.log(phone_add)
-                console.log(dob_add)
-                $.ajax({
-                    url: '/user/add',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(
-                        {
-                            name : name_add,
-                            gender: gender_add,
-                            email: email_add,
-                            dob: dob_add,
-                            phone: phone_add,
-                        }
-                    ),
-                    success: function(response) {
-                        $('#error_adding_user').html(response)
-                        $('#error_adding_user_outer').removeClass('d-none')
-                        //console.log(response);
-                        //alert(response.message);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-        });
-    </script>
+<script>
+    ajaxInUserManagement()
+    handleUploadImg()
+</script>
