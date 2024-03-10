@@ -96,6 +96,10 @@
         .personality__img{
             width: 100%!important;
         }
+
+        .xray-img__predict{
+            margin-bottom: 20px;
+        }
 }
 
 /* Tablet */
@@ -195,6 +199,10 @@
 
     .personality__img{
         width: 100%!important;
+    }
+
+    .xray-img__predict{
+        margin-bottom: 20px;
     }
 }
 

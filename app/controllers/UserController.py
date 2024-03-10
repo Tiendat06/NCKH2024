@@ -64,6 +64,7 @@ class UserController:
         user_db.createAccount(user, account);
         return jsonify(result.get('success'));
     
+    # POST, AJAX
     def edit_user(self):
         user_db = self.user;
         result = {

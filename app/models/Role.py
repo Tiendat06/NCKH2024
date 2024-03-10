@@ -1,4 +1,4 @@
-from config import DataBaseUtils;
+from database import DataBaseUtils;
 
 class Role:
     def __init__(self, _id, role_id, role_name):

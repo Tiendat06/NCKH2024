@@ -259,8 +259,11 @@ function ajaxInUserManagement(){
 }
 
 function handleUploadImg() {
-    const fileInput = document.getElementById(this);
+    // console.log(this)
+    const fileInput = document.getElementById('fileInput');
     const img = document.getElementById('profile-img');
+    console.log(img)
+    console.log(fileInput)
 
     const file = fileInput.files[0];
 

@@ -1,4 +1,4 @@
-from config import DataBaseUtils
+from database import DataBaseUtils
 from models.Account import AccountModel, Account
 from models.Role import Role, RoleModel
 

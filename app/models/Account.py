@@ -1,4 +1,4 @@
-from config import DataBaseUtils
+from database import DataBaseUtils
 from flask import redirect
 
 class Account:

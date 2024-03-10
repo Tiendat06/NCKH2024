@@ -313,3 +313,9 @@
     transition: linear 0.2s;
 }
 
+/* xray */
+.xray-img__original--outer{
+    /* border: 0.5px solid #051f32; */
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
