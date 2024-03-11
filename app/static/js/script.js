@@ -67,22 +67,22 @@ function fullScreen(){
 
 }
 
-function handleUploadImg() {
-    const fileInput = document.getElementById('fileInput');
-    const img = document.getElementById('xray-img');
+// function handleUploadImg() {
+//     const fileInput = document.getElementById('fileInput');
+//     const img = document.getElementById('xray-img');
 
-    const file = fileInput.files[0];
+//     const file = fileInput.files[0];
 
-    if (file) {
-        const reader = new FileReader();
+//     if (file) {
+//         const reader = new FileReader();
 
-        reader.onload = function (e) {
-            img.src = e.target.result;
-        };
+//         reader.onload = function (e) {
+//             img.src = e.target.result;
+//         };
 
-        reader.readAsDataURL(file);
-    }
-}
+//         reader.readAsDataURL(file);
+//     }
+// }
 
 function downloadImage() {
     var imgElement = document.getElementById('xray-img--output');
@@ -260,21 +260,27 @@ function ajaxInUserManagement(){
 
 function handleUploadImg() {
     // console.log(this)
-    const fileInput = document.getElementById('fileInput');
-    const img = document.getElementById('profile-img');
+    const fileInput = document.getElementById('upload');
+    const img = document.getElementById('xray-img--output');
     console.log(img)
     console.log(fileInput)
 
     const file = fileInput.files[0];
 
-    if (file) {
-        const reader = new FileReader();
+    const file_path = fileInput.files[0].name;
+    console.log(file_path)
 
-        reader.onload = function (e) {
-            img.src = e.target.result;
-            console.log('hello')
-        };
+    // for(let i = 0; i < img.length; i++){
+        if (file) {
+            const reader = new FileReader();
+    
+            reader.onload = function (e) {
+                img.src = e.target.result;
+                console.log(e.target.result);
+                // console.log('hello')
+            };
+            reader.readAsDataURL(file);
+        }
+    // }
 
-        reader.readAsDataURL(file);
-    }
 }

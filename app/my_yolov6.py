@@ -11,6 +11,7 @@ from yolov6.data.data_augment import letterbox
 from yolov6.utils.nms import non_max_suppression
 
 class my_yolov6():
+    color_global = ''
     def __init__(self, weights, device, yaml, img_size, half):
         self.__dict__.update(locals())
 
@@ -55,9 +56,12 @@ class my_yolov6():
     
     @staticmethod
     def plot_box_and_label(image, lw, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255)):
+        global color_global;
         # Add one xyxy box to image with label
         p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        color_global = color
+        print(color)
         cv2.rectangle(image, p1, p2, color, thickness=lw, lineType=cv2.LINE_AA)
         if label:
             tf = max(lw - 1, 1)  # font thickness
@@ -121,33 +125,71 @@ class my_yolov6():
 
         return image, img_src
 
-    # work in here
+    # def infer(self, source, conf_thres=0.25, iou_thres=0.45, classes=None, agnostic_nms=False, max_det=1000):
+    #     img, img_src = self.precess_image(source, self.img_size, self.stride, self.half)
+    #     img = img.to(self.device)
+
+    #     if len(img.shape) == 3:
+    #         img = img[None]
+    #         # expand for batch dim
+
+    #     pred_results = self.model(img)
+    #     det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+    #     label_name = []
+    #     percentage = []
+    #     sick_name = []
+    #     if len(det):
+    #         det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
+    #         for *xyxy, conf, cls in reversed(det):
+    #             class_num = int(cls)  # integer class
+    #             label = f'{self.class_names[class_num]} {conf:.2f}'
+    #             self.plot_box_and_label(img_src, max(round(sum(img_src.shape) / 2 * 0.003), 2), xyxy, label, color=(255,0,0))
+    #             label_name.append(label)
+    #             percentage.append(f'{conf:.2f}')
+    #             sick_name.append(f'{self.class_names[class_num]}')
+    #     img_src = np.asarray(img_src)
+
+    #     return img_src, len(det), label_name, percentage, sick_name
+
     def infer(self, source, conf_thres=0.25, iou_thres=0.45, classes=None, agnostic_nms=False, max_det=1000):
-        # print("Source:",source)
+        global color_global;
         img, img_src = self.precess_image(source, self.img_size, self.stride, self.half)
         img = img.to(self.device)
 
         if len(img.shape) == 3:
-            img = img[None]
-            # expand for batch dim
+            img = img[None]  # expand for batch dim
 
         pred_results = self.model(img)
         det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
-        label_name = []
+        labels_vn = ['Phình động mạch chủ', 'Xẹp phổi', 'Vôi hóa', 'Tim to', 'Đông đặc phổi', 'Phổi kẽ', 'Thâm nhiễm', 'Mờ phổi', 'Khối u', 'Tổn thương khác', 'Tràn dịch màn phổi', 'Màng phổi dày', 'Tràn khí phế mạc', 'Xơ phổi']
+        label_mapping = {i: label for i, label in enumerate(labels_vn)}
+        labels = []  # List to store predicted labels
         percentage = []
         sick_name = []
+        sick_name_eng = []
+        colors = []
+
         if len(det):
             det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
             for *xyxy, conf, cls in reversed(det):
                 class_num = int(cls)  # integer class
                 label = f'{self.class_names[class_num]} {conf:.2f}'
+                # label_name = f'{label_mapping.get(class_num)} {conf:.2f}'
+                label_name = f'{self.class_names[class_num]} ({label_mapping.get(class_num)})  {conf:.2f}'
+                print(label.encode('utf-8').decode('utf-8'))
                 self.plot_box_and_label(img_src, max(round(sum(img_src.shape) / 2 * 0.003), 2), xyxy, label, color=(255,0,0))
-                label_name.append(label)
+                print(color_global)
+                labels.append(label_name)  # Append label to the list
                 percentage.append(f'{conf:.2f}')
                 sick_name.append(f'{self.class_names[class_num]}')
+                sick_name_eng.append(f'{label_mapping.get(class_num)}')
+                colors.append(color_global)
+                
+                # sick_name.append(label_name)
         img_src = np.asarray(img_src)
 
-        return img_src, len(det), label_name, percentage, sick_name
+        return img_src, len(det), labels, percentage, sick_name, sick_name_eng, colors
+    
 
     # def infer(self, source, conf_thres=0.25, iou_thres=0.45, classes=None, agnostic_nms=False, max_det=1000):
     #     img, img_src = self.precess_image(source, self.img_size, self.stride, self.half)
@@ -158,7 +200,7 @@ class my_yolov6():
 
     #     pred_results = self.model(img)
     #     det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
-    #     labels_vn = ['Phình động mạch chủ', 'Xẹp phổi', 'Vôi hóa', 'Tim to', 'Đông đặc phổi', 'Phổi kẽ', 'Thâm nhiễm', 'Mờ phổi', 'Khối u', 'Tổn thương khác', 'Tràn dịch màn phổi', 'Màng phổi dày', 'Tràn khí phế mạc', 'Xơ phổi']
+    #     labels_vn = ['Phình động mạch chủ', 'Xẹp phổi', 'Vôi hóa', 'Tim to', 'Đông đặc phổi', 'Phổi kẽ', 'Thâm nhiễm', 'Mờ phổi', 'Khối u', 'Tổn thương khác', 'Tràn dịch màng phổi', 'Màng phổi dày', 'Tràn khí phế mạc', 'Xơ phổi']
     #     label_mapping = {i: label for i, label in enumerate(labels_vn)}
     #     labels = []  # List to store predicted labels
 
@@ -166,8 +208,8 @@ class my_yolov6():
     #         det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
     #         for *xyxy, conf, cls in reversed(det):
     #             class_num = int(cls)  # integer class
-    #             label = f'{self.class_names[class_num]} {conf:.2f}'
-    #             label_name = f'{label_mapping.get(class_num)} {conf:.2f}'
+    #             label = f'{self.class_names[class_num]} {conf:.2f} '
+    #             label_name = f'{self.class_names[class_num]} ({label_mapping.get(class_num)})  {conf:.2f}'
     #             print(label.encode('utf-8').decode('utf-8'))
     #             self.plot_box_and_label(img_src, max(round(sum(img_src.shape) / 2 * 0.003), 2), xyxy, label, color=(255,0,0))
     #             labels.append(label_name)  # Append label to the list
