@@ -22,7 +22,7 @@
 
                 <div class="col-lg-3 col-md-6 user-items mb-5">
                     <div class="user-items__inner p-4" style="background-color: #fff; border-radius: 20px">
-                        <div class="user-items__delete mb-2 w-100" style="text-align: right;">
+                        <div data-id="{{user._user_id}}" data-name="{{user._name}}" data-toggle="modal" data-target="#delete-user" class="user-items__delete mb-2 w-100 btn-show-details-delete" style="text-align: right;">
                             <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
                         </div>
                         <div class="user-items__img text-center">
@@ -215,6 +215,41 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="submit" id="btn_edit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    delete modal -->
+    <div class="modal fade" tabindex="-1"  id="delete-user">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/user/delete" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- ID item đc click gắn ở đây, kéo lên mục delete chỉnh lại data-id -->
+                            <input type="hidden" name="userIdDelete" id="userIdDelete" value="">
+                            <input type="hidden" name="userNameDelete" id="userNameDelete" value="">
+
+                            <p id="userIdDelete-para"></p>
+
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Delete</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>

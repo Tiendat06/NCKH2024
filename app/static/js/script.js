@@ -256,6 +256,19 @@ function ajaxInUserManagement(){
 
         });
     });
+
+    $(document).ready(function() {
+        $('.btn-show-details-delete').on('click', function() {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+
+            $('#userIdDelete').attr('value', id);
+            $('#userNameDelete').attr('value', name);
+
+            $('#userIdDelete-para').html('Are you sure to delete '+ name + ' ?');
+
+        });
+    });
 }
 
 function handleUploadImg() {

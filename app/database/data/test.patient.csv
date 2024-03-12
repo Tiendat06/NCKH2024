@@ -1,0 +1,2 @@
+_id,patient_id,name,age,img,phone,PID,gender,address,date_created,dob
+65ed50374a07c72c2cfb99a1,PAT0000001,Hakim Ziech,30,https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png,0356779197,0123456789,Male,123 HCM City,2024-01-03,2020-02-03
