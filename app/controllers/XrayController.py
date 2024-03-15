@@ -45,9 +45,9 @@ class XrayController:
                     # print("Save = ", path_to_save)
                     # path_to_save = "../static/img/"+image.filename
                     static_folder_path = os.path.join(app.root_path, 'static')
-                    path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+                    path_to_save = (os.path.join(static_folder_path, 'img', image.filename))
 
-                    # print(str(path_to_save))
+                    print((path_to_save))
 
                     image.save(path_to_save)
 
@@ -142,17 +142,17 @@ class XrayController:
     #                     zip_data = zip(sick_name, real_percentage, sick_name_eng, colors);
     #                     doctor_zip_data = zip_data;
     #                     # print(real_percentage)
-    #                     return render_template("index.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
+    #                     return render_template("change_range.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
     #                     real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
     #                 else:
-    #                     return render_template('index.html',user_image = image.filename , 
+    #                     return render_template('change_range.html',user_image = image.filename , 
     #                     rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
     #             else:
     #                 # Nếu không có file thì yêu cầu tải file
-    #                 return render_template('index.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+    #                 return render_template('change_range.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
 
     #         except Exception as ex:
     #             print(ex)
-    #             return render_template('index.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+    #             return render_template('change_range.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
 
         
