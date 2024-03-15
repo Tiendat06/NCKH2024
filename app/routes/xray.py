@@ -18,3 +18,10 @@ def load_data():
     app = current_app
     print("Current app:",app)
     return XrayController().load_data(app)
+
+# [POST, AJAX]
+# @xray.route('/xray/ajax/changeRange', methods=['post'])
+# def load_data_ajax():
+#     global app;
+#     app = current_app
+#     return XrayController().load_data_ajax(app)

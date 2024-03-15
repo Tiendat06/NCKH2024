@@ -26,10 +26,10 @@
                             <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
                         </div>
                         <div class="user-items__img text-center">
-                            <label for="fileInput">
+                            <!-- <label for="fileInput"> -->
                                 <img style="width: 80px; height: 80px; border-radius: 50%; object-fit:cover" src="{{user._img_profile}}" id="profile-img" alt="" srcset="">
-                            </label>
-                            <input type="file" style="display: none;" accept="image/*" onchange="handleUploadImg()" name="fileImg" id="fileInput">
+                            <!-- </label> -->
+                            <!-- <input type="file" style="display: none;" accept="image/*" name="fileImg" id="fileInput"> -->
                         </div>
                         <div class="user-items__info mt-2 text-center">
                             <p class="text-dark" style="font-size: 18px;">{{user._name}}</p>
@@ -260,5 +260,5 @@
 
 <script>
     ajaxInUserManagement()
-    handleUploadImg()
+    //handleUploadImg()
 </script>

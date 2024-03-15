@@ -1,160 +1,3 @@
-<!-- <form method="post" class="xray d-flex w-100 flex-wrap p-5" enctype="multipart/form-data">
-    
-    <div class="xray-material d-flex flex-wrap w-100">
-        <div class="xray-inp-img col-lg-6 col-md-6 col-sm-12">
-            <div style="border-radius: 20px; border: 0.5px solid #ccc; overflow: hidden;" class="xray-inp-img--inner w-100">
-                <label for="fileInput" class="w-100">
-                    <img id="xray-img" style="width: 100%; height: 100%; z-index: 1; object-fit: cover" src="{{url_for('static', filename='img/xray-inp.jpg')}}" alt="" srcset="">
-                </label> 
-                <input type="file" name="fileImg" id="fileInput" style="display: none;" accept="image/*" onchange="handleUploadImg()">
-            </div>
-        </div>
-        
-        <div class="xray-out-info col-lg-6 col-md-6 col-sm-12">
-            <div style="background-color: #fff; border: 0.5px solid #ccc; border-radius: 20px" class="overflow-hidden xray-out-info--inner h-100 w-100">
-                <img id="xray-img--output" class="w-100 h-100" src="{{url_for('static', filename='img/bg_main_1.jpg')}}" alt="" srcset="">
-            </div>
-        </div>
-    </div>
-
-    <div class="xray-result col-lg-12 col-md-12 col-sm-12 mt-3">
-        <div class="xray-result__form">
-            <div class="form-group">
-                <input readonly type="text" class="form-control w-100 text-center" style="font-size: 1.5rem;">
-            </div>
-        </div>
-    </div>
-
-    <div class="xray-btn d-flex flex-wrap justify-content-end col-lg-12 col-md-12 col-sm-12 mt-3">
-
-        <div class="xray-btn-download mr-3">
-            <div onclick="downloadImage();" class="btn btn-info">Download</div>
-        </div>
-
-        <div class="xray-btn-checking">
-            <button class="btn btn-success">Checking</button>
-        </div>
-
-    </div>
-
-</form> -->
-
-
-
-<!-- <style>
-
-    #upload {
-        opacity: 0;
-    }
-
-    #upload-label {
-        position: absolute;
-        top: 50%;
-        left: 1rem;
-        transform: translateY(-50%);
-    }
-
-    .image-area {
-        border: 2px dashed rgba(255, 255, 255, 0.7);
-        padding: 1rem;
-        position: relative;
-    }
-
-    .image-area::before {
-        content: 'Uploaded image result';
-        color: #fff;
-        font-weight: bold;
-        text-transform: uppercase;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 0.8rem;
-        z-index: 1;
-    }
-
-    .image-area img {
-        z-index: 2;
-        position: relative;
-    }
-    body {
-        min-height: 100vh;
-        background-color: #757f9a;
-        background-image: linear-gradient(147deg, #757f9a 0%, #d7dde8 100%);
-    }
-</style>
-
-<header class="text-white text-center">
-    <h1 class="display-4">Hệ thống dự đoán</h1>
-    {% if msg %}
-    <div class='result_title'><b>Kết quả nhận diện</b></div>
-    {% if msg %}
-        {% if user_image %}
-            {% if ndet == 0 %}
-            <p class="font-italic text-white text-center">Kết quả nhận diện là bình thường</p>
-            {% else %}
-            {% endif %} -->
-            <!-- {{ url_for('static', filename='img/' + user_image) }} -->
-            <!-- <img id="imageResult" style="max-width: 560px; border-radius: 1rem"
-                src="{{ user_image }}?{{ rand }}" alt=""
-                class="img-fluid rounded shadow-sm mx-auto d-block">
-            {% endif %}
-    {% else %}
-        <img src="https://bootstrapious.com/i/snippets/sn-img-upload/image.svg" alt="Default Image" width="150"
-            class="mb-4">
-    {% endif %}
-
-
-    {% if ndet > 0 %}
-    <div class='result_id'><h1>Nhận diện được <span class='result_id_number'>{{ ndet }} loại bệnh</span></h1>
-    <br>
-    <ul class="list-group">
-        {% for item in label %}
-        <li class="list-group-item">{{ item }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    {% endif %}
-</header>
-
-
-<div class="row py-4">
-    <div class="col-lg-6 mx-auto">
-
-        <form action="/xray" method="POST" enctype="multipart/form-data" id='form'>
-            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-                <input id="upload" type="file" name="file" id="upload" style="display: none;" accept="image/*" class="form-control border-0">
-                <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
-                <div class="input-group-append">
-                    <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> 
-                        <i class="fa fa-cloud-upload mr-2 text-muted"></i>
-                        <small class="text-uppercase font-weight-bold text-muted">Choose file</small>
-                    </label>
-                </div>
-            </div>
-        </form>
-
-    </div>
-</div>
-
-<script>
-
-    $('#upload_button').click(function () {
-        $("#upload").trigger('click');
-    });
-
-    $('#upload').change(function () {
-        $('#form').submit();
-        $('#upload_hint').text('Đang tải file ' + $('#upload')[0].files[0].name + ' lên server...');
-    });
-
-
-</script> -->
-                <!-- https://res.cloudinary.com/dervs0fx5/image/upload/v1709830885/is2di2ihtdjkfwf0s2da.png 
-                https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png-->
-
-
 
 <div class="xray-material p-5 d-flex flex-wrap w-100">
     <div class="xray-title col-lg-12 col-md-12 col-sm-12 mb-3">
@@ -178,7 +21,10 @@
             </div>
             
             <div class="xray-img__predict bg-dark p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center" style="height: 400px;">
-                <img width=80% style="height: 90% !important; object-fit:contain" id="xray-img--output" class="profile-img text-center" src="{{user_image}}" alt="" srcset="">
+                <img width=80% style="height: 90% !important; object-fit:contain" id="xray-img--output" class="profile-img text-center" src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt="" srcset="">
+                <!-- {% if user_image %} -->
+                    <!-- <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}"> -->
+                <!-- {% endif %} -->
                 <!-- <img style="object-fit: contain; height: 100%; width: 100%" src="" class="d-none" id="xray-img--real" alt="" srcset=""> -->
             </div>
         
@@ -197,8 +43,14 @@
                         <li class="nav-item">
                           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Doctor Result</a>
                         </li>
-                      </ul>
+                    </ul>
+                    <div class="xray-slider w-100 form-group">
+                        <input class="w-100 form-control" type="range" name="range" id="myRange" min="0" max="1" step="0.1" value="{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}">
+                        <p>Value: <span id="rangeValue">{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}</span></p>
+                    </div>
                       <div class="tab-content w-100" id="myTabContent">
+                        
+                        {% if zip_data %}
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
                             <div class="text-light xray-predict__item w-100 mb-2">
@@ -214,21 +66,22 @@
                             </div>
                             {% endfor %}
                         </div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            {% for sick_name, percentage, sick_name_eng in zip_data %}
+                        <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            {% for sick_name, percentage, sick_name_eng, colors in doctor_zip_data %}
                             <div class="text-light xray-predict__item w-100 mb-2">
                                 <div class="xray-predict__title d-flex flex-wrap mb-2">
-                                    <p class="mb-0 w-75 text-left">{{sick_name_eng}} ({{sick_name}})</p>
-                                    <p class="mb-0 w-25 text-right">{{percentage}}%</p>
+                                    <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
+                                    <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
                                 </div>
                                 <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
-                                    <div style="" class="xray-percent h-100 bg-danger w-75">
-
+                                    <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
+                
                                     </div>
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
                       </div>
                 </div>
             
@@ -291,34 +144,7 @@
 
 
 <script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('form');
-        const overlay = document.getElementById('overlay');
-        
-      
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Ngăn chặn form submit mặc định
-            //overlay.style.display = 'block'; // Hiển thị overlay
-            $('#overlay').removeClass('d-none')
-            
-            // Gửi yêu cầu AJAX hoặc xử lý form theo cách của bạn
-            // Trong ví dụ này, tôi giả định rằng sau 2 giây, form trả về dữ liệu
-            setTimeout(function() {
-                //overlay.style.display = 'none'; // Ẩn overlay
-            $('#overlay').addClass('d-none')
-
-                // Xử lý dữ liệu trả về từ form
-            }, 100000);
-        });
-      });
-      
-
-    $('#checking').click(function () {
-        //$('overlay').removeClass('d-none')
-        $('#form').submit();
-        //$('#upload_hint').text('Đang tải file ' + $('#upload')[0].files[0].name + ' lên server...');
-    });
-
-
+    jsInXray();
+    //changeRange();
+    //activeOverlay();
 </script>

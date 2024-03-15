@@ -76,9 +76,10 @@ class XrayController:
                             # real_percentage.append(int(percentage[i]))
                         
                         zip_data = zip(sick_name, real_percentage, sick_name_eng, colors);
+                        doctor_zip_data = zip_data;
                         # print(real_percentage)
-                        return render_template("index.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name,
-                        real_percentage = real_percentage, zip_data = zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
+                        return render_template("index.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
+                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
                         return render_template('index.html',user_image = image.filename , 
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
@@ -93,5 +94,65 @@ class XrayController:
 
         else:
             # Nếu là GET thì hiển thị giao diện upload
-            return render_template('index.html', content = 'index', page = 'xray' , user_image = '/static/img/xray-img-check.png')
+            return render_template('index.html', content = 'index', page = 'xray')
+        
+
+    # [POST, AJAX]
+    # def load_data_ajax(self, app):
+    #     ndet = 0
+
+    #     if request.method == "POST": 
+    #         try:
+    #             image = request.files['file']
+    #             data = request.get_json();
+    #             path_ = data.get('img_link');
+    #             conf_thres_ajax = data.get('range');
+
+    #             if image:
+    #                 static_folder_path = os.path.join(app.root_path, 'static')
+    #                 path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+
+    #                 # print(str(path_to_save))
+
+    #                 # image.save(path_to_save)
+
+    #                 # Convert image to dest size tensor
+    #                 frame = cv2.imread(path_to_save)
+
+    #                 # frame, ndet, label_name, percentage, sick_name = self.yolov6_model.infer(frame, conf_thres=0.2, iou_thres=0.4)
+    #                 frame, ndet, label_name, percentage, sick_name, sick_name_eng, colors = self.yolov6_model.infer(frame, conf_thres=conf_thres_ajax, iou_thres=0.4)
+
+    #                 if ndet!=0:
+    #                     cv2.imwrite(path_to_save, frame)
+
+    #                     # # Trả về kết quả
+    #                     # print("img: ",image)
+    #                     # Chuyển đổi mảng NumPy thành định dạng hình ảnh
+    #                     # image_data = cv2.imencode('.png', frame)[1].tobytes()
+
+    #                     # res = cloudinary.uploader.upload(image_data);
+    #                     # path_ = res['secure_url'];
+    #                     # print(path_)
+    #                     real_percentage = []
+    #                     for i in range(len(percentage)):
+    #                         float_percentage = float((percentage[i])) * 100
+    #                         # print(float_percentage)
+    #                         real_percentage.append((round(float_percentage, 2)))
+                        
+    #                     zip_data = zip(sick_name, real_percentage, sick_name_eng, colors);
+    #                     doctor_zip_data = zip_data;
+    #                     # print(real_percentage)
+    #                     return render_template("index.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
+    #                     real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
+    #                 else:
+    #                     return render_template('index.html',user_image = image.filename , 
+    #                     rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
+    #             else:
+    #                 # Nếu không có file thì yêu cầu tải file
+    #                 return render_template('index.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+
+    #         except Exception as ex:
+    #             print(ex)
+    #             return render_template('index.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+
         

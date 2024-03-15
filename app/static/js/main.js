@@ -1,3 +1,4 @@
+
 function collapsedSideBar(){
     document.getElementById('toggleButton').addEventListener('click', function() {
         const specificSidebar = document.getElementById('header-sidebar');
@@ -67,22 +68,22 @@ function fullScreen(){
 
 }
 
-// function handleUploadImg() {
-//     const fileInput = document.getElementById('fileInput');
-//     const img = document.getElementById('xray-img');
+function handleUploadImg() {
+    const fileInput = document.getElementById('fileInput');
+    const img = document.getElementById('xray-img');
 
-//     const file = fileInput.files[0];
+    const file = fileInput.files[0];
 
-//     if (file) {
-//         const reader = new FileReader();
+    if (file) {
+        const reader = new FileReader();
 
-//         reader.onload = function (e) {
-//             img.src = e.target.result;
-//         };
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
 
-//         reader.readAsDataURL(file);
-//     }
-// }
+        reader.readAsDataURL(file);
+    }
+}
 
 function downloadImage() {
     var imgElement = document.getElementById('xray-img--output');
@@ -174,7 +175,7 @@ function ajaxInUserManagement(){
     //         });
     //     });
     // });
-
+    
     $(document).ready(function() {
         $('#btn_edit').click(function() {
             let name_edit = $('#full_name_edit').val();
@@ -271,6 +272,77 @@ function ajaxInUserManagement(){
     });
 }
 
+function jsInXray(){
+
+    $('#checking').click(function () {
+        $('#form').submit();
+    });
+
+    $(document).ready(function() {
+        $('#myRange').on('input', function() {
+            let img_link = $('#img_link_predict').val();
+            let range = $('#myRange').val();
+            $('#rangeValue').text(range);
+            console.log(img_link)
+            console.log(range)
+
+            $.ajax({
+                url: '/xray/ajax/changeRange',
+                type: 'POST',
+
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    range: range, 
+                    img_link: img_link 
+                }),
+
+            }).done((response)=>{
+                $('#myTabContent').html(response)
+                // success: function(response) {
+                // },
+                // error: function(error) {
+                //     console.log(error);
+                // }
+            }).fail((error)=>{
+                console.log(error)
+            })
+
+
+        });
+    });
+
+    // overlay
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form');
+        const overlay = document.getElementById('overlay');
+        
+      
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn form submit mặc định
+            //overlay.style.display = 'block'; // Hiển thị overlay
+            $('#overlay').removeClass('d-none')
+
+            setTimeout(function() {
+                //overlay.style.display = 'none'; // Ẩn overlay
+            $('#overlay').addClass('d-none')
+
+                // Xử lý dữ liệu trả về từ form
+            }, 100000);
+        });
+    });
+
+}
+
+// function changeRange(){
+    // var rangeInput = document.getElementById("myRange");
+
+    // rangeInput.addEventListener("input", function() {
+    //     var value = rangeInput.value;
+
+    //     document.getElementById("rangeValue").textContent = value;  
+    // });       
+// }
+
 function handleUploadImg() {
     // console.log(this)
     const fileInput = document.getElementById('upload');
@@ -297,3 +369,23 @@ function handleUploadImg() {
     // }
 
 }
+
+
+            // $.ajax({
+            //     url: '/xray/ajax/changeRange',
+            //     type: 'POST',
+            //     contentType: 'application/json',
+            //     data: JSON.stringify({
+            //         img_link: img_link,
+            //         range: range,
+
+            //     }),
+            //     success: function(response) {
+            //         $('#myTabContent').html(response)
+            //         //$('#error_editing_user_outer').removeClass('d-none')
+                    
+            //     },
+            //     error: function(error) {
+            //         console.log(error);
+            //     }
+            // });
