@@ -1,44 +1,61 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<div class="xray-img__original--outer pt-2 pb-2 col-lg-1 col-md-2 col-sm-2">
+    <div style="border-radius: 10px; overflow: hidden;border: 2px solid #387181; cursor: pointer;" class="xray-img--small mb-3 w-100">
+        <img style="height: 60px; object-fit:cover" class="profile-img" src="https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png" alt="" srcset="">
+    </div>
+</div>
 
-{% if zip_data %}
-<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
-    <div class="text-light xray-predict__item w-100 mb-2">
-        <div class="xray-predict__title d-flex flex-wrap mb-2">
-            <p class="mb-0 w-75 text-left text-secondary">
-                {{sick_name_eng}} ({{sick_name}})
-            </p>
-            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
-        </div>
-        <div style="
-        height: 5px;
-        background-color: #ccc;
-        border-radius: 10px;
-        overflow: hidden;
-      " class="xray-percent--outer w-100">
-            <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100"></div>
+<div class="xray-img__predict bg-dark p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center" style="height: 400px;">
+    <img width=80% style="height: 90% !important; object-fit:contain" id="xray-img--output" class="profile-img text-center" src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt="" srcset="">
+    {% if user_image %}
+        <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}">
+    {% endif %}
+</div>
+
+<div style="height: 400px" class="xray-predict overflow-scroll col-lg-3 col-md-12 col-sm-12">
+    <div class="xray-predict__btn d-flex flex-wrap text-center w-100">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">AI Result</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Doctor Result</a>
+            </li>
+        </ul>
+
+        <div class="tab-content w-100" id="myTabContent">
+            
+            {% if zip_data %}
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
+                <div class="text-light xray-predict__item w-100 mb-2">
+                    <div class="xray-predict__title d-flex flex-wrap mb-2">
+                        <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
+                        <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                    </div>
+                    <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
+                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
+    
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                {% for sick_name, percentage, sick_name_eng, colors in doctor_zip_data %}
+                <div class="text-light xray-predict__item w-100 mb-2">
+                    <div class="xray-predict__title d-flex flex-wrap mb-2">
+                        <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
+                        <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                    </div>
+                    <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
+                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
+    
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </div>
-    {% endfor %}
 </div>
-<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    {% for sick_name, percentage, sick_name_eng, colors in doctor_zip_data %}
-    <div class="text-light xray-predict__item w-100 mb-2">
-        <div class="xray-predict__title d-flex flex-wrap mb-2">
-            <p class="mb-0 w-75 text-left text-secondary">
-                {{sick_name_eng}} ({{sick_name}})
-            </p>
-            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
-        </div>
-        <div style="
-        height: 5px;
-        background-color: #ccc;
-        border-radius: 10px;
-        overflow: hidden;
-      " class="xray-percent--outer w-100">
-            <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100"></div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}

@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, request, url_for, current_app
+from flask import render_template, session, redirect, request, url_for, current_app, sessions
 from models.Account import AccountModel
 import os
 from random import random
@@ -48,6 +48,7 @@ class XrayController:
                     path_to_save = (os.path.join(static_folder_path, 'img', image.filename))
 
                     print((path_to_save))
+                    session['path_to_save'] = path_to_save
 
                     image.save(path_to_save)
 
@@ -68,6 +69,7 @@ class XrayController:
                         res = cloudinary.uploader.upload(image_data);
                         path_ = res['secure_url'];
                         print(path_)
+                        session['path_predict'] = path_;
                         real_percentage = []
                         for i in range(len(percentage)):
                             float_percentage = float((percentage[i])) * 100
@@ -103,14 +105,19 @@ class XrayController:
 
     #     if request.method == "POST": 
     #         try:
-    #             image = request.files['file']
-    #             data = request.get_json();
+    #             data = request.form;
+    #             # image = request.files['file']
+    #             # print(image.filename)
     #             path_ = data.get('img_link');
     #             conf_thres_ajax = data.get('range');
+    #             print(path_)
+    #             print(conf_thres_ajax)
 
-    #             if image:
-    #                 static_folder_path = os.path.join(app.root_path, 'static')
-    #                 path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+    #             if data:
+    #                 # static_folder_path = os.path.join(app.root_path, 'static')
+    #                 # path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+    #                 path_to_save = session.get('path_to_save', 'Guest')
+    #                 print(path_to_save)
 
     #                 # print(str(path_to_save))
 
@@ -145,7 +152,7 @@ class XrayController:
     #                     return render_template("change_range.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
     #                     real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
     #                 else:
-    #                     return render_template('change_range.html',user_image = image.filename , 
+    #                     return render_template('change_range.html',user_image = path_ , 
     #                     rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
     #             else:
     #                 # Nếu không có file thì yêu cầu tải file
@@ -155,4 +162,63 @@ class XrayController:
     #             print(ex)
     #             return render_template('change_range.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
 
-        
+    def load_data_ajax(self, app):
+        ndet = 0
+
+        if request.method == "POST": 
+            try:
+                data = request.form;
+                # image = request.files['file']
+                # print(image.filename)
+                
+                if data:
+                    path_ = data.get('img_link');
+                    conf_thres_ajax = float(data.get('range'));
+                    print(path_)
+                    print(conf_thres_ajax)
+                    # static_folder_path = os.path.join(app.root_path, 'static')
+                    # path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+                    path_to_save = session.get('path_to_save')
+                    print(path_to_save)
+
+                    # Tìm đường dẫn tương đối của thư mục static
+                    static_path = os.path.relpath(path_to_save, os.path.join(os.getcwd(), 'app'))
+
+                    path_ = session.get('path_predict');
+
+                    # print(str(path_to_save))
+
+                    # Convert image to dest size tensor
+                    frame = cv2.imread(path_to_save)
+
+                    # frame, ndet, label_name, percentage, sick_name = self.yolov6_model.infer(frame, conf_thres=0.2, iou_thres=0.4)
+                    frame, ndet, label_name, percentage, sick_name, sick_name_eng, colors = self.yolov6_model.infer(frame, conf_thres=conf_thres_ajax, iou_thres=0.4)
+                    zip_data = []
+                    doctor_zip_data = []
+
+                    if ndet!=0:
+                        cv2.imwrite(path_to_save, frame)
+
+                        real_percentage = []
+                        for i in range(len(percentage)):
+                            float_percentage = float((percentage[i])) * 100
+                            real_percentage.append((round(float_percentage, 2)))
+                        
+                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
+                        doctor_zip_data = zip_data;
+
+                        return render_template("/xray/change_range.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
+                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
+                    else:
+                        return render_template('/xray/change_range.html',user_image = session.get('path_predict') , 
+                        rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
+                else:
+                    # Nếu không có dữ liệu, trả về thông báo lỗi
+                    return render_template('/xray/change_range.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+
+            except Exception as ex:
+                # Ghi log lỗi vào console hoặc tệp log
+                print("Error:", ex)
+                # Trả về một thông báo lỗi cho client
+                return render_template('/xray/change_range.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+

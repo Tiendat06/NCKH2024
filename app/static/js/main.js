@@ -280,9 +280,19 @@ function jsInXray(){
 
     $(document).ready(function() {
         $('#myRange').on('input', function() {
+            var formData = new FormData();
+
+            // var fileInput = document.getElementById('upload');
+            // if (fileInput.files.length > 0) {
+            //     var file = fileInput.files[0];
+            //     console.log(file.name)
+            //     formData.append('file', file);
+            // }
             let img_link = $('#img_link_predict').val();
             let range = $('#myRange').val();
             $('#rangeValue').text(range);
+            formData.append('img_link', img_link);
+            formData.append('range', range);
             console.log(img_link)
             console.log(range)
 
@@ -290,14 +300,12 @@ function jsInXray(){
                 url: '/xray/ajax/changeRange',
                 type: 'POST',
 
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    range: range, 
-                    img_link: img_link 
-                }),
+                processData: false,
+                contentType: false,
+                data: formData
 
             }).done((response)=>{
-                $('#myTabContent').html(response)
+                $('#xray-general__predict').html(response)
                 // success: function(response) {
                 // },
                 // error: function(error) {
