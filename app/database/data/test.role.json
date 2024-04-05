@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "65dd997fb863c58337dd006c"
+  },
+  "role_id": "ROL0000001",
+  "role_name": "Manager"
+},
+{
+  "_id": {
+    "$oid": "65dd999db863c58337dd006d"
+  },
+  "role_id": "ROL0000002",
+  "role_name": "Staff"
+},
+{
+  "_id": {
+    "$oid": "65dd99fbb863c58337dd006e"
+  },
+  "role_id": "ROL0000003",
+  "role_name": "Lock"
+}]

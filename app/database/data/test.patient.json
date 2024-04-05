@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "65ed50374a07c72c2cfb99a1"
+  },
+  "patient_id": "PAT0000001",
+  "name": "Hakim Ziech",
+  "age": "30",
+  "img": "https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png",
+  "phone": "0356779197",
+  "PID": "0123456789",
+  "gender": "Male",
+  "address": "123 HCM City",
+  "date_created": "2024-01-03",
+  "dob": "2020-02-03"
+}]

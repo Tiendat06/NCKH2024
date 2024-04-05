@@ -1,93 +1,120 @@
-
 <div class="xray-material p-5 d-flex flex-wrap w-100">
     <div class="xray-title col-lg-12 col-md-12 col-sm-12 mb-3">
         <h5>X-ray management</h5>
     </div>
-    
+
     <div class="xray-btn col-lg-12 col-md-12 col-sm-12">
-        <button style="float: right;" type="submit" class="btn mb-4 btn-primary">
+        <button data-toggle="modal" data-target="#add-record" style="float: right" type="submit"
+            class="btn mb-4 btn-primary">
             <i class="fa-solid fa-user-gear"></i>
-            Add Customer
+            Add Record
         </button>
     </div>
     <form id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2" enctype="multipart/form-data">
-    
-        <div style="background-color: #fff;" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap ">
-
-            <div class="xray-slider w-100 form-group d-flex flex-wrap justify-content-end" style="float: right;">
-                <input style="" class="w-25 form-control col-lg-12 col-md-12 col-sm-12 " type="range" name="range" id="myRange" min="0" max="1" step="0.1" value="{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}">
-                <p class="col-lg-12 col-md-12 col-sm-12 mt-2 d-flex flex-wrap justify-content-end">Value: <span id="rangeValue" class="ml-1">{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}</span></p>
+        <div style="background-color: #fff" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
+            <div class="xray-slider w-100 form-group d-flex flex-wrap justify-content-end" style="float: right">
+                <input style="" class="w-25 form-control col-lg-12 col-md-12 col-sm-12" type="range" name="range"
+                    id="myRange" min="0" max="1" step="0.1"
+                    value="{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}" />
+                <p class="col-lg-12 col-md-12 col-sm-12 mt-2 d-flex flex-wrap justify-content-end">
+                    Value:
+                    <span id="rangeValue" class="ml-1">{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}</span>
+                </p>
             </div>
-    
-            <div class="xray-general__predict col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap" id="xray-general__predict">
+
+            <div class="xray-general__predict col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap"
+                id="xray-general__predict">
                 <div class="xray-img__original--outer pt-2 pb-2 col-lg-1 col-md-2 col-sm-2">
-                    <div style="border-radius: 10px; overflow: hidden;border: 2px solid #387181; cursor: pointer;" class="xray-img--small mb-3 w-100">
-                        <img style="height: 60px; object-fit:cover" class="profile-img" src="https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png" alt="" srcset="">
+                    <div style="
+                        border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #387181;
+                        cursor: pointer;
+                        " class="xray-img--small mb-3 w-100">
+                        <img style="height: 60px; object-fit: cover" class="profile-img"
+                            src="https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png"
+                            alt="" srcset="" />
                     </div>
                 </div>
 
-                <div class="xray-img__predict bg-dark p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center" style="height: 400px;">
-                    <img width=80% style="height: 90% !important; object-fit:contain" id="xray-img--output" class="profile-img text-center" src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt="" srcset="">
+                <div class="xray-img__predict bg-dark p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center"
+                    style="height: 400px">
+                    <img width="80%" style="height: 90% !important; object-fit: contain" id="xray-img--output"
+                        class="profile-img text-center"
+                        src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
+                        alt="" srcset="" />
                     {% if user_image %}
-                        <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}">
+                    <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
                     {% endif %}
                     <!-- <img style="object-fit: contain; height: 100%; width: 100%" src="" class="d-none" id="xray-img--real" alt="" srcset=""> -->
                 </div>
-            
+
                 <div style="height: 400px" class="xray-predict overflow-scroll col-lg-3 col-md-12 col-sm-12">
                     <div class="xray-predict__btn d-flex flex-wrap text-center w-100">
-                        <!-- <div style="cursor: pointer; border-top-left-radius: 10px; height: 10px" class="xray-predict__AI bg-dark p-2 pb-4 col-lg-6 col-md-6 col-sm-6">
-                            <p style="font-size: 13px;" class="mb-0 text-light">AI Result</p>
-                        </div>
-                        <div style="cursor: pointer; border-top-right-radius: 10px; height: 10px" class="xray-predict__doctor p-2 pb-4 col-lg-6 col-md-6 col-sm-6">
-                            <p style="font-size: 13px;" class="mb-0 text-dark">Doctor Result</p>
-                        </div> -->
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">AI Result</a>
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                    aria-controls="home" aria-selected="true">AI Result</a>
                             </li>
                             <li class="nav-item">
-                              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Doctor Result</a>
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                                    aria-controls="profile" aria-selected="false">Doctor Result</a>
                             </li>
                         </ul>
-    
+
                         <div class="tab-content w-100" id="myTabContent">
-                            
                             {% if zip_data %}
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
                                 <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
-                                        <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
+                                        <p class="mb-0 w-75 text-left text-secondary">
+                                            {{sick_name_eng}} ({{sick_name}})
+                                        </p>
                                         <div>
-                                            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
-                                            <i style="font-size: 18px;" class="fa-solid fa-circle-minus text-danger"></i>
+                                            <p class="mb-0 w-25 text-right text-secondary">
+                                                {{percentage}}%
+                                            </p>
+                                            <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i>
                                         </div>
                                     </div>
-                                    <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
-                                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
-                    
-                                        </div>
+                                    <div style="
+                                        height: 5px;
+                                        background-color: #ccc;
+                                        border-radius: 10px;
+                                        overflow: hidden;
+                                        " class="xray-percent--outer w-100">
+                                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}"
+                                            class="xray-percent h-100"></div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
-                            <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    
-                                {% for sick_name, percentage, sick_name_eng, colors in doctor_zip_data %}
-                                <div style="cursor: pointer;" class="text-light xray-predict__item w-100 mb-2">
+
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                {% for sick_name, percentage, sick_name_eng, colors in
+                                doctor_zip_data %}
+                                <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
-                                        <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
+                                        <p class="mb-0 w-75 text-left text-secondary">
+                                            {{sick_name_eng}} ({{sick_name}})
+                                        </p>
                                         <!-- <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p> -->
                                         <div>
-                                            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
-                                            <i style="font-size: 18px;" class="fa-solid fa-circle-minus text-danger"></i>
+                                            <p class="mb-0 w-25 text-right text-secondary">
+                                                {{percentage}}%
+                                            </p>
+                                            <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i>
                                         </div>
                                     </div>
-                                    <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
-                                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
-                    
-                                        </div>
+                                    <div style="
+                                        height: 5px;
+                                        background-color: #ccc;
+                                        border-radius: 10px;
+                                        overflow: hidden;
+                                        " class="xray-percent--outer w-100">
+                                        <div style="width: {{ percentage }}%; background-color: rgb{{colors}}"
+                                            class="xray-percent h-100"></div>
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -95,68 +122,129 @@
                             {% endif %}
                         </div>
                     </div>
-                
-                    <!-- <div style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; height: 325px" class="bg-dark xray-predict__info col-lg-12 col-md-12 col-sm-12 p-3">
-                        {% for sick_name, percentage, sick_name_eng in zip_data %}
-                        <div class="text-light xray-predict__item w-100 mb-2">
-                            <div class="xray-predict__title d-flex flex-wrap mb-2">
-                                <p class="mb-0 w-75 text-left">{{sick_name_eng}} ({{sick_name}})</p>
-                                <p class="mb-0 w-25 text-right">{{percentage}}%</p>
-                            </div>
-                            <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
-                                <div style="" class="xray-percent h-100 bg-danger w-75">
-            
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-    
-                    </div> -->
+
                 </div>
             </div>
 
             <div class="xray-btn mt-5 d-flex flex-wrap justify-content-end col-lg-12 col-md-12 col-sm-12 mt-3">
-    
                 <div class="xray-btn-download mr-3">
                     <label for="upload" onclick="" id="upload_button" class="btn btn-info">Upload</label>
-                    <input id="upload" type="file" name="file" style="display: none;" accept="image/*" class="form-control" onchange="handleUploadImg()">
+                    <input id="upload" type="file" name="file" style="display: none" accept="image/*"
+                        class="form-control" onchange="handleUploadImg()" />
                 </div>
 
                 <div class="xray-btn-checking">
                     <button id="checking" class="btn btn-success">Checking</button>
                 </div>
-        
             </div>
         </div>
     </form>
-    <!-- <div class="preloader overlay" style="display:block;">
-        <div style="transform: translateX(100%) !important;" class="loader"></div>
 
-        <div class="loading-text enter-loading">Đang thực hiện tính toán</div>
-    </div>
-</div> -->
-
-<!-- <div class="loader-wrapper w-100 position-fixed top-0 bottom-0" style="right: 0; left: 0;">
-    <div class="loader"></div>
-</div>
-
-<div class="overlay d-none">
-
-</div> -->
-<div id="overlay" class="overlay d-none">
-    <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
-        <div class="w-100 text-center" style="height: 200px;">
-            <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">
-                <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px"></div>
+    <div id="overlay" class="overlay d-none">
+        <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
+            <div class="w-100 text-center" style="height: 200px">
+                <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">
+                    <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px"></div>
+                </div>
+                <div style="font-size: 25px"
+                    class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">
+                    Đang thực hiện tính toán
+                </div>
             </div>
-            <div style="font-size: 25px;" class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">Đang thực hiện tính toán</div>
         </div>
     </div>
+
+    <!--    add modal -->
+    <div class="modal fade" id="add-record">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form onsubmit="return false" method="post">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                            <li class="nav-item">
+                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Record</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Patient</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                            </li>
+                          </ul>
+                          <div class="tab-content" id="myTabContent">
+                            <!-- add record -->
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="full_name_add">Full name</label>
+                                        <input class="form-control" type="text" name="full_name_add" id="full_name_add"
+                                            placeholder="Full name" required />
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label for="gender_add">Gender</label>
+                                        <select class="form-control" name="gender_add" id="gender_add" required>
+                                            <option value="">--Choose gender--</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label for="email_add">Email</label>
+                                        <input class="form-control" type="email" name="email_add" id="email_add"
+                                            placeholder="Email" required />
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label for="dob_add">Birthday</label>
+                                        <input class="form-control" type="date" name="dob_add" id="dob_add" required />
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label for="phone_add">Phone number</label>
+                                        <input class="form-control" type="number" name="phone_add" id="phone_add"
+                                            placeholder="Phone number" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- add patient if not exist -->
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">hello 2</div>
+
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">hello 3</div>
+                          </div>
+                        
+                    </div>
+
+                    <div id="error_adding_user_outer" style="width: 90%"
+                        class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_adding_user" class="login-form__para mb-0 text-danger"></p>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button id="btn_add" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jsInXray();
+        //changeRange();
+        //activeOverlay();
+    </script>
 </div>
-
-
-<script>
-    jsInXray();
-    //changeRange();
-    //activeOverlay();
-</script>

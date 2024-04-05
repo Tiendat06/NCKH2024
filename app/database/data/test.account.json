@@ -1,0 +1,135 @@
+[{
+  "_id": {
+    "$oid": "65dd98e7b27da34f3e054da9"
+  },
+  "password": "123456",
+  "acc_id": "ACC0000001",
+  "username": "",
+  "role_id": "ROL0000001"
+},
+{
+  "_id": {
+    "$oid": "65de0fac6ae44f2220f296ae"
+  },
+  "password": "1234567862",
+  "acc_id": "ACC0000002",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de0fbd6ae44f2220f296b3"
+  },
+  "password": "741045852693",
+  "acc_id": "ACC0000003",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de0fdf6ae44f2220f296b8"
+  },
+  "password": "654424984984",
+  "acc_id": "ACC0000004",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de0ff16ae44f2220f296bd"
+  },
+  "password": "sadasdasdsa",
+  "acc_id": "ACC0000005",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de10016ae44f2220f296c2"
+  },
+  "password": "54334523234234",
+  "acc_id": "ACC0000006",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de10166ae44f2220f296c7"
+  },
+  "password": "54656345345234",
+  "acc_id": "ACC0000007",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de10306ae44f2220f296cc"
+  },
+  "password": "67665653452323",
+  "acc_id": "ACC0000008",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de105b6ae44f2220f296d3"
+  },
+  "password": "234242343442",
+  "acc_id": "ACC0000009",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65de107d6ae44f2220f296d8"
+  },
+  "password": "4556565645654",
+  "acc_id": "ACC0000010",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65deab965c83428ccde7b295"
+  },
+  "password": "7418529630",
+  "acc_id": "ACC0000011",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65deb397572d7927ef897537"
+  },
+  "password": "tiendat79197@gmail.com",
+  "acc_id": "ACC0000012",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65deb4a2c9eb5dead0d56041"
+  },
+  "password": "tiendat79197@gmail.com",
+  "acc_id": "ACC0000013",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65deba4b735c8229669e4889"
+  },
+  "password": null,
+  "acc_id": "ACC0000014",
+  "username": "",
+  "role_id": "ROL0000002"
+},
+{
+  "_id": {
+    "$oid": "65debe382a3018bd070b4809"
+  },
+  "password": null,
+  "acc_id": "ACC0000016",
+  "username": "",
+  "role_id": "ROL0000002"
+}]

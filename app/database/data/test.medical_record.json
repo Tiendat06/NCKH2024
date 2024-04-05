@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "65ed55514a07c72c2cfb99a8"
+  },
+  "m_rec_id": "MDR0000001",
+  "patient_id": "PAT0000001",
+  "img_before": "https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png",
+  "img_last": "https://res.cloudinary.com/dervs0fx5/image/upload/v1709830885/is2di2ihtdjkfwf0s2da.png",
+  "medical_predict": "Viem Phoi",
+  "percentage": "0.2",
+  "date_created": "2024-02-03",
+  "doctor_predict": "Viem Phoi"
+}]
