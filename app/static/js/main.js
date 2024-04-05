@@ -176,6 +176,7 @@ function ajaxInUserManagement(){
     //     });
     // });
     
+    // edit
     $(document).ready(function() {
         $('#btn_edit').click(function() {
             let name_edit = $('#full_name_edit').val();
@@ -270,6 +271,29 @@ function ajaxInUserManagement(){
 
         });
     });
+
+    // delete
+    $(document).ready(function() {
+        $('#btn-delete').click(function (){
+            var id = $("#userIdDelete").val();
+
+            $.ajax({
+                url: '/user/delete',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: id
+                }),
+                success: function(response){
+                    $('#error_delete_user').html(response)
+                    $('#error_delete_user_outer').removeClass('d-none')
+                },
+                error: function(error){
+                    console.log(error)
+                }
+            })
+        })
+    })
 }
 
 function jsInXray(){

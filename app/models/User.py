@@ -193,6 +193,18 @@ class UserModel(DataBaseUtils):
             return True
         return False
 
+    def delete_user(self, id):
+        user_data = self.__conn.get_collection('user').find_one({'user_id': id});
+        acc_id = user_data.get('acc_id');
+
+        result = self.__conn.get_collection('user').delete_one({'user_id': id});
+        result_2 = self.__conn.get_collection('account').delete_one({'acc_id': acc_id});
+        if(result and result_2):
+            return 'Delete Successfully';
+        return 'Delete Failed';
+        
+
+
     def AUTO_USE_ID(self):
         result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #desc
 

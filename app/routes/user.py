@@ -23,5 +23,9 @@ def add_user():
 def edit_user():
     return UserController().edit_user()
 
+# [POST, AJAX]
+@user.route('/user/delete', methods=['post'])
+def delete_user():
+    return UserController().delete_user()
 
 

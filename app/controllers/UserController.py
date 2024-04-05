@@ -130,3 +130,19 @@ class UserController:
             return jsonify(result.get('fail'));
 
         return jsonify(result.get('success'));
+
+    # [POST, AJAX]
+    def delete_user(self):
+        user_model = self.user;
+        result = {
+            'fail': 'Delete failed !',
+            'success': 'Delete successfully !'
+        }
+        data = request.get_json();
+        id = data.get('id');
+        user_data = user_model.delete_user(id);
+        if not user_data:
+            return jsonify(result.get('fali'));
+
+        return jsonify(result.get('success'))
+        

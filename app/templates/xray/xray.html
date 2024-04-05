@@ -56,10 +56,13 @@
                             {% if zip_data %}
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
-                                <div class="text-light xray-predict__item w-100 mb-2">
+                                <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
                                         <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
-                                        <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                                        <div>
+                                            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                                            <i style="font-size: 18px;" class="fa-solid fa-circle-minus text-danger"></i>
+                                        </div>
                                     </div>
                                     <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
                                         <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">
@@ -72,10 +75,14 @@
                             <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                     
                                 {% for sick_name, percentage, sick_name_eng, colors in doctor_zip_data %}
-                                <div class="text-light xray-predict__item w-100 mb-2">
+                                <div style="cursor: pointer;" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
                                         <p class="mb-0 w-75 text-left text-secondary">{{sick_name_eng}} ({{sick_name}})</p>
-                                        <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                                        <!-- <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p> -->
+                                        <div>
+                                            <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p>
+                                            <i style="font-size: 18px;" class="fa-solid fa-circle-minus text-danger"></i>
+                                        </div>
                                     </div>
                                     <div style="height: 5px; background-color: #ccc; border-radius: 10px; overflow: hidden" class="xray-percent--outer w-100">
                                         <div style="width: {{ percentage }}%; background-color: rgb{{colors}}" class="xray-percent h-100">

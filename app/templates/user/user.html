@@ -227,7 +227,7 @@
     <div class="modal fade" tabindex="-1"  id="delete-user">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/user/delete" method="post">
+                <form action="" onsubmit="return false" method="post">
 
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -247,9 +247,15 @@
                         </div>
                     </div>
 
+                    <div id="error_delete_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_delete_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
+                    </div>
+
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="submit" id="btn-delete" class="btn btn-primary">Delete</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>

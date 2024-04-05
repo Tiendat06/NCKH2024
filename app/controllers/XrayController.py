@@ -186,8 +186,6 @@ class XrayController:
 
                     path_ = session.get('path_predict');
 
-                    # print(str(path_to_save))
-
                     # Convert image to dest size tensor
                     frame = cv2.imread(path_to_save)
 
@@ -204,13 +202,23 @@ class XrayController:
                             float_percentage = float((percentage[i])) * 100
                             real_percentage.append((round(float_percentage, 2)))
                         
+                        # image_data = cv2.imencode('.png', frame)[1].tobytes()00000000000000000000000000000000000
+                        
+                        # with open('/static/img/image.png', 'wb') as f:
+                        #     f.write(image_data)
+
+                        # res = cloudinary.uploader.upload(image_data);
+                        # path_ = res['secure_url'];
+                        
+                        print(path_)
+                        
                         zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
                         doctor_zip_data = zip_data;
 
                         return render_template("/xray/change_range.html", user_image = path_ , rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
-                        return render_template('/xray/change_range.html',user_image = session.get('path_predict') , 
+                        return render_template('/xray/change_range.html',user_image = 'static/img/image.png' , 
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi
