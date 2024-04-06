@@ -2,7 +2,7 @@ from database import DataBaseUtils
 from flask import request
 
 class Patient():
-    def __init__(self, patient_id, name, age, img, phone, PID, gender, address, date_created, dob):
+    def __init__(self, patient_id, name, age, img, phone, PID, gender, address, date_created, dob, email):
         self.__patient_id = patient_id;
         self.__name = name;
         self.__age = age;
@@ -13,6 +13,7 @@ class Patient():
         self.__address = address;
         self.__date_created = date_created;
         self.__dob = dob;
+        self.__email = email;
 
     @property
     def _patient_id(self):
@@ -93,6 +94,14 @@ class Patient():
     @_dob.setter
     def _dob(self, value):
         self.__dob = value
+
+    @property
+    def _email(self):
+        return self.__email
+
+    @_email.setter
+    def _email(self, value):
+        self.__email = value
 
 
 class PatientModel(DataBaseUtils):

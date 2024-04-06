@@ -13,7 +13,7 @@
     <form id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2" enctype="multipart/form-data">
         <div style="background-color: #fff" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
             <div class="xray-slider w-100 form-group d-flex flex-wrap justify-content-end" style="float: right">
-                <input style="" class="w-25 form-control col-lg-12 col-md-12 col-sm-12" type="range" name="range"
+                <input style="" class="w-25 form-range form-control p-3 col-lg-12 col-md-12 col-sm-12" type="range" name="range"
                     id="myRange" min="0" max="1" step="0.1"
                     value="{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}" />
                 <p class="col-lg-12 col-md-12 col-sm-12 mt-2 d-flex flex-wrap justify-content-end">
@@ -31,8 +31,8 @@
                         border: 2px solid #387181;
                         cursor: pointer;
                         " class="xray-img--small mb-3 w-100">
-                        <img style="height: 60px; object-fit: cover" class="profile-img"
-                            src="https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png"
+                        <img style="height: 60px; object-fit: cover" class="profile-img w-100"
+                            src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
                             alt="" srcset="" />
                     </div>
                 </div>
@@ -71,12 +71,12 @@
                                         <p class="mb-0 w-75 text-left text-secondary">
                                             {{sick_name_eng}} ({{sick_name}})
                                         </p>
-                                        <div>
+                                        <!-- <div> -->
                                             <p class="mb-0 w-25 text-right text-secondary">
                                                 {{percentage}}%
                                             </p>
-                                            <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i>
-                                        </div>
+                                            <!-- <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i> -->
+                                        <!-- </div> -->
                                     </div>
                                     <div style="
                                         height: 5px;
@@ -92,8 +92,8 @@
                             </div>
 
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                {% for sick_name, percentage, sick_name_eng, colors in
-                                doctor_zip_data %}
+                                {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
+                                <!-- sick_name, percentage, sick_name_eng, colors -->
                                 <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
                                         <p class="mb-0 w-75 text-left text-secondary">
@@ -156,12 +156,12 @@
 
     <!--    add modal -->
     <div class="modal fade" id="add-record">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form onsubmit="return false" method="post">
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">Add User</h5>
+                        <h5 class="modal-title">Add Record</h5>
                         <button type="button" class="close" data-dismiss="modal">
                             &times;
                         </button>
@@ -171,56 +171,92 @@
                     <div class="modal-body">
                         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Record</a>
+                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home_add" role="tab" aria-controls="home" aria-selected="true">Record</a>
                             </li>
                             <li class="nav-item">
-                              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Patient</a>
+                              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile_add" role="tab" aria-controls="profile" aria-selected="false">Patient</a>
                             </li>
                             <li class="nav-item">
-                              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_add" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
                             </li>
-                          </ul>
+                        </ul>
+
                           <div class="tab-content" id="myTabContent">
                             <!-- add record -->
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <div class="form-group">
+                            <div class="tab-pane fade show active d-flex flex-wrap" id="home_add" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="full_name_add">Full name</label>
-                                        <input class="form-control" type="text" name="full_name_add" id="full_name_add"
-                                            placeholder="Full name" required />
+                                        <div class="form-group">
+                                            <label for="full_name_add">Full name</label>
+                                            <input class="form-control" type="text" name="full_name_add" id="full_name_add"
+                                                placeholder="Full name" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="number_add">PID</label>
+                                            <input class="form-control" type="number" name="number_add" id="number_add"
+                                                placeholder="PID" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="age_add">Age</label>
+                                            <input class="form-control" type="text" name="age_add" id="age_add"
+                                                placeholder="Age" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="phone_add">Phone number</label>
+                                            <input class="form-control" placeholder="Phone number" type="number" name="phone_add" id="phone_add" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="gender_add">Gender</label>
+                                            <select class="form-control" name="gender_add" id="gender_add">
+                                                <option value="">--Choose gender--</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
                                     </div>
-        
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="gender_add">Gender</label>
-                                        <select class="form-control" name="gender_add" id="gender_add" required>
-                                            <option value="">--Choose gender--</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-        
-                                    <div class="form-group">
-                                        <label for="email_add">Email</label>
-                                        <input class="form-control" type="email" name="email_add" id="email_add"
-                                            placeholder="Email" required />
-                                    </div>
-        
-                                    <div class="form-group">
-                                        <label for="dob_add">Birthday</label>
-                                        <input class="form-control" type="date" name="dob_add" id="dob_add" required />
-                                    </div>
-        
-                                    <div class="form-group">
-                                        <label for="phone_add">Phone number</label>
-                                        <input class="form-control" type="number" name="phone_add" id="phone_add"
-                                            placeholder="Phone number" required />
+                                        <div class="form-group">
+                                            <label for="address_add">Address</label>
+                                            <input class="form-control" type="text" name="address_add" id="address_add"
+                                                placeholder="Address" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="date_add">Birthday</label>
+                                            <input type="date" class="form-control" name="date_add" id="date_add">
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="email_add">Email</label>
+                                            <input class="form-control" type="email" name="email_add" id="email_add"
+                                                placeholder="Email" required />
+                                        </div>
+            
+                                        <div class="form-group">
+                                            <label for="doctor_predict_add">Prediction</label>
+                                            <!-- <input class="form-control" type="date" name="dob_add" id="dob_add" required /> -->
+                                            <textarea class="form-control" style="white-space: pre-wrap;" name="doctor_predict_add" id="doctor_predict_add" cols="30" rows="5" contenteditable="true">{% for item in sick_name %}{{ item }}{% if not loop.last %}&#13;&#10;{% endif %}{% endfor %}</textarea>
+                                        </div>
+            
+                                        <!-- <div class="form-group">
+                                            <label for="phone_add">Phone number</label>
+                                            <input class="form-control" type="number" name="phone_add" id="phone_add"
+                                                placeholder="Phone number" required />
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
                             <!-- add patient if not exist -->
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">hello 2</div>
+                            <div class="tab-pane fade" id="profile_add" role="tabpanel" aria-labelledby="profile-tab">hello 2</div>
 
-                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">hello 3</div>
+                            <div class="tab-pane fade" id="contact_add" role="tabpanel" aria-labelledby="contact-tab">hello 3</div>
                           </div>
                         
                     </div>
