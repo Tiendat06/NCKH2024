@@ -43,6 +43,13 @@
                         class="profile-img text-center"
                         src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
                         alt="" srcset="" />
+                        <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
+                        </div> -->
+                        <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain" class="profile-img text-center"></canvas>
+                    
+                    <!-- <input type="hidden" name="img_link_download" id="img_link_download" value="{{user_image_local}}" /> -->
+                    <img style="width: 330px!important; height: 330px!important" hidden src="{% if user_image_local %}{{user_image_local}}{% else %}/static/img/xray-img-check.png{% endif %}" id="img_link_download" alt="">
+                    
                     {% if user_image %}
                     <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
                     {% endif %}
@@ -126,20 +133,31 @@
                 </div>
             </div>
 
-            <div class="xray-btn mt-5 d-flex flex-wrap justify-content-end col-lg-12 col-md-12 col-sm-12 mt-3">
-                <div class="xray-btn-download mr-3">
-                    <label for="upload" onclick="" id="upload_button" class="btn btn-info">Upload</label>
+            <div class="xray-btn mt-5 d-flex flex-wrap justify-content-end col-lg-3 col-md-3 col-sm-3 mt-3 ml-auto">
+                <div class="xray-btn-upload  col-lg-6 text-right">
+                    <label for="upload" onclick="" id="upload_button" class="btn btn-info" style="width: 105px;">Upload</label>
                     <input id="upload" type="file" name="file" style="display: none" accept="image/*"
                         class="form-control" onchange="handleUploadImg()" />
                 </div>
 
-                <div class="xray-btn-checking">
-                    <button id="checking" class="btn btn-success">Checking</button>
+                <div class="xray-btn-checking col-lg-6 text-left">
+                    <button id="checking" class="btn btn-success" style="width: 105px;">Checking</button>
                 </div>
+
+                {% if user_image_local %}
+                <div class="xray-btn-download col-lg-6 text-right">
+                    <a id="downloading" class="btn btn-primary" style="width: 105px;">Download</a>
+                </div>
+
+                <div class="xray-btn-edit col-lg-6 text-left">
+                    <a id="editing" class="btn btn-danger" style="width: 105px;">Edit mode</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </form>
 
+    <!-- overlay -->
     <div id="overlay" class="overlay d-none">
         <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
             <div class="w-100 text-center" style="height: 200px">
@@ -171,14 +189,14 @@
                     <div class="modal-body">
                         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home_add" role="tab" aria-controls="home" aria-selected="true">Record</a>
+                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home_add" role="tab" aria-controls="home" aria-selected="true"><i class="fa-solid fa-heart-pulse"></i> Medical Record</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                               <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile_add" role="tab" aria-controls="profile" aria-selected="false">Patient</a>
                             </li>
                             <li class="nav-item">
                               <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_add" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                            </li>
+                            </li> -->
                         </ul>
 
                           <div class="tab-content" id="myTabContent">
@@ -186,6 +204,7 @@
                             <div class="tab-pane fade show active d-flex flex-wrap" id="home_add" role="tabpanel" aria-labelledby="home-tab">
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
+
                                         <div class="form-group">
                                             <label for="full_name_add">Full name</label>
                                             <input class="form-control" type="text" name="full_name_add" id="full_name_add"
@@ -261,14 +280,14 @@
                         
                     </div>
 
-                    <div id="error_adding_user_outer" style="width: 90%"
+                    <div id="error_adding_record_outer" style="width: 90%"
                         class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
-                        <p id="error_adding_user" class="login-form__para mb-0 text-danger"></p>
+                        <p id="error_adding_record" class="login-form__para mb-0 text-danger"></p>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button id="btn_add" class="btn btn-primary">Submit</button>
+                        <button id="btn_add-record" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">
                             Cancel
                         </button>
@@ -278,9 +297,35 @@
         </div>
     </div>
 
-    <script>
-        jsInXray();
-        //changeRange();
-        //activeOverlay();
-    </script>
+    <!-- choosing disease modal -->
+    <div class="modal fade" id="selectOptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Select disease</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label for="options">Disease:</label>
+              <select class="form-control" id="options">
+                {% for disease in disease_list %}
+                    <option value="{{disease._disease_name_eng}}">{{disease._disease_name}} - {{disease._disease_name_eng}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveOption">Save</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+   
+<script>
+    jsInXray();
+
+</script>
 </div>

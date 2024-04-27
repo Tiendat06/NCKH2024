@@ -108,14 +108,26 @@ class Patient():
 class PatientModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
+    
+    def addPatient(self, patient):
+        result = self.__conn.get_collection('patient').insert_one(patient)
+        if result.acknowledged:
+            return True;
+        return False;
 
-    def getPatientByPID(self, id):
-        data = []
-        result = self.__conn.get_collection('patient').find_one({'patient_id': id});
+    def checkPatientIsContainByPID(self, PID):
+        result = self.__conn.get_collection('patient').find_one({'PID': PID});
         if result:
-            data.append(result);
-            return data;
+            return True;
+        return False;
+
+    def getPatientByPID(self, PID):
+        result = self.__conn.get_collection('patient').find_one({'PID': PID});
+        if result:
+            # patient = Patient(result['patient_id'], result['name'], result['age'], result['gender']);  # Assuming these are the patient attributes
+            return result;
         return None;
+
 
     def getAllPatient(self):
         patient_data = self.__conn.get_collection('patient').find();
@@ -159,3 +171,18 @@ class PatientModel(DataBaseUtils):
             return data;
         return None;
 
+    def AUTO_PAT_ID(self):
+        result = self.__conn.get_collection('patient').find_one({}, sort=[("patient_id", -1)])  #desc
+
+        if result:
+            max_patient_id = result['patient_id'];
+        else:
+            max_patient_id = None;
+
+        if max_patient_id:
+            next_patient_id = int(max_patient_id[3:]) + 1
+        else:
+            next_patient_id = 1
+
+        format_patient_id = f'PAT{next_patient_id:07d}';
+        return format_patient_id;    

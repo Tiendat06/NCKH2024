@@ -25,3 +25,11 @@ def load_data_ajax():
     global app;
     app = current_app
     return XrayController().load_data_ajax(app)
+
+@xray.route('/xray/proxy-image', methods=['get'])
+def sendImg():
+    return XrayController().sendImg();
+
+@xray.route('/xray/saveRecord', methods=['post'])
+def saveRecord():
+    return XrayController().saveRecord();

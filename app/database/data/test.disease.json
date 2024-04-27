@@ -1,0 +1,112 @@
+[{
+  "_id": {
+    "$oid": "662cc167c4d7c2b0cf7d7b4d"
+  },
+  "disease_id": "DIS0000001",
+  "disease_name": "Phình động mạch chủ",
+  "disease_name_eng": "Aortic enlargement"
+},
+{
+  "_id": {
+    "$oid": "662cc225c4d7c2b0cf7d7b4f"
+  },
+  "disease_id": "DIS0000002",
+  "disease_name": "Xẹp phổi",
+  "disease_name_eng": "Atelectasis"
+},
+{
+  "_id": {
+    "$oid": "662cc23fc4d7c2b0cf7d7b50"
+  },
+  "disease_id": "DIS0000003",
+  "disease_name": "Vôi hóa",
+  "disease_name_eng": "Calcification"
+},
+{
+  "_id": {
+    "$oid": "662cc254c4d7c2b0cf7d7b51"
+  },
+  "disease_id": "DIS0000004",
+  "disease_name": "Tim to",
+  "disease_name_eng": "Cardiomegaly"
+},
+{
+  "_id": {
+    "$oid": "662cc27bc4d7c2b0cf7d7b52"
+  },
+  "disease_id": "DIS0000005",
+  "disease_name": "Đông đặc phổi",
+  "disease_name_eng": "Consolidation"
+},
+{
+  "_id": {
+    "$oid": "662cc29ac4d7c2b0cf7d7b53"
+  },
+  "disease_id": "DIS0000006",
+  "disease_name": "Phổi kẽ",
+  "disease_name_eng": "ILD"
+},
+{
+  "_id": {
+    "$oid": "662cc2b3c4d7c2b0cf7d7b54"
+  },
+  "disease_id": "DIS0000007",
+  "disease_name": "Thâm nhiễm",
+  "disease_name_eng": "Infiltration"
+},
+{
+  "_id": {
+    "$oid": "662cc2c7c4d7c2b0cf7d7b55"
+  },
+  "disease_id": "DIS0000008",
+  "disease_name": "Mờ phổi",
+  "disease_name_eng": "Lung Opacity"
+},
+{
+  "_id": {
+    "$oid": "662cc2e1c4d7c2b0cf7d7b56"
+  },
+  "disease_id": "DIS0000009",
+  "disease_name": "Khối u",
+  "disease_name_eng": "Nodule/Mass"
+},
+{
+  "_id": {
+    "$oid": "662cc2fbc4d7c2b0cf7d7b57"
+  },
+  "disease_id": "DIS0000010",
+  "disease_name": "Tổn thương khác",
+  "disease_name_eng": "Other lesion"
+},
+{
+  "_id": {
+    "$oid": "662cc318c4d7c2b0cf7d7b58"
+  },
+  "disease_id": "DIS0000011",
+  "disease_name": "Tràn dịch màn phổi",
+  "disease_name_eng": "Pleural effusion"
+},
+{
+  "_id": {
+    "$oid": "662cc338c4d7c2b0cf7d7b59"
+  },
+  "disease_id": "DIS0000012",
+  "disease_name": "Màng phổi dày",
+  "disease_name_eng": "Pleural thickening"
+},
+{
+  "_id": {
+    "$oid": "662cc353c4d7c2b0cf7d7b5a"
+  },
+  "disease_id": "DIS0000013",
+  "disease_name": "Tràn khí phế mạc",
+  "disease_name_eng": "Pneumothorax"
+},
+{
+  "_id": {
+    "$oid": "662cc36ac4d7c2b0cf7d7b5b"
+  },
+  "disease_id": "DIS0000014",
+  "disease_name": "Xơ phổi",
+  "disease_name_eng": "Pulmonary fibrosis"
+}]

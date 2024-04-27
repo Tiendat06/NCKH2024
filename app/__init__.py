@@ -3,6 +3,8 @@ from flask import Flask, render_template, Blueprint, session
 from flask_session import Session
 from routes import routes
 from dotenv import load_dotenv
+from flask_cors import CORS
+
 # import streamlit as st
 load_dotenv()
 
@@ -30,6 +32,7 @@ cloudinary.config(
 
 if __name__ == '__main__':
     app = Flask(__name__)
+    CORS(app)
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY") 
     app.config['SESSION_TYPE'] = 'filesystem' 

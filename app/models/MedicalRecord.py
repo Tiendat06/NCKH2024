@@ -82,4 +82,25 @@ class MedicalRecordModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
 
+    def addMedicalRecord(self, medicalRecord):
+        result = self.__conn.get_collection('medical_record').insert_one(medicalRecord);
+        if result.acknowledged:
+            return True;
+        return False;
+
+    def AUTO_MDR_ID(self):
+        result = self.__conn.get_collection('medical_record').find_one({}, sort=[("m_rec_id", -1)])  #desc
+
+        if result:
+            max_medical_id = result['m_rec_id'];
+        else:
+            max_medical_id = None;
+
+        if max_medical_id:
+            next_medical_id = int(max_medical_id[3:]) + 1
+        else:
+            next_medical_id = 1
+
+        format_medical_id = f'MDR{next_medical_id:07d}';
+        return format_medical_id;    
     
