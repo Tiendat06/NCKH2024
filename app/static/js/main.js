@@ -1,35 +1,33 @@
 function collapsedSideBar() {
-  document
-    .getElementById("toggleButton")
-    .addEventListener("click", function () {
-      const specificSidebar = document.getElementById("header-sidebar");
-      const sidebar = document.getElementById("sidebar");
-      const content = document.querySelector(".content");
-      const header_content = document.getElementById("header-content");
-      const sidebar_para = document.querySelectorAll(".main-sidebar__para");
-      const sidebar_item = document.querySelectorAll(".main-sidebar__item");
-      const header_title = document.querySelector("#header-navbar__title");
+  document.getElementById("toggleButton").addEventListener("click", function() {
+    const specificSidebar = document.getElementById("header-sidebar");
+    const sidebar = document.getElementById("sidebar");
+    const content = document.querySelector(".content");
+    const header_content = document.getElementById("header-content");
+    const sidebar_para = document.querySelectorAll(".main-sidebar__para");
+    const sidebar_item = document.querySelectorAll(".main-sidebar__item");
+    const header_title = document.querySelector("#header-navbar__title");
 
-      for (let i = 0; i < sidebar_para.length; i++) {
-        if (
-          sidebar_para[i].classList.contains("d-none") &&
-          sidebar_item[i].classList.contains("justify-content-center")
-        ) {
-          sidebar_para[i].classList.remove("d-none");
-          sidebar_item[i].classList.remove("justify-content-center");
-        } else {
-          sidebar_para[i].classList.add("d-none");
-          sidebar_item[i].classList.add("justify-content-center");
-        }
+    for (let i = 0; i < sidebar_para.length; i++) {
+      if (
+        sidebar_para[i].classList.contains("d-none") &&
+        sidebar_item[i].classList.contains("justify-content-center")
+      ) {
+        sidebar_para[i].classList.remove("d-none");
+        sidebar_item[i].classList.remove("justify-content-center");
+      } else {
+        sidebar_para[i].classList.add("d-none");
+        sidebar_item[i].classList.add("justify-content-center");
       }
+    }
 
-      console.log(header_title);
+    console.log(header_title);
 
-      sidebar.classList.toggle("collapsed");
-      header_content.classList.toggle("collapsed");
-      specificSidebar.classList.toggle("collapsed");
-      content.classList.toggle("collapsed");
-    });
+    sidebar.classList.toggle("collapsed");
+    header_content.classList.toggle("collapsed");
+    specificSidebar.classList.toggle("collapsed");
+    content.classList.toggle("collapsed");
+  });
 }
 
 function fullScreen() {
@@ -46,7 +44,7 @@ function fullScreen() {
     }
   });
 
-  function requestFullscreen() {
+function requestFullscreen() {
     if (content.requestFullscreen) {
       content.requestFullscreen();
     } else if (content.mozRequestFullScreen) {
@@ -61,7 +59,7 @@ function fullScreen() {
     }
   }
 
-  function exitFullscreen() {
+function exitFullscreen() {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -77,38 +75,55 @@ function fullScreen() {
   }
 }
 
-function handleUploadImg() {
-  const fileInput = document.getElementById("fileInput");
-  const img = document.getElementById("xray-img");
+// function handleUploadImg() {
+//   const fileInput = document.getElementById("fileInput");
+//   const img = document.getElementById("xray-img");
 
-  const file = fileInput.files[0];
+//   const file = fileInput.files[0];
 
-  if (file) {
-    const reader = new FileReader();
+//   if (file) {
+//     const reader = new FileReader();
 
-    reader.onload = function (e) {
-      img.src = e.target.result;
-    };
+//     reader.onload = function (e) {
+//       img.src = e.target.result;
+//     };
 
-    reader.readAsDataURL(file);
-  }
-}
+//     reader.readAsDataURL(file);
+//   }
+// }
 
 function downloadImage() {
-  var imgElement = document.getElementById("xray-img--output");
+  // var imgElement = document.getElementById("xray-img--output");
 
-  var a = document.createElement("a");
-  a.href = imgElement.src;
-  a.download = "downloaded_image.jpg";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  var imageUrl = document.getElementById("xray-img--output").src;
+
+  // Sử dụng Fetch API để tải hình ảnh từ URL
+  fetch(imageUrl)
+    .then(response => response.blob()) // Chuyển đổi dữ liệu hình ảnh thành Blob
+    .then(blob => {
+      // Tạo một URL từ Blob
+      var url = window.URL.createObjectURL(blob);
+
+      // Tạo một phần tử <a> để tạo ra một liên kết tải xuống
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "image.jpg"; // Tên tệp khi tải xuống
+
+      // Thêm phần tử <a> vào body
+      document.body.appendChild(a);
+
+      // Kích hoạt sự kiện click trên phần tử <a>
+      a.click();
+
+      // Xóa URL của Blob sau khi tải xuống hoàn tất
+      window.URL.revokeObjectURL(url);
+    });
 }
 
 function ajaxInUserManagement() {
   // add
-  $(document).ready(function () {
-    $("#btn_add").click(function () {
+  $(document).ready(function() {
+    $("#btn_add").click(function() {
       let name_add = $("#full_name_add").val();
       let gender_add = $("#gender_add").val();
       let email_add = $("#email_add").val();
@@ -126,13 +141,13 @@ function ajaxInUserManagement() {
           dob: dob_add,
           phone: phone_add
         }),
-        success: function (response) {
+        success: function(response) {
           $("#error_adding_user").html(response);
           $("#error_adding_user_outer").removeClass("d-none");
           //console.log(response);
           //alert(response.message);
         },
-        error: function (error) {
+        error: function(error) {
           console.log(error);
         }
       });
@@ -183,8 +198,8 @@ function ajaxInUserManagement() {
   // });
 
   // edit
-  $(document).ready(function () {
-    $("#btn_edit").click(function () {
+  $(document).ready(function() {
+    $("#btn_edit").click(function() {
       let name_edit = $("#full_name_edit").val();
       let gender_edit = $("#gender_edit").val();
       let email_edit = $("#email_edit").val();
@@ -228,19 +243,19 @@ function ajaxInUserManagement() {
           acc_id: acc_id,
           img: img
         }),
-        success: function (response) {
+        success: function(response) {
           $("#error_editing_user").html(response);
           $("#error_editing_user_outer").removeClass("d-none");
         },
-        error: function (error) {
+        error: function(error) {
           console.log(error);
         }
       });
     });
   });
 
-  $(document).ready(function () {
-    $(".btn-show-details").on("click", function () {
+  $(document).ready(function() {
+    $(".btn-show-details").on("click", function() {
       var name = $(this).data("name");
       var gender = $(this).data("gender");
       var email = $(this).data("email");
@@ -263,8 +278,8 @@ function ajaxInUserManagement() {
     });
   });
 
-  $(document).ready(function () {
-    $(".btn-show-details-delete").on("click", function () {
+  $(document).ready(function() {
+    $(".btn-show-details-delete").on("click", function() {
       var id = $(this).data("id");
       var name = $(this).data("name");
 
@@ -276,8 +291,8 @@ function ajaxInUserManagement() {
   });
 
   // delete
-  $(document).ready(function () {
-    $("#btn-delete").click(function () {
+  $(document).ready(function() {
+    $("#btn-delete").click(function() {
       var id = $("#userIdDelete").val();
 
       $.ajax({
@@ -287,11 +302,11 @@ function ajaxInUserManagement() {
         data: JSON.stringify({
           id: id
         }),
-        success: function (response) {
+        success: function(response) {
           $("#error_delete_user").html(response);
           $("#error_delete_user_outer").removeClass("d-none");
         },
-        error: function (error) {
+        error: function(error) {
           console.log(error);
         }
       });
@@ -299,43 +314,43 @@ function ajaxInUserManagement() {
   });
 }
 
-function jsInXray() {
-
-    // edit and download file
-  document.addEventListener("DOMContentLoaded", function () {
+function sumUpManualBoundingBoxAndDownloadInXray() {
+  // edit and download file
+  $(document).ready(function() {
+    // document.addEventListener("DOMContentLoaded", function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
-    var realImg = document.getElementById('xray-img--output');
+    var realImg = document.getElementById("xray-img--output");
     var image = document.getElementById("img_link_download");
     var editBtn = document.getElementById("editing");
     var downloadBtn = document.getElementById("downloading");
-    var boundingBoxes = []; 
-    var currentBox = null; 
+    var boundingBoxes = [];
+    var currentBox = null;
 
     // canvas.width = image.width;
     // canvas.height = image.height;
     canvas.width = image.width;
     canvas.height = image.height;
-    canvas.style.objectFit = 'contain'
+    canvas.style.objectFit = "contain";
 
     var isDrawing = false;
     var startX, startY, endX, endY;
 
     // Sự kiện khi nhấn nút "Edit"
-    editBtn.addEventListener("click", function (e) {
+    editBtn.addEventListener("click", function(e) {
       image.style.display = "none";
       canvas.style.display = "block";
       realImg.style.display = "none";
       isDrawing = true;
     });
 
-    canvas.addEventListener("mousedown", function (e) {
+    canvas.addEventListener("mousedown", function(e) {
       isDrawing = true;
       startX = e.offsetX;
       startY = e.offsetY;
     });
 
-    canvas.addEventListener("mousemove", function (e) {
+    canvas.addEventListener("mousemove", function(e) {
       if (isDrawing) {
         var currentX = e.offsetX;
         var currentY = e.offsetY;
@@ -344,7 +359,7 @@ function jsInXray() {
         ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
 
         // Vẽ lại tất cả các bounding box đã lưu
-        boundingBoxes.forEach(function (box) {
+        boundingBoxes.forEach(function(box) {
           ctx.beginPath();
           ctx.rect(
             box.startX,
@@ -372,140 +387,135 @@ function jsInXray() {
       }
     });
 
-    canvas.addEventListener("mouseup", function () {
+    canvas.addEventListener("mouseup", function() {
       isDrawing = false;
       endX = event.offsetX;
       endY = event.offsetY;
       currentBox = { startX: startX, startY: startY, endX: endX, endY: endY }; // Lưu bounding box đang được vẽ vào biến tạm thời
-        //$("#selectOptionModal").modal("show"); // Hiển thị modal
+      //$("#selectOptionModal").modal("show"); // Hiển thị modal
 
-        var modal = document.getElementById("selectOptionModal");
-        modal.classList.add("show");
-        modal.style.display = "block";
-        modal.setAttribute("aria-modal", "true");
-        modal.setAttribute("aria-hidden", "false");                
-    
+      var modal = document.getElementById("selectOptionModal");
+      modal.classList.add("show");
+      modal.style.display = "block";
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("aria-hidden", "false");
     });
 
     // Sự kiện khi nhấn nút "Save" trong modal
-    document
-      .getElementById("saveOption")
-      .addEventListener("click", function () {
-        var selectedOption = document.getElementById("options").value;
-        console.log("Selected option:", selectedOption);
+    document.getElementById("saveOption").addEventListener("click", function() {
+      var selectedOption = document.getElementById("options").value;
+      console.log("Selected option:", selectedOption);
 
-        // Lưu thông tin đã chọn vào bounding box đang được vẽ
-        currentBox.option = selectedOption;
+      // Lưu thông tin đã chọn vào bounding box đang được vẽ
+      currentBox.option = selectedOption;
+      // Đóng modal
+      //$("#selectOptionModal").modal("hide");
 
-        // Đóng modal
-        //$("#selectOptionModal").modal("hide");
+      var modal = document.getElementById("selectOptionModal");
+      modal.classList.remove("show");
+      modal.style.display = "none";
+      modal.setAttribute("aria-modal", "false");
+      modal.setAttribute("aria-hidden", "true");
 
-        var modal = document.getElementById("selectOptionModal");
-        modal.classList.remove("show");
-        modal.style.display = "none";
-        modal.setAttribute("aria-modal", "false");
-        modal.setAttribute("aria-hidden", "true");
-        
+      // var modal = document.getElementById("selectOptionModal");
+      // modal.style.display = "none";
+      // Vẽ lựa chọn lên bounding box
+      ctx.font = "12px Arial";
+      ctx.fillStyle = "red";
+      ctx.fillText(
+        selectedOption,
+        currentBox.startX + 10,
+        currentBox.startY + 20
+      );
 
-        // var modal = document.getElementById("selectOptionModal");
-        // modal.style.display = "none";
-
-
-        // Vẽ lựa chọn lên bounding box
-        ctx.font = "12px Arial";
-        ctx.fillStyle = "red";
-        ctx.fillText(
-          selectedOption,
-          currentBox.startX + 10,
-          currentBox.startY + 20
-        );
-
-        // Lưu bounding box vào mảng boundingBoxes
-        boundingBoxes.push(currentBox);
-      });
+      // Lưu bounding box vào mảng boundingBoxes
+      boundingBoxes.push(currentBox);
+    });
 
     // Sự kiện khi nhấn nút "Close" trong modal
-    document
-      .getElementById("closeModal")
-      .addEventListener("click", function () {
-        // Xóa bounding box tạm thời
-        currentBox = null;
+    document.getElementById("closeModal").addEventListener("click", function() {
+      // Xóa bounding box tạm thời
+      currentBox = null;
 
-        // Đóng modal
-        //$("#selectOptionModal").modal("hide");
-        var modal = document.getElementById("selectOptionModal");
-        modal.classList.remove("show");
-        modal.style.display = "none";
-        modal.setAttribute("aria-modal", "false");
-        modal.setAttribute("aria-hidden", "true");
+      // Đóng modal
+      //$("#selectOptionModal").modal("hide");
+      var modal = document.getElementById("selectOptionModal");
+      modal.classList.remove("show");
+      modal.style.display = "none";
+      modal.setAttribute("aria-modal", "false");
+      modal.setAttribute("aria-hidden", "true");
 
-        // Vẽ lại canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-        boundingBoxes.forEach(function (box) {
-          ctx.beginPath();
-          ctx.rect(
-            box.startX,
-            box.startY,
-            box.endX - box.startX,
-            box.endY - box.startY
-          );
-          ctx.strokeStyle = "red";
-          ctx.lineWidth = 2;
-          ctx.stroke();
+      // Vẽ lại canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+      boundingBoxes.forEach(function(box) {
+        ctx.beginPath();
+        ctx.rect(
+          box.startX,
+          box.startY,
+          box.endX - box.startX,
+          box.endY - box.startY
+        );
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-          // Vẽ lựa chọn lên bounding box
-          if (box.option) {
-            ctx.font = "12px Arial";
-            ctx.fillStyle = "red";
-            ctx.fillText(box.option, box.startX + 10, box.startY + 20);
-          }
-        });
+        // Vẽ lựa chọn lên bounding box
+        if (box.option) {
+          ctx.font = "12px Arial";
+          ctx.fillStyle = "red";
+          ctx.fillText(box.option, box.startX + 10, box.startY + 20);
+        }
       });
+    });
 
     // Sự kiện khi nhấn nút "Download"
-    downloadBtn.addEventListener("click", function () {
-        // Lấy reference đến canvas và context
-        var imageUrl = document.getElementById('img_link_download').src;
-        var proxyUrl = 'xray/proxy-image?url=' + encodeURIComponent(imageUrl);
+    $(document).ready(function() {
+      if (isDrawing == true) {
+        downloadBtn.addEventListener("click", function() {
+          console.log("Btn is clicked");
+          // Lấy reference đến canvas và context
+          var imageUrl = document.getElementById("img_link_download").src;
+          var proxyUrl = "xray/proxy-image?url=" + encodeURIComponent(imageUrl);
 
-        var image = new Image();
-        // Đảm bảo sử dụng cross-origin
-        // Using like this, system will know that imgs from another place are safety
-        image.crossOrigin = "Anonymous"; 
+          var image = new Image();
+          // Đảm bảo sử dụng cross-origin
+          // Using like this, system will know that imgs from another place are safety
+          image.crossOrigin = "Anonymous";
 
-        image.onload = function() {
+          image.onload = function() {
             // Vẽ hình ảnh lên canvas
             ctx.drawImage(image, 0, 0);
-        };
+          };
 
-        image.src = proxyUrl;
+          image.src = proxyUrl;
 
-        canvas.toBlob(function(blob) {
+          canvas.toBlob(function(blob) {
             var link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = "image_with_bounding_box.jpg";
             link.click();
-        }, "image/jpeg");
+          }, "image/jpeg");
+        });
+      }
     });
+
+    $(document).ready(function() {
+      if (isDrawing == false) {
+        downloadBtn.addEventListener("click", function() {
+          downloadImage();
+        });
+      }
+    });
+    // });
   });
+}
 
-
-  //   check
-  $("#checking").click(function () {
-    $("#form").submit();
-  });
-
-  $(document).ready(function () {
-    $("#myRange").on("input", function () {
+function jsAjaxChangRangeInXray() {
+  $(document).ready(function() {
+    $("#myRange").on("input", function() {
       var formData = new FormData();
 
-      // var fileInput = document.getElementById('upload');
-      // if (fileInput.files.length > 0) {
-      //     var file = fileInput.files[0];
-      //     console.log(file.name)
-      //     formData.append('file', file);
-      // }
       let img_link = $("#img_link_predict").val();
       let range = $("#myRange").val();
       $("#rangeValue").text(range);
@@ -522,31 +532,42 @@ function jsInXray() {
         contentType: false,
         data: formData
       })
-        .done((response) => {
+        .done(response => {
           $("#xray-general__predict").html(response);
           // success: function(response) {
           // },
           // error: function(error) {
           //     console.log(error);
           // }
+          // sumUpManualBoundingBoxAndDownloadInXray()
         })
-        .fail((error) => {
+        .fail(error => {
           console.log(error);
         });
     });
   });
+}
+
+function jsInXray() {
+  //   check
+  $(document).ready(function() {
+    $("#checking").click(function() {
+      $("#form").submit();
+    });
+  });
 
   // overlay
-  document.addEventListener("DOMContentLoaded", function () {
+  // document.addEventListener("DOMContentLoaded", function () {
+  $(document).ready(function() {
     const form = document.getElementById("form");
     const overlay = document.getElementById("overlay");
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", function(event) {
       event.preventDefault(); // Ngăn chặn form submit mặc định
       //overlay.style.display = 'block'; // Hiển thị overlay
       $("#overlay").removeClass("d-none");
 
-      setTimeout(function () {
+      setTimeout(function() {
         //overlay.style.display = 'none'; // Ẩn overlay
         $("#overlay").addClass("d-none");
 
@@ -554,127 +575,123 @@ function jsInXray() {
       }, 100000);
     });
   });
+  // })
 
   // add record
-  $(document).ready(function(){
-    $('#btn_add-record').click(function(){
-      var name = $('#full_name_add').val()
-      var PID = $('#number_add').val()
-      var age = $('#age_add').val()
-      var phone = $('#phone_add').val()
-      var gender = $('#gender_add').val()
-      var address = $('#address_add').val()
-      var dob = $('#date_add').val()
-      var email = $('#email_add').val()
-      var predict = $('#doctor_predict_add').val();
+  $(document).ready(function() {
+    $("#btn_add-record").click(function() {
+      var name = $("#full_name_add").val();
+      var PID = $("#number_add").val();
+      var age = $("#age_add").val();
+      var phone = $("#phone_add").val();
+      var gender = $("#gender_add").val();
+      var address = $("#address_add").val();
+      var dob = $("#date_add").val();
+      var email = $("#email_add").val();
+      var predict = $("#doctor_predict_add").val();
 
       $.ajax({
-        type: 'POST',
-        url: '/xray/saveRecord',
+        type: "POST",
+        url: "/xray/saveRecord",
         contentType: "application/json",
         data: JSON.stringify({
-            name: name,
-            PID: PID,
-            age: age,
-            phone: phone,
-            gender: gender,
-            address: address,
-            dob: dob,
-            email: email,
-            predict: predict
-          }),
-          success: function(response){
-            $('#error_adding_record_outer').removeClass('d-none');
-            $('#error_adding_record').html(response);
-          },
-          error: function (err){
-            console.log(err);
-          } 
-      })
-    })
-
+          name: name,
+          PID: PID,
+          age: age,
+          phone: phone,
+          gender: gender,
+          address: address,
+          dob: dob,
+          email: email,
+          predict: predict
+        }),
+        success: function(response) {
+          $("#error_adding_record_outer").removeClass("d-none");
+          $("#error_adding_record").html(response);
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
+    });
   });
 
   // open-img
-  $(document).ready(function(){
-    $('#xray-img__small').click(function(){
+  $(document).ready(function() {
+    $("#xray-img__small").click(function() {
       // var imgUrl = $(this).attr('src');
-      var imgUrl = document.getElementById('xray-img__small').src;
+      var imgUrl = document.getElementById("xray-img__small").src;
       console.log(imgUrl);
 
-      $('#xray-img--show').attr('src', imgUrl);
-    })
+      $("#xray-img--show").attr("src", imgUrl);
+    });
   });
 
-//   $(document).ready(function() {
-//     $("#xray-img--show").mousemove(function(event) {
-//         var posX = event.pageX;
-//         var posY = event.pageY;
-//         var zoomedInWidth = $(".img-zoom-result").width();
-//         var zoomedInHeight = $(".img-zoom-result").height();
+  //   $(document).ready(function() {
+  //     $("#xray-img--show").mousemove(function(event) {
+  //         var posX = event.pageX;
+  //         var posY = event.pageY;
+  //         var zoomedInWidth = $(".img-zoom-result").width();
+  //         var zoomedInHeight = $(".img-zoom-result").height();
 
-//         // Điều chỉnh vị trí hiển thị của vùng phóng to gần con chuột
-//         $(".img-zoom-result").css({
-//             display: "block",
-//             left: posX + 10, // Thêm khoảng cách 10px để vùng phóng to không che khuất con chuột
-//             top: posY + 10
-//         });
+  //         // Điều chỉnh vị trí hiển thị của vùng phóng to gần con chuột
+  //         $(".img-zoom-result").css({
+  //             display: "block",
+  //             left: posX + 10, // Thêm khoảng cách 10px để vùng phóng to không che khuất con chuột
+  //             top: posY + 10
+  //         });
 
-//         // Tính toán vị trí hiển thị của hình ảnh phóng to bằng cách lấy vị trí hiện tại của con chuột
-//         var imgWidth = $(this).width();
-//         var imgHeight = $(this).height();
-//         var bgPosX = -(posX - $(this).offset().left) * 3; // Tính toán vị trí X phù hợp với scale 3 lần
-//         var bgPosY = -(posY - $(this).offset().top) * 3; // Tính toán vị trí Y phù hợp với scale 3 lần
+  //         // Tính toán vị trí hiển thị của hình ảnh phóng to bằng cách lấy vị trí hiện tại của con chuột
+  //         var imgWidth = $(this).width();
+  //         var imgHeight = $(this).height();
+  //         var bgPosX = -(posX - $(this).offset().left) * 3; // Tính toán vị trí X phù hợp với scale 3 lần
+  //         var bgPosY = -(posY - $(this).offset().top) * 3; // Tính toán vị trí Y phù hợp với scale 3 lần
 
-//         // Cập nhật vị trí và kích thước của hình ảnh phóng to
-//         $(".img-zoom-result").css({
-//             backgroundImage: "url('" + $(this).attr("src") + "')",
-//             backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
-//             backgroundPosition: bgPosX + "px " + bgPosY + "px"
-//         });
-//     }).mouseout(function() {
-//         $(".img-zoom-result").css("display", "none");
-//     });
-// });
+  //         // Cập nhật vị trí và kích thước của hình ảnh phóng to
+  //         $(".img-zoom-result").css({
+  //             backgroundImage: "url('" + $(this).attr("src") + "')",
+  //             backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
+  //             backgroundPosition: bgPosX + "px " + bgPosY + "px"
+  //         });
+  //     }).mouseout(function() {
+  //         $(".img-zoom-result").css("display", "none");
+  //     });
+  // });
 
-// $(document).ready(function() {
-//   $(document).on('mousemove', '#xray-open__img', function(event) {
-//       var posX = event.pageX;
-//       var posY = event.pageY;
-//       var modalOffset = $("#xray-open__img").offset();
-//       var imgOffset = $("#xray-img--show").offset();
-//       var imgWidth = $("#xray-img--show").width();
-//       var imgHeight = $("#xray-img--show").height();
-//       var zoomedInWidth = $(".img-zoom-result").width();
-//       var zoomedInHeight = $(".img-zoom-result").height();
+  // $(document).ready(function() {
+  //   $(document).on('mousemove', '#xray-open__img', function(event) {
+  //       var posX = event.pageX;
+  //       var posY = event.pageY;
+  //       var modalOffset = $("#xray-open__img").offset();
+  //       var imgOffset = $("#xray-img--show").offset();
+  //       var imgWidth = $("#xray-img--show").width();
+  //       var imgHeight = $("#xray-img--show").height();
+  //       var zoomedInWidth = $(".img-zoom-result").width();
+  //       var zoomedInHeight = $(".img-zoom-result").height();
 
-//       // Tính toán vị trí hiển thị của vùng phóng to gần con chuột
-//       var zoomX = posX - modalOffset.left - imgOffset.left - zoomedInWidth / 2;
-//       var zoomY = posY - modalOffset.top - imgOffset.top - zoomedInHeight / 2;
+  //       // Tính toán vị trí hiển thị của vùng phóng to gần con chuột
+  //       var zoomX = posX - modalOffset.left - imgOffset.left - zoomedInWidth / 2;
+  //       var zoomY = posY - modalOffset.top - imgOffset.top - zoomedInHeight / 2;
 
-//       // Kiểm tra vị trí của vùng phóng to để không cho nó ra khỏi hình ảnh
-//       if (zoomX < 0) zoomX = 0;
-//       if (zoomY < 0) zoomY = 0;
-//       if (zoomX > imgWidth - zoomedInWidth) zoomX = imgWidth - zoomedInWidth;
-//       if (zoomY > imgHeight - zoomedInHeight) zoomY = imgHeight - zoomedInHeight;
+  //       // Kiểm tra vị trí của vùng phóng to để không cho nó ra khỏi hình ảnh
+  //       if (zoomX < 0) zoomX = 0;
+  //       if (zoomY < 0) zoomY = 0;
+  //       if (zoomX > imgWidth - zoomedInWidth) zoomX = imgWidth - zoomedInWidth;
+  //       if (zoomY > imgHeight - zoomedInHeight) zoomY = imgHeight - zoomedInHeight;
 
-//       // Cập nhật vị trí và kích thước của vùng phóng to
-//       $(".img-zoom-result").css({
-//           display: "block",
-//           left: posX - zoomedInWidth / 2,
-//           top: posY - zoomedInHeight / 2,
-//           backgroundImage: "url('" + $("#xray-img--show").attr("src") + "')",
-//           backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
-//           backgroundPosition: "-" + zoomX * 3 + "px -" + zoomY * 3 + "px"
-//       });
-//   }).on('mouseleave', '#xray-open__img', function() {
-//       $(".img-zoom-result").css("display", "none");
-//   });
-// });
-
-
-
-
+  //       // Cập nhật vị trí và kích thước của vùng phóng to
+  //       $(".img-zoom-result").css({
+  //           display: "block",
+  //           left: posX - zoomedInWidth / 2,
+  //           top: posY - zoomedInHeight / 2,
+  //           backgroundImage: "url('" + $("#xray-img--show").attr("src") + "')",
+  //           backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
+  //           backgroundPosition: "-" + zoomX * 3 + "px -" + zoomY * 3 + "px"
+  //       });
+  //   }).on('mouseleave', '#xray-open__img', function() {
+  //       $(".img-zoom-result").css("display", "none");
+  //   });
+  // });
 }
 
 // function changeRange(){
@@ -690,30 +707,30 @@ function jsInXray() {
 function handleUploadImg() {
   const fileInput = document.getElementById("upload");
   const img = document.getElementById("xray-img--output");
-  const editImg = document.getElementById('img_link_download');
-  img.style.display = 'block';
-  editImg.style.display = 'none';
+  const editImg = document.getElementById("img_link_download");
+  img.style.display = "block";
+  editImg.style.display = "none";
 
   const file = fileInput.files[0];
 
   if (file) {
     const reader = new FileReader();
 
-    reader.onload = function (e) {
+    reader.onload = function(e) {
       const imgDataUrl = e.target.result;
-      
+
       // Tạo một hình ảnh mới
       const image = new Image();
-      
+
       // Khi hình ảnh đã được tải lên
       image.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
         // Thiết lập kích thước mới cho canvas
         const maxWidth = 330; // Đặt kích thước tối đa cho chiều rộng
         const maxHeight = 330; // Đặt kích thước tối đa cho chiều cao
-        
+
         let newWidth = image.width;
         let newHeight = image.height;
 
@@ -737,7 +754,7 @@ function handleUploadImg() {
         ctx.drawImage(image, 0, 0, newWidth, newHeight);
 
         // Lấy dữ liệu của hình ảnh từ canvas dưới dạng URL
-        const resizedImgDataUrl = canvas.toDataURL('image/jpeg');
+        const resizedImgDataUrl = canvas.toDataURL("image/jpeg");
 
         // Hiển thị hình ảnh đã thay đổi kích thước
         img.src = resizedImgDataUrl;
@@ -765,7 +782,6 @@ function handleUploadImg() {
 
 //   const file_path = fileInput.files[0].name;
 //   console.log(file_path);
-
 
 //   if (file) {
 //     const reader = new FileReader();

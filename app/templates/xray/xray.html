@@ -368,6 +368,15 @@
    
 <script>
     jsInXray();
+    sumUpManualBoundingBoxAndDownloadInXray();
+    jsAjaxChangRangeInXray()
+    $(document).ajaxComplete(function() {
+        $(document).ready(function(){
+            jsAjaxChangRangeInXray()
+            sumUpManualBoundingBoxAndDownloadInXray();
+            jsInXray();
+        })
+    });
 
 </script>
 </div>
