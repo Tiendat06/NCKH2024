@@ -10,8 +10,8 @@
             Add Record
         </button>
     </div>
-    <form id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2" enctype="multipart/form-data">
-        <div style="background-color: #fff" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
+    <form style="" id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2" enctype="multipart/form-data">
+        <div style="background-color: #fff;border-radius: 10px;" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
             <div class="xray-slider w-100 form-group d-flex flex-wrap justify-content-end" style="float: right">
                 <input style="" class="w-25 form-range form-control p-3 col-lg-12 col-md-12 col-sm-12" type="range" name="range"
                     id="myRange" min="0" max="1" step="0.1"
@@ -31,14 +31,15 @@
                         border: 2px solid #387181;
                         cursor: pointer;
                         " class="xray-img--small mb-3 w-100">
-                        <img style="height: 60px; object-fit: cover" class="profile-img w-100"
+
+                        <img data-toggle="modal" data-target="#xray-open__img" id="xray-img__small" style="height: 60px; object-fit: cover" class="profile-img w-100"
                             src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
                             alt="" srcset="" />
                     </div>
                 </div>
 
-                <div class="xray-img__predict bg-dark p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center"
-                    style="height: 400px">
+                <div class="xray-img__predict bg-light p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center"
+                    style="height: 400px; border: 1px solid var(--para-link); border-radius: 10px">
                     <img width="80%" style="height: 90% !important; object-fit: contain" id="xray-img--output"
                         class="profile-img text-center"
                         src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
@@ -323,6 +324,47 @@
         </div>
     </div>
     
+    <!-- open img -->
+    <!-- Modal -->
+<style>
+    .img-container {
+        position: relative;
+    }
+    
+    .img-zoom-result {
+        position: absolute;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+        display: none;
+        width: 200px; /* Độ rộng của vùng phóng to */
+        height: 200px; /* Độ cao của vùng phóng to */
+        z-index: 9999;
+    }
+    
+</style>
+
+<div class="modal fade" id="xray-open__img" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xray image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="d-flex flex-wrap justify-content-center img-container">
+                <img width="800" height="800" id="xray-img--show" src="" alt="" srcset="">
+                <div id="zoomed-in-section" class="img-zoom-result"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
    
 <script>
     jsInXray();

@@ -359,7 +359,7 @@ function jsInXray() {
           // Vẽ lựa chọn lên bounding box
           if (box.option) {
             ctx.font = "12px Arial";
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "red";
             ctx.fillText(box.option, box.startX + 10, box.startY + 20);
           }
         });
@@ -413,7 +413,7 @@ function jsInXray() {
 
         // Vẽ lựa chọn lên bounding box
         ctx.font = "12px Arial";
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "red";
         ctx.fillText(
           selectedOption,
           currentBox.startX + 10,
@@ -457,7 +457,7 @@ function jsInXray() {
           // Vẽ lựa chọn lên bounding box
           if (box.option) {
             ctx.font = "12px Arial";
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "red";
             ctx.fillText(box.option, box.startX + 10, box.startY + 20);
           }
         });
@@ -487,53 +487,7 @@ function jsInXray() {
             link.download = "image_with_bounding_box.jpg";
             link.click();
         }, "image/jpeg");
-
-
-        /*var imageUrl = document.getElementById('xray-img--output').src;
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext("2d");
-    
-        // Tạo một hình ảnh mới từ URL của proxy server
-        var image = new Image();
-        image.src = '/xray/proxy-image?url=' + encodeURIComponent(imageUrl);
-    
-        // Khi hình ảnh đã được load
-        image.onload = function() {
-            // Vẽ hình ảnh lên canvas
-            ctx.drawImage(image, 0, 0);
-    
-            // Vẽ lại bounding boxes lên canvas
-            boundingBoxes.forEach(function (box) {
-                ctx.beginPath();
-                ctx.rect(
-                    box.startX,
-                    box.startY,
-                    box.endX - box.startX,
-                    box.endY - box.startY
-                );
-                ctx.strokeStyle = "red";
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Vẽ option lên bounding box nếu có
-                if (box.option) {
-                    ctx.font = "16px Arial";
-                    ctx.fillStyle = "black";
-                    ctx.fillText(box.option, box.startX + 10, box.startY + 20);
-                }
-            });
-    
-            // Tạo một liên kết để tải hình ảnh mới
-            var link = document.createElement("a");
-            link.href = canvas.toDataURL("image/jpeg");
-            link.download = "image_with_bounding_box.jpg";
-            link.click();
-        };*/
     });
-
-    
-    
-
   });
 
 
@@ -640,6 +594,86 @@ function jsInXray() {
     })
 
   });
+
+  // open-img
+  $(document).ready(function(){
+    $('#xray-img__small').click(function(){
+      // var imgUrl = $(this).attr('src');
+      var imgUrl = document.getElementById('xray-img__small').src;
+      console.log(imgUrl);
+
+      $('#xray-img--show').attr('src', imgUrl);
+    })
+  });
+
+//   $(document).ready(function() {
+//     $("#xray-img--show").mousemove(function(event) {
+//         var posX = event.pageX;
+//         var posY = event.pageY;
+//         var zoomedInWidth = $(".img-zoom-result").width();
+//         var zoomedInHeight = $(".img-zoom-result").height();
+
+//         // Điều chỉnh vị trí hiển thị của vùng phóng to gần con chuột
+//         $(".img-zoom-result").css({
+//             display: "block",
+//             left: posX + 10, // Thêm khoảng cách 10px để vùng phóng to không che khuất con chuột
+//             top: posY + 10
+//         });
+
+//         // Tính toán vị trí hiển thị của hình ảnh phóng to bằng cách lấy vị trí hiện tại của con chuột
+//         var imgWidth = $(this).width();
+//         var imgHeight = $(this).height();
+//         var bgPosX = -(posX - $(this).offset().left) * 3; // Tính toán vị trí X phù hợp với scale 3 lần
+//         var bgPosY = -(posY - $(this).offset().top) * 3; // Tính toán vị trí Y phù hợp với scale 3 lần
+
+//         // Cập nhật vị trí và kích thước của hình ảnh phóng to
+//         $(".img-zoom-result").css({
+//             backgroundImage: "url('" + $(this).attr("src") + "')",
+//             backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
+//             backgroundPosition: bgPosX + "px " + bgPosY + "px"
+//         });
+//     }).mouseout(function() {
+//         $(".img-zoom-result").css("display", "none");
+//     });
+// });
+
+// $(document).ready(function() {
+//   $(document).on('mousemove', '#xray-open__img', function(event) {
+//       var posX = event.pageX;
+//       var posY = event.pageY;
+//       var modalOffset = $("#xray-open__img").offset();
+//       var imgOffset = $("#xray-img--show").offset();
+//       var imgWidth = $("#xray-img--show").width();
+//       var imgHeight = $("#xray-img--show").height();
+//       var zoomedInWidth = $(".img-zoom-result").width();
+//       var zoomedInHeight = $(".img-zoom-result").height();
+
+//       // Tính toán vị trí hiển thị của vùng phóng to gần con chuột
+//       var zoomX = posX - modalOffset.left - imgOffset.left - zoomedInWidth / 2;
+//       var zoomY = posY - modalOffset.top - imgOffset.top - zoomedInHeight / 2;
+
+//       // Kiểm tra vị trí của vùng phóng to để không cho nó ra khỏi hình ảnh
+//       if (zoomX < 0) zoomX = 0;
+//       if (zoomY < 0) zoomY = 0;
+//       if (zoomX > imgWidth - zoomedInWidth) zoomX = imgWidth - zoomedInWidth;
+//       if (zoomY > imgHeight - zoomedInHeight) zoomY = imgHeight - zoomedInHeight;
+
+//       // Cập nhật vị trí và kích thước của vùng phóng to
+//       $(".img-zoom-result").css({
+//           display: "block",
+//           left: posX - zoomedInWidth / 2,
+//           top: posY - zoomedInHeight / 2,
+//           backgroundImage: "url('" + $("#xray-img--show").attr("src") + "')",
+//           backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
+//           backgroundPosition: "-" + zoomX * 3 + "px -" + zoomY * 3 + "px"
+//       });
+//   }).on('mouseleave', '#xray-open__img', function() {
+//       $(".img-zoom-result").css("display", "none");
+//   });
+// });
+
+
+
 
 }
 
