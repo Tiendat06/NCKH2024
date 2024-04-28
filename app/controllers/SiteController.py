@@ -9,6 +9,7 @@ class SiteController:
     def index(self):
         if 'account' not in session:
             return redirect('/home')
+        
         return render_template("index.html", content = 'index', page = 'index')
         
     # [GET]
