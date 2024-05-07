@@ -204,6 +204,8 @@ class XrayController:
 
         return send_file(BytesIO(response.content), mimetype='image/jpeg')
     
+    
+    # [POST, AJAX]
     def saveRecord(self):
         data = request.get_json();
         patient_id = self.patient.AUTO_PAT_ID();
@@ -267,7 +269,6 @@ class XrayController:
             if not result_patient:
                 return jsonify(result.get('fail'));
 
-        
         
         result_medical_record = self.medicalRecord.addMedicalRecord(medical_record);
         if not result_medical_record:

@@ -314,6 +314,13 @@ function ajaxInUserManagement() {
   });
 }
 
+
+// function deleteDoctorPredict(data){
+//   var value = document.getElementsByClassName(data);
+//   console.log(value.value);
+// }
+
+
 function sumUpManualBoundingBoxAndDownloadInXray() {
   // edit and download file
   $(document).ready(function() {
@@ -324,8 +331,15 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     var image = document.getElementById("img_link_download");
     var editBtn = document.getElementById("editing");
     var downloadBtn = document.getElementById("downloading");
-    var boundingBoxes = [];
+    var undoBtn = document.getElementById('btn-undo-xray');
+    var redoBtn = document.getElementById('btn-redo-xray');
+    var isClickOnBoundingBox = false;
+    var isDownloadOk = false;
+    var redoStackBB = [];
+    var redoStackHM = [];
     var currentBox = null;
+    var boundingBoxes = [];
+    var hashMapData = [];
 
     // canvas.width = image.width;
     // canvas.height = image.height;
@@ -341,13 +355,71 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
       image.style.display = "none";
       canvas.style.display = "block";
       realImg.style.display = "none";
+      document.getElementById('xray-btn--undo').style.display = "block";
+      document.getElementById('xray-btn--redo').style.display = "block";
       isDrawing = true;
     });
 
-    canvas.addEventListener("mousedown", function(e) {
+    // // xóa bounding box
+    // canvas.addEventListener("click", function(e) {
+    //   var clickX = e.offsetX;
+    //   var clickY = e.offsetY;
+    
+    //   // Kiểm tra xem click có nằm trong bounding box nào không
+    //   boundingBoxes.forEach(function(box, index) {
+    //     if (
+    //       clickX >= box.startX &&
+    //       clickX <= box.endX &&
+    //       clickY >= box.startY &&
+    //       clickY <= box.endY
+    //     ) {
+    //       // Hiển thị modal confirm
+    //       var confirmDelete = confirm("Bạn có muốn xóa bounding box này không?");
+    //       if (confirmDelete) {
+    //         // Xóa bounding box khỏi mảng boundingBoxes
+    //         boundingBoxes.splice(index, 1);   
+    //         isClickOnBoundingBox = true; 
+    //         // Vẽ lại canvas
+    //         redrawCanvas();
+    //       }
+    //     }
+    //   });
+    // });
+    
+    // Hàm vẽ lại canvas sau khi xóa bounding box
+    function redrawCanvas() {
       isDrawing = true;
-      startX = e.offsetX;
-      startY = e.offsetY;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+      boundingBoxes.forEach(function(box) {
+        ctx.beginPath();
+        ctx.rect(
+          box.startX,
+          box.startY,
+          box.endX - box.startX,
+          box.endY - box.startY
+        );
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    
+        // Vẽ lựa chọn lên bounding box
+        if (box.option) {
+          ctx.font = "12px Arial";
+          ctx.fillStyle = "red";
+          ctx.fillText(box.option, box.startX + 10, box.startY + 20);
+        }
+      });
+    }
+
+    canvas.addEventListener("mousedown", function(e) {
+      if(!isClickOnBoundingBox){
+        isDrawing = true;
+        startX = e.offsetX;
+        startY = e.offsetY;
+      }else{
+        isDrawing = false;
+      }
     });
 
     canvas.addEventListener("mousemove", function(e) {
@@ -389,17 +461,61 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
     canvas.addEventListener("mouseup", function() {
       isDrawing = false;
+      // isDownloadOk = true;
       endX = event.offsetX;
       endY = event.offsetY;
       currentBox = { startX: startX, startY: startY, endX: endX, endY: endY }; // Lưu bounding box đang được vẽ vào biến tạm thời
       //$("#selectOptionModal").modal("show"); // Hiển thị modal
 
+
+      isClickOnBoundingBox = false;
       var modal = document.getElementById("selectOptionModal");
       modal.classList.add("show");
       modal.style.display = "block";
       modal.setAttribute("aria-modal", "true");
       modal.setAttribute("aria-hidden", "false");
     });
+
+    undoBtn.addEventListener("click", function () {
+      if(boundingBoxes.length != 0 && hashMapData.length != 0){
+        var itemBB = boundingBoxes.pop();
+        redoStackBB.push(itemBB)
+        redrawCanvas();
+        var itemHM = hashMapData.pop();
+        redoStackHM.push(itemHM);
+        writeDataToFront(hashMapData);
+      }
+
+    });
+
+    redoBtn.addEventListener("click", function () {
+      if(redoStackBB.length != 0 && redoStackHM.length != 0){
+        boundingBoxes.push(redoStackBB.pop());
+        redrawCanvas();
+        hashMapData.push(redoStackHM.pop());
+        writeDataToFront(hashMapData);
+      }
+
+    });
+
+    function writeDataToFront(hashMapData){
+      var htmlContent = "";
+      hashMapData.forEach(function(item) {
+        htmlContent += "<div style='cursor: pointer' class='text-light xray-predict__item w-100 mb-2'>" + 
+                        "<div class='xray-predict__title d-flex flex-wrap mb-2'>" + 
+                        "<p class='mb-0 w-75 text-left text-secondary'>"+ item +"</p>" + 
+                          "<div class='w-25 text-right'>" + 
+                                "<input type='hidden' class='delete-doctor-predict' value='"+ item + "' />"+
+                              "<i id='"+ item+"' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-circle-minus text-right text-danger'></i>" +
+                          "</div>" + 
+                        "</div>" + 
+                      "<div style='height: 5px;background-color: #ccc;border-radius: 10px;overflow: hidden;' class='xray-percent--outer w-100'>"+
+                          "<div style='width: 100%; background-color: red' class='xray-percent h-100'></div>" + 
+                      "</div>" + 
+                    "</div>"; 
+      });
+      $('#profile').html(htmlContent)
+    }
 
     // Sự kiện khi nhấn nút "Save" trong modal
     document.getElementById("saveOption").addEventListener("click", function() {
@@ -430,6 +546,12 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
       // Lưu bounding box vào mảng boundingBoxes
       boundingBoxes.push(currentBox);
+
+      // Thêm phần tử vào Map
+      hashMapData.push(selectedOption);
+
+      writeDataToFront(hashMapData);
+    
     });
 
     // Sự kiện khi nhấn nút "Close" trong modal
@@ -470,43 +592,50 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     });
 
     // Sự kiện khi nhấn nút "Download"
-    $(document).ready(function() {
-      if (isDrawing == true) {
+    // $(document).ready(function() {
         downloadBtn.addEventListener("click", function() {
-          console.log("Btn is clicked");
+          // console.log("Btn is clicked");
           // Lấy reference đến canvas và context
-          var imageUrl = document.getElementById("img_link_download").src;
-          var proxyUrl = "xray/proxy-image?url=" + encodeURIComponent(imageUrl);
+          if(boundingBoxes.length != 0 && hashMapData.length != 0){
+            var imageUrl = document.getElementById("img_link_download").src;
+            var proxyUrl = "xray/proxy-image?url=" + encodeURIComponent(imageUrl);
 
-          var image = new Image();
-          // Đảm bảo sử dụng cross-origin
-          // Using like this, system will know that imgs from another place are safety
-          image.crossOrigin = "Anonymous";
+            var imageClass = new Image();
+            // Đảm bảo sử dụng cross-origin
+            // Using like this, system will know that imgs from another place are safety
+            imageClass.crossOrigin = "Anonymous";
 
-          image.onload = function() {
-            // Vẽ hình ảnh lên canvas
-            ctx.drawImage(image, 0, 0);
-          };
+            imageClass.onload = function() {
+              // Vẽ hình ảnh lên canvas
+              ctx.drawImage(imageClass, 0, 0);
+            };
 
-          image.src = proxyUrl;
+            imageClass.src = proxyUrl;
 
-          canvas.toBlob(function(blob) {
-            var link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "image_with_bounding_box.jpg";
-            link.click();
-          }, "image/jpeg");
+            canvas.toBlob(function(blob) {
+              var link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.download = "image_with_bounding_box.jpg";
+              link.click();
+            }, "image/jpeg");
+            redrawCanvas();
+
+          } else{
+            downloadImage();
+            redrawCanvas();
+          }
         });
-      }
-    });
+      // else {
+      //   downloadBtn.addEventListener("click", function() {
+      //     console.log(boundingBoxes.length)
+      //     console.log(hashMapData.length)
+      //     downloadImage();
+      //     redrawCanvas();
+      //   });
+      // }
 
-    $(document).ready(function() {
-      if (isDrawing == false) {
-        downloadBtn.addEventListener("click", function() {
-          downloadImage();
-        });
-      }
-    });
+    // });
+
     // });
   });
 }
@@ -708,8 +837,10 @@ function handleUploadImg() {
   const fileInput = document.getElementById("upload");
   const img = document.getElementById("xray-img--output");
   const editImg = document.getElementById("img_link_download");
+  const canvas = document.getElementById('canvas');
   img.style.display = "block";
   editImg.style.display = "none";
+  canvas.style.display = "none";
 
   const file = fileInput.files[0];
 

@@ -71,7 +71,7 @@
                         </ul>
 
                         <div class="tab-content w-100" id="myTabContent">
-                            {% if zip_data %}
+                            <!-- { if zip_data %} -->
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
                                 <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
@@ -100,14 +100,32 @@
                             </div>
 
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
-                                <!-- sick_name, percentage, sick_name_eng, colors -->
-                                <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
+                                <!-- <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
+                                    <div class="xray-predict__title d-flex flex-wrap mb-2">
+                                        <p class="mb-0 w-75 text-left text-secondary">
+                                            ILD
+                                        </p>
+                                        <div class="w-25">
+                                            <i style="font-size: 18px" class="fa-solid fa-circle-minus text-right w-100 text-danger"></i>
+                                        </div>
+                                    </div>
+                                    <div style="
+                                        height: 5px;
+                                        background-color: #ccc;
+                                        border-radius: 10px;
+                                        overflow: hidden;
+                                        " class="xray-percent--outer w-100">
+                                        <div style="width: 100%; background-color: red"
+                                            class="xray-percent h-100"></div>
+                                    </div>
+                                </div> -->
+                                
+                                <!-- { for sick_name, percentage, sick_name_eng, colors in zip_data %} -->
+                                <!-- <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
                                         <p class="mb-0 w-75 text-left text-secondary">
                                             {{sick_name_eng}} ({{sick_name}})
                                         </p>
-                                        <!-- <p class="mb-0 w-25 text-right text-secondary">{{percentage}}%</p> -->
                                         <div>
                                             <p class="mb-0 w-25 text-right text-secondary">
                                                 {{percentage}}%
@@ -124,10 +142,21 @@
                                         <div style="width: {{ percentage }}%; background-color: rgb{{colors}}"
                                             class="xray-percent h-100"></div>
                                     </div>
-                                </div>
-                                {% endfor %}
+                                </div> -->
+                                <!-- { endfor %} -->
                             </div>
-                            {% endif %}
+
+                            <div class="d-flex flex-wrap justify-content-end">
+                                <div class="text-right xray-btn--undo tab-pane mt-4" id="xray-btn--undo" style="display: none;">
+                                    <a id="btn-undo-xray" class="btn btn-warning">Undo</a>
+                                </div>
+
+                                <div class="text-right xray-btn--redo tab-pane mt-4 ml-3" id="xray-btn--redo" style="display: none;">
+                                    <a id="btn-redo-xray" class="btn btn-purple">Redo</a>
+                                </div>
+                            </div>
+
+                            <!-- { endif %} -->
                         </div>
                     </div>
 
