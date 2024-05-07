@@ -484,16 +484,19 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         var itemHM = hashMapData.pop();
         redoStackHM.push(itemHM);
         writeDataToFront(hashMapData);
+        isDrawing = false;
       }
 
     });
 
     redoBtn.addEventListener("click", function () {
       if(redoStackBB.length != 0 && redoStackHM.length != 0){
+        isDrawing = false;
         boundingBoxes.push(redoStackBB.pop());
         redrawCanvas();
         hashMapData.push(redoStackHM.pop());
         writeDataToFront(hashMapData);
+        isDrawing = false;
       }
 
     });
