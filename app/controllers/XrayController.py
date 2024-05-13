@@ -1,6 +1,7 @@
 from flask import render_template, session, redirect, request, url_for, current_app, sessions, send_file, jsonify
 from datetime import datetime
 import requests
+import random
 from io import BytesIO
 from models.Account import AccountModel
 from models.Disease import DiseaseModel
@@ -59,8 +60,10 @@ class XrayController:
                     path_to_save = (os.path.join(static_folder_path, 'img', image.filename))
                     path_to_save_local = (os.path.join(static_folder_path, 'img', 'data', image.filename))
                     # image.save(path_to_save_local)
+                    session['relative_path_to_save_local'] = path_to_save_local;
 
                     print((path_to_save))
+                    session['image_name'] = image.filename;
                     session['relative_path_to_save'] = '/static/img/'+image.filename
                     session['path_to_save'] = path_to_save
 
@@ -139,15 +142,15 @@ class XrayController:
                 if data:
                     path_ = data.get('img_link');
                     conf_thres_ajax = float(data.get('range'));
-                    print(path_)
-                    print(conf_thres_ajax)
+                    # print(path_)
+                    # print(conf_thres_ajax)
                     # static_folder_path = os.path.join(app.root_path, 'static')
                     # path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
                     path_to_save = session.get('path_to_save')
                     print(path_to_save)
 
                     # Tìm đường dẫn tương đối của thư mục static
-                    static_path = os.path.relpath(path_to_save, os.path.join(os.getcwd(), 'app'))
+                    # static_path = os.path.relpath(path_to_save, os.path.join(os.getcwd(), 'app'))
 
                     path_ = session.get('path_predict');
 
@@ -160,8 +163,18 @@ class XrayController:
                     doctor_zip_data = []
 
                     if ndet!=0:
-                        path_to_save_local = session.get('path_to_save_local');
+                        # os.remove(session.get('path_to_save_local'));
+                        path_to_save_local = session.get('relative_path_to_save_local');
                         cv2.imwrite(path_to_save_local, frame)
+
+                        image_re = cv2.imread(path_to_save_local)
+                        resized_image = cv2.resize(image_re, (330, 330))
+                        cv2.imwrite(path_to_save_local, resized_image)
+
+                        image_name = session.get('image_name');
+                        random_string = self.medicalRecord.generate_random_string(8);
+                        img_local = '/static/img/data/'+image_name+"?random_string="+random_string;
+
 
                         real_percentage = []
                         for i in range(len(percentage)):
@@ -176,15 +189,15 @@ class XrayController:
                         # res = cloudinary.uploader.upload(image_data);
                         # path_ = res['secure_url'];
                         
-                        print(path_)
+                        # print(path_)
                         
                         zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
                         doctor_zip_data = zip_data;
 
-                        return render_template("/xray/change_range.html", user_image = path_ , user_image_local = session.get('path_to_save_local'), rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
+                        return render_template("/xray/change_range.html", user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
-                        return render_template('/xray/change_range.html',user_image = session.get('path_to_save') , conf_thres= conf_thres_ajax,
+                        return render_template('/xray/change_range.html',user_image = img_local , conf_thres= conf_thres_ajax,
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi

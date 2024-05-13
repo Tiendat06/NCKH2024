@@ -320,6 +320,11 @@ function ajaxInUserManagement() {
 //   console.log(value.value);
 // }
 
+function removeQueryString(url) {
+  var parts = url.split('?');
+  var cleanedUrl = parts[0];
+  return cleanedUrl;
+}
 
 function sumUpManualBoundingBoxAndDownloadInXray() {
   // edit and download file
@@ -329,6 +334,9 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     var ctx = canvas.getContext("2d");
     var realImg = document.getElementById("xray-img--output");
     var image = document.getElementById("img_link_download");
+    // console.log(image);
+    // var imgSrc = image.src;
+    // image.src = removeQueryString(imgSrc);
     var editBtn = document.getElementById("editing");
     var downloadBtn = document.getElementById("downloading");
     var undoBtn = document.getElementById('btn-undo-xray');
@@ -343,8 +351,8 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
     // canvas.width = image.width;
     // canvas.height = image.height;
-    canvas.width = image.width;
-    canvas.height = image.height;
+    canvas.width = 330;
+    canvas.height = 330;
     canvas.style.objectFit = "contain";
 
     var isDrawing = false;
@@ -509,7 +517,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
                         "<p class='mb-0 w-75 text-left text-secondary'>"+ item +"</p>" + 
                           "<div class='w-25 text-right'>" + 
                                 "<input type='hidden' class='delete-doctor-predict' value='"+ item + "' />"+
-                              "<i id='"+ item+"' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-circle-minus text-right text-danger'></i>" +
+                              "<i id='"+ item+"' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-pen-to-square text-right text-danger'></i>" +
                           "</div>" + 
                         "</div>" + 
                       "<div style='height: 5px;background-color: #ccc;border-radius: 10px;overflow: hidden;' class='xray-percent--outer w-100'>"+
@@ -517,6 +525,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
                       "</div>" + 
                     "</div>"; 
       });
+      // <i class="fa-solid fa-pen-to-square"></i>
       $('#profile').html(htmlContent)
     }
 
@@ -595,9 +604,8 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     });
 
     // Sự kiện khi nhấn nút "Download"
-    // $(document).ready(function() {
         downloadBtn.addEventListener("click", function() {
-          // console.log("Btn is clicked");
+          var count = 0;
           // Lấy reference đến canvas và context
           if(boundingBoxes.length != 0 && hashMapData.length != 0){
             var imageUrl = document.getElementById("img_link_download").src;
@@ -616,30 +624,26 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
             imageClass.src = proxyUrl;
 
             canvas.toBlob(function(blob) {
-              var link = document.createElement("a");
-              link.href = URL.createObjectURL(blob);
-              link.download = "image_with_bounding_box.jpg";
-              link.click();
+              if(count == 0){
+                var link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "image_with_bounding_box.jpg";
+                link.click();
+                count = count + 1;
+              }
             }, "image/jpeg");
             redrawCanvas();
-
+            isDrawing = false;
           } else{
-            downloadImage();
-            redrawCanvas();
+            if(count == 0){
+              downloadImage();
+              redrawCanvas();
+              isDrawing = false;
+              count = count + 1;
+            }
           }
         });
-      // else {
-      //   downloadBtn.addEventListener("click", function() {
-      //     console.log(boundingBoxes.length)
-      //     console.log(hashMapData.length)
-      //     downloadImage();
-      //     redrawCanvas();
-      //   });
-      // }
 
-    // });
-
-    // });
   });
 }
 

@@ -1,5 +1,7 @@
 
 from database import DataBaseUtils
+import random
+import string
 
 class MedicalRecord:
     def __init__(self, m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict):
@@ -87,6 +89,10 @@ class MedicalRecordModel(DataBaseUtils):
         if result.acknowledged:
             return True;
         return False;
+
+    def generate_random_string(self, length):
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choice(characters) for _ in range(length))
 
     def AUTO_MDR_ID(self):
         result = self.__conn.get_collection('medical_record').find_one({}, sort=[("m_rec_id", -1)])  #desc

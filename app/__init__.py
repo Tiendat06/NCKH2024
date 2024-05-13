@@ -38,4 +38,3 @@ if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem' 
     routes(app)
     app.run(debug=True)
-    # st.rerun()
