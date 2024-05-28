@@ -233,7 +233,7 @@ class XrayController:
         date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
 
         medical_record_id = self.medicalRecord.AUTO_MDR_ID();
-        img_before = session.get('relative_path_to_save');
+        img_before = session.get('path_to_save');
         img_last = session.get('path_to_save_local');
         medical_predict = data.get('predict');
 
@@ -245,11 +245,8 @@ class XrayController:
             'not_checking': 'You must check your image first',
         }     
 
-        if not all([patient_name, patient_PID, patient_age, patient_phone, patient_gender, patient_address, patient_dob, patient_email, medical_predict]):
-            return jsonify(result.get('empty'))
-
-        if self.user.checkEmailIsContain(patient_email):
-            return jsonify(result.get('email_not_contain'))   
+        if not all([patient_name, patient_PID, patient_age, patient_phone, patient_gender, patient_address, patient_dob, patient_email, medical_predict, img_before, img_last]):
+            return jsonify(result.get('empty'));
 
         patient = {
             'patient_id': patient_id,
@@ -278,6 +275,8 @@ class XrayController:
 
         if not self.patient.checkPatientIsContainByPID(patient_PID):
             medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'];
+            # if self.patient.checkEmailIsContain(patient_email):
+                # return jsonify(result.get('email_not_contain'));
             result_patient = self.patient.addPatient(patient);
             if not result_patient:
                 return jsonify(result.get('fail'));

@@ -109,7 +109,7 @@ class PatientModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
     
-    def addPatient(self, patient):
+    def addPatient(self, patient: Patient):
         result = self.__conn.get_collection('patient').insert_one(patient)
         if result.acknowledged:
             return True;
@@ -128,6 +128,24 @@ class PatientModel(DataBaseUtils):
             return result;
         return None;
 
+    def edit_patient(self, patient: Patient):
+        result = self.__conn.get_collection('patient').update_one({'patient_id': patient._patient_id}, 
+                                                               {"$set": { 
+                                                                   'name': patient._name,
+                                                                   'age': patient._age,
+                                                                   'phone': patient._phone,
+                                                                   'PID': patient._PID,
+                                                                   'gender': patient._gender,
+                                                                   'address': patient._address,
+                                                                   'dob': patient._dob,
+                                                                   'email': patient._email,
+                                                                }})
+        if result.modified_count > 0:
+            return True
+        return False
+    
+    def delete_patient(self):
+        pass
 
     def getAllPatient(self):
         patient_data = self.__conn.get_collection('patient').find();

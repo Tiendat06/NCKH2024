@@ -314,7 +314,6 @@ function ajaxInUserManagement() {
   });
 }
 
-
 // function deleteDoctorPredict(data){
 //   var value = document.getElementsByClassName(data);
 //   console.log(value.value);
@@ -603,9 +602,15 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
       });
     });
 
+    var isDownloading = false;
     // Sự kiện khi nhấn nút "Download"
-        downloadBtn.addEventListener("click", function() {
+        downloadBtn.addEventListener("click", async function() {
           var count = 0;
+          if(isDownloading){
+            // alert("You must wait 5s")
+            return;
+          }
+          isDownloading = await true;
           // Lấy reference đến canvas và context
           if(boundingBoxes.length != 0 && hashMapData.length != 0){
             var imageUrl = document.getElementById("img_link_download").src;
@@ -632,16 +637,22 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
                 count = count + 1;
               }
             }, "image/jpeg");
-            redrawCanvas();
             isDrawing = false;
+            redrawCanvas();
           } else{
             if(count == 0){
               downloadImage();
-              redrawCanvas();
               isDrawing = false;
+              redrawCanvas();
               count = count + 1;
             }
           }
+          redrawCanvas();
+
+          setTimeout(async function() {
+              isDownloading = await false;
+              isDrawing = false;
+          }, 15000);
         });
 
   });
@@ -828,6 +839,113 @@ function jsInXray() {
   //       $(".img-zoom-result").css("display", "none");
   //   });
   // });
+}
+
+function jsInPatient(){
+  // delete
+  $(document).ready(function(){
+    $(".btn-show-details-delete").on("click", function() {
+      var id = $(this).data("id");
+      var name = $(this).data("name");
+
+      $("#patientIdDelete").attr("value", id);
+      $("#patientNameDelete").attr("value", name);
+
+      $("#patientIdDelete-para").html("Are you sure to delete " + name + " ?");
+    });
+  });
+
+  $(document).ready(function(){
+    $("#btn-delete").click(function(){
+      var id = $("#patientIdDelete").val();
+
+      $.ajax({
+        url: "/patient/delete",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          id: id
+        }),
+        success: function(response) {
+          $("#error_delete_user").html(response);
+          $("#error_delete_user_outer").removeClass("d-none");
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      });
+    });
+  });
+
+  // edit
+  $(document).ready(function(){
+    $('.btn-show-details').on('click', function(){
+      var patient_id = $(this).data("patient_id");
+      var name = $(this).data("name");
+      var age = $(this).data("age");
+      var img = $(this).data("img");
+      var phone = $(this).data("phone");
+      var PID = $(this).data("pid");
+      var gender = $(this).data("gender");
+      var address = $(this).data("address");
+      var date_created = $(this).data("date_created");
+      var dob = $(this).data("dob");
+      var email = $(this).data("email");
+
+      $("#patient_id").attr("value", patient_id);
+      $("#full_name_edit").attr("value", name);
+      $("#age_edit").attr("value", age);
+      $("#phone_edit").val(phone);
+      $("#PID_edit").attr("value", PID);
+      $("#gender_edit").val(gender);
+      $("#address_edit").attr("value", address);
+      $("#dob_edit").val(dob);
+      $("#email_edit").attr("value", email);
+      $("#date_created_edit").attr("value", date_created);
+      // $("#img_edit").attr("value", img_profile);
+    });
+  });
+
+  $(document).ready(function(){
+    $("#btn_edit").click(function(){
+      let patient_id = $("#patient_id").val();
+      let name_edit = $("#full_name_edit").val();
+      let age_edit = $("#age_edit").val();
+      let phone_edit = $("#phone_edit").val();
+      let PID_edit = $("#PID_edit").val();
+      let gender_edit = $("#gender_edit").val();
+      let address_edit = $("#address_edit").val();
+      let dob_edit = $("#dob_edit").val();
+      let email_edit = $("#email_edit").val();
+      let date_created = $("#date_created_edit").val();
+
+      $.ajax({
+        url: "/patient/edit",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          patient_id: patient_id,
+          name_edit: name_edit,
+          age_edit: age_edit,
+          phone_edit: phone_edit,
+          PID_edit: PID_edit,
+          gender_edit: gender_edit,
+          address_edit: address_edit,
+          dob_edit: dob_edit,
+          email_edit: email_edit,
+          date_created: date_created,
+        }),
+        success: function(response) {
+          $("#error_editing_user").html(response);
+          $("#error_editing_user_outer").removeClass("d-none");
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      })
+    });
+  });
+
 }
 
 // function changeRange(){

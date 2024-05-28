@@ -1,6 +1,304 @@
+<div class="patient d-flex flex-wrap w-100 p-5">
+    <div class="patient-title col-lg-12 col-md-12 col-sm-12">
+        <h5 class="patient-heading">Patient Management</h5>
+    </div>
 
-<div>
-    {% for item in patient_list %}
-        <p>{{item._name}}</p>
-    {% endfor %}
+    <!-- <div class="user-btn col-lg-12 col-md-12 col-sm-12">
+        <button data-toggle="modal" data-target="#add-user" style="float: right;" class="btn btn-info">
+            <i class="fa-solid fa-user-plus"></i>
+            Add Patient
+        </button>
+    </div> -->
+
+    <div class="w-100 p-3 pt-1">
+        <div class="row">
+            <div class="user-table pl-4 pr-4 col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap" style="">
+                <div class="w-100 col-lg-12 col-md-12 col-sm-12 p-3 mt-3 mb-5 d-flex align-items-center" style="background-color: #fff; border-radius: 20px">
+                    <i class="fa-solid fa-circle-info mr-3" style="font-size: 18px;"></i>
+                    <h4 class="mb-0" style="font-size: 1.3rem;">Information table</h4>
+                </div>
+
+                {% for patient in patient_list %}
+
+                <div class="col-lg-3 col-md-6 user-items mb-5">
+                    <div class="user-items__inner p-4" style="background-color: #fff; border-radius: 20px">
+                        <div class="d-flex flex-wrap">
+                            <!-- <div data-id="{{patient._patient_id}}" data-name="{{patient._name}}" data-toggle="modal" data-target="#delete-user" class="user-items__delete mb-2 w-50 btn-show-details-delete" style="text-align: left;">
+                                <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
+                            </div> -->
+    
+                            <div data-id="{{patient._patient_id}}" data-name="{{patient._name}}" data-toggle="modal" data-target="#more-patient" class="user-items__delete mb-2 w-100 btn-show-details-delete" style="text-align: right;">
+                                <i class="fa-solid fa-circle-info text-primary" style="font-size: 25px; cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <div class="user-items__img text-center">
+                            <!-- <label for="fileInput"> -->
+                                <img style="width: 80px; height: 80px; border-radius: 50%; object-fit:cover" src="{{patient._img}}" id="profile-img" alt="" srcset="">
+                            <!-- </label> -->
+                            <!-- <input type="file" style="display: none;" accept="image/*" name="fileImg" id="fileInput"> -->
+                        </div>
+                        <div class="user-items__info mt-2 text-center">
+                            <p class="text-dark" style="font-size: 18px;">{{patient._name}}</p>
+                            <p class="mb-2">{{patient._dob}}</p>
+                            <a style="color: var(--bs-body-color);" href="tel:{{patient._phone}}">
+                                <p class="mb-2">{{patient._phone}}</p>
+                            </a>
+                            <a style="color: var(--bs-body-color);" class="" href="mailto:{{patient._email}}">
+                                <p class="mb-3">{{patient._email}}</p>
+                            </a>
+                        </div>
+                        
+                        <div class="user-items__btn text-center">
+                            <button data-patient_id="{{patient._patient_id}}"
+                                    data-name="{{patient._name}}"
+                                    data-age="{{patient._age}}"
+                                    data-img="{{patient._img}}"
+                                    data-phone="{{patient._phone}}"
+                                    data-PID="{{patient._PID}}"
+                                    data-gender="{{patient._gender}}"
+                                    data-address="{{patient._address}}"
+                                    data-date_created="{{patient._date_created}}"
+                                    data-dob="{{patient._dob}}"
+                                    data-email="{{patient._email}}"
+                            class="btn btn-primary btn-show-details" data-toggle="modal" data-target="#edit-patient" type="submit">Edit Profile</button>
+
+                            <!-- <button data-patient_id="{{patient._patient_id}}"
+                                    data-name="{{patient._name}}"
+                                    data-age="{{patient._age}}"
+                                    data-img="{{patient._img}}"
+                                    data-phone="{{patient._phone}}"
+                                    data-PID="{{patient._PID}}"
+                                    data-gender="{{patient._gender}}"
+                                    data-address="{{patient._address}}"
+                                    data-date_created="{{patient._date_created}}"
+                                    data-dob="{{patient._dob}}"
+                                    data-email="{{patient._email}}"
+                            class="btn btn-primary btn-show-details" data-toggle="modal" data-target="#more-patient" type="submit"><i class="fa-solid fa-info"></i></button> -->
+                        </div>
+
+                    </div>
+                </div>
+
+                {% endfor %}
+        
+                <nav style="" class="col-lg-12 col-md-12 col-sm-12" aria-label="Page navigation">
+                    <ul class="pagination justify-content-end">
+                    {% if pages > 1 %}
+                        <li class="page-item"><a class="page-link" href="/patient/{{pages-1}}">Previous</a></li>
+                    {% endif %}
+        
+                    {% for page_num in range(1, total_pages + 1) %}
+                        <li class="page-item {% if page_num == pages %} active {% endif %}"><a class="page-link" href="/patient/{{page_num}}">{{ page_num }}</a></li>
+                    {% endfor %}
+        
+                    {% if pages < total_pages %}
+                        <li class="page-item"><a class="page-link" href="/patient/{{pages+1}}">Next</a></li>
+                    {% endif %}
+                    
+                    </ul>
+                </nav>
+            
+            </div>
+        </div>
+
+    </div>
+    
 </div>
+
+    <!--    add modal -->
+    <div class="modal fade" id="add-user">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form onsubmit="return false" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="full_name_add">Full name</label>
+                                <input class="form-control" type="text" name="full_name_add" id="full_name_add" placeholder="Full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender_add">Gender</label>
+                                <select class="form-control" name="gender_add" id="gender_add" required>
+                                    <option value="">--Choose gender--</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email_add">Email</label>
+                                <input class="form-control" type="email" name="email_add" id="email_add" placeholder="Email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dob_add">Birthday</label>
+                                <input class="form-control" type="date" name="dob_add" id="dob_add" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_add">Phone number</label>
+                                <input class="form-control" type="text" name="phone_add" id="phone_add" placeholder="Phone number" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="error_adding_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_adding_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+
+                        <button id="btn_add" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    edit modal -->
+    <div class="modal fade" id="edit-patient">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form onsubmit="return false" enctype="multipart/form-data" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Patient</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- <input type="hidden" name="tmp_email" id="tmp_email">
+                            <input type="hidden" name="acc_id" id="acc_id"> -->
+                            <input type="hidden" name="date_created_edit" id="date_created_edit">
+
+                            <input type="hidden" name="patient_id" id="patient_id">
+
+                            <div class="form-group">
+                                <label for="full_name_edit">Full name</label>
+                                <input class="form-control" type="text" name="full_name_edit" id="full_name_edit" placeholder="Full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age_edit">Age</label>
+                                <input class="form-control" type="text" name="age_edit" id="age_edit" placeholder="Age" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_edit">Phone number</label>
+                                <input class="form-control" type="text" name="phone_edit" id="phone_edit" placeholder="Phone number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="PID_edit">PID</label>
+                                <input class="form-control" type="text" name="PID_edit" id="PID_edit" placeholder="PID" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender_edit">Gender</label>
+                                <select class="form-control" name="gender_edit" id="gender_edit" required>
+                                    <option value="">--Choose gender--</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address_edit">Address</label>
+                                <input class="form-control" type="text" name="address_edit" id="address_edit" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dob_edit">Birthday</label>
+                                <input class="form-control" type="date" name="dob_edit" id="dob_edit" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email_edit">Email</label>
+                                <input class="form-control" type="email" name="email_edit" id="email_edit" placeholder="Email" required>
+                            </div>
+
+                            <!-- <div class="form-group">
+                                <label for="avatar_edit">Avatar</label>
+                                <input type="file" name="avatar_edit" id="avatar_edit" class="form-control">
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div id="error_editing_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-primary">
+                        <p id="error_editing_user" class="login-form__para mb-0 text-primary">
+                                
+                        </p>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" id="btn_edit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    delete modal -->
+    <div class="modal fade" tabindex="-1"  id="delete-patient">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" onsubmit="return false" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- ID item đc click gắn ở đây, kéo lên mục delete chỉnh lại data-id -->
+                            <input type="hidden" name="patientIdDelete" id="patientIdDelete" value="">
+                            <input type="hidden" name="patientNameDelete" id="patientNameDelete" value="">
+
+                            <p id="patientIdDelete-para"></p>
+
+                        </div>
+                    </div>
+
+                    <div id="error_delete_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_delete_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-delete" class="btn btn-primary">Delete</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    jsInPatient();
+</script>
