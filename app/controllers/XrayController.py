@@ -233,7 +233,7 @@ class XrayController:
         date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
 
         medical_record_id = self.medicalRecord.AUTO_MDR_ID();
-        img_before = session.get('path_to_save');
+        img_before = session.get('relative_path_to_save');
         img_last = session.get('path_to_save_local');
         medical_predict = data.get('predict');
 
@@ -274,12 +274,13 @@ class XrayController:
         }
 
         if not self.patient.checkPatientIsContainByPID(patient_PID):
-            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'];
             # if self.patient.checkEmailIsContain(patient_email):
                 # return jsonify(result.get('email_not_contain'));
             result_patient = self.patient.addPatient(patient);
             if not result_patient:
                 return jsonify(result.get('fail'));
+        else:
+            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'];
 
         
         result_medical_record = self.medicalRecord.addMedicalRecord(medical_record);

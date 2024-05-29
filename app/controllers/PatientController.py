@@ -97,4 +97,18 @@ class PatientController:
         if not patient_data:
             return jsonify(result.get('fali'));
 
-        return jsonify(result.get('success'))
+        return jsonify(result.get('success'));
+
+#   [POST] /patient/medical_record
+    def view_medical_record(self):
+        patient_model = self.patient_model;
+        result = {
+            'fail': 'Delete failed !',
+            'success': 'Delete successfully !'
+        }
+        data = request.get_json();
+        patient_id = data.get('patient_id');
+        patient_name = data.get('name');
+        medical_record_list = list(patient_model.view_medical_record(patient_id));
+
+        return render_template("/patient/patient_medical_record.html", content='index', page='patient', patient_name=patient_name, medical_record_list=medical_record_list);

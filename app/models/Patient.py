@@ -1,6 +1,7 @@
 from database import DataBaseUtils
 from flask import request
 from models.builder.BuilderPatient import BuilderPatient
+from models.MedicalRecord import MedicalRecord
 
 class Patient():
     def __init__(self, patient_id, name, age, img, phone, PID, gender, address, date_created, dob, email):
@@ -146,6 +147,25 @@ class PatientModel(DataBaseUtils):
     
     def delete_patient(self):
         pass
+
+    def view_medical_record(self, patient_id):
+        medical_record_data = self.__conn.get_collection('medical_record').find({'patient_id': patient_id});
+        data = []
+        if medical_record_data:
+            print("hi lo")
+            for medical_record in medical_record_data:
+                m_rec_id = medical_record.get('m_rec_id');
+                img_before = medical_record.get('img_before');
+                img_last = medical_record.get('img_last');
+                medical_predict = medical_record.get('medical_predict');
+                percentage = medical_record.get('percentage');
+                date_created = medical_record.get('date_created');
+                doctor_predict = medical_record.get('doctor_predict');
+                medical_record_model = MedicalRecord(m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict);
+                data.append(medical_record_model);
+            return data;
+        return None;
+
 
     def getAllPatient(self):
         patient_data = self.__conn.get_collection('patient').find();

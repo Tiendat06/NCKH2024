@@ -20,3 +20,7 @@ def edit_patient():
 @patient.route('/patient/delete', methods=['post'])
 def delete_patient():
     return PatientController().delete_patient();
+
+@patient.route('/patient/medical_record', methods=['post'])
+def view_medical_record():
+    return PatientController().view_medical_record();

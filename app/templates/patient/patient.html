@@ -27,7 +27,7 @@
                                 <i class="fa-regular fa-circle-xmark" style="font-size: 25px; cursor: pointer;"></i>
                             </div> -->
     
-                            <div data-id="{{patient._patient_id}}" data-name="{{patient._name}}" data-toggle="modal" data-target="#more-patient" class="user-items__delete mb-2 w-100 btn-show-details-delete" style="text-align: right;">
+                            <div data-patient_id="{{patient._patient_id}}" data-name="{{patient._name}}" data-toggle="modal" data-target="#more-patient" class="user-items__delete mb-2 w-100 btn-show-details-medical-record" style="text-align: right;">
                                 <i class="fa-solid fa-circle-info text-primary" style="font-size: 25px; cursor: pointer;"></i>
                             </div>
                         </div>
@@ -298,7 +298,47 @@
         </div>
     </div>
 
+    <!--    more modal -->
+    <div class="modal fade" id="more-patient">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form onsubmit="return false" method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Medical Record</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body" id="more-patient-medical-record">
+                        
+                    </div>
+
+                    <div id="error_adding_user_outer" style="width: 90%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_adding_user" class="login-form__para mb-0 text-danger">
+                                
+                        </p>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+
+                        <!-- <button id="btn_add" class="btn btn-primary">Submit</button> -->
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 <script>
     jsInPatient();
+
+    $(document).ajaxComplete(function(){
+        $(document).ready(function(){
+            jsInPatient();
+        });
+    });
 </script>

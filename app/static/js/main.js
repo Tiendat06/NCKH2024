@@ -855,25 +855,71 @@ function jsInPatient(){
     });
   });
 
+  // $(document).ready(function(){
+  //   $("#btn-delete").click(function(){
+  //     var id = $("#patientIdDelete").val();
+
+  //     $.ajax({
+  //       url: "/patient/delete",
+  //       type: "POST",
+  //       contentType: "application/json",
+  //       data: JSON.stringify({
+  //         id: id
+  //       }),
+  //       success: function(response) {
+  //         $("#error_delete_user").html(response);
+  //         $("#error_delete_user_outer").removeClass("d-none");
+  //       },
+  //       error: function(error) {
+  //         console.log(error);
+  //       }
+  //     });
+  //   });
+  // });
+
+  // show details record
   $(document).ready(function(){
-    $("#btn-delete").click(function(){
-      var id = $("#patientIdDelete").val();
+    $(".btn-show-details-medical-record").click(function(){
+      var patient_id = $(this).data("patient_id");
+      // console.log(patient_id);
+      var name = $(this).data("name");
 
       $.ajax({
-        url: "/patient/delete",
+        url: "/patient/medical_record",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-          id: id
+          patient_id: patient_id,
+          name: name,
         }),
         success: function(response) {
-          $("#error_delete_user").html(response);
-          $("#error_delete_user_outer").removeClass("d-none");
+          $("#more-patient-medical-record").html(response);
+          // $("#error_editing_user_outer").removeClass("d-none");
         },
         error: function(error) {
           console.log(error);
         }
-      });
+      })
+
+    })
+  });
+
+  // show img of record
+  $(document).ready(function(){
+    $(".btn-show-details-xray-img").click(function(){
+      var m_rec_id = $(this).data('m_rec_id');
+      var img_before = $(this).data('img_before');
+      var img_last = $(this).data('img_last');
+      var medical_predict = $(this).data('medical_predict');
+
+      console.log(img_before);
+      console.log(img_last);
+      console.log(medical_predict);
+      console.log($(".img-left"))
+
+      $("#img-left").attr('src', img_before);
+      $("#img-right").attr('src', img_last);
+      $("#medical_predict").val(medical_predict);
     });
   });
 
