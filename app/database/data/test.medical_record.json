@@ -4,10 +4,51 @@
   },
   "m_rec_id": "MDR0000001",
   "patient_id": "PAT0000001",
-  "img_before": "https://res.cloudinary.com/dervs0fx5/image/upload/v1709813906/komiwbrgflxdtdxmd7je.png",
-  "img_last": "https://res.cloudinary.com/dervs0fx5/image/upload/v1709830885/is2di2ihtdjkfwf0s2da.png",
-  "medical_predict": "Viem Phoi",
+  "img_before": "/static/img/tdmp.jpg",
+  "img_last": "/static/img/data/tdmp.jpg",
+  "medical_predict": "Pleural effusion\nPleural effusion\nPleural effusion\nCardiomegaly\nAortic enlargement",
   "percentage": "0.2",
-  "date_created": "2024-02-03",
+  "date_created": {
+    "$date": "2024-02-03T00:00:00.000Z"
+  },
   "doctor_predict": "Viem Phoi"
+},
+{
+  "_id": {
+    "$oid": "662d293e7c1d094950ae7a09"
+  },
+  "m_rec_id": "MDR0000002",
+  "patient_id": "PAT0000003",
+  "img_before": "/static/img/tdmp.jpg",
+  "img_last": "/static/img/data/tdmp.jpg",
+  "medical_predict": "Pleural effusion\nPleural effusion\nPleural effusion\nCardiomegaly\nAortic enlargement",
+  "percentage": "",
+  "date_created": "2024-04-27 23:35:10",
+  "doctor_predict": ""
+},
+{
+  "_id": {
+    "$oid": "6656c2938d4799a757256a71"
+  },
+  "m_rec_id": "MDR0000003",
+  "patient_id": "PAT0000003",
+  "img_before": "/static/img/tdmp.jpg",
+  "img_last": "/static/img/data/tdmp.jpg",
+  "medical_predict": "Pleural effusion\nPleural effusion\nPleural effusion\nCardiomegaly\nAortic enlargement",
+  "percentage": "",
+  "date_created": "2024-05-29 12:52:19",
+  "doctor_predict": ""
+},
+{
+  "_id": {
+    "$oid": "6656dd7e2b4c0ba42e4226ea"
+  },
+  "m_rec_id": "MDR0000004",
+  "patient_id": "PAT0000001",
+  "img_before": "/static/img/img_xray.png",
+  "img_last": "/static/img/data/img_xray.png",
+  "medical_predict": "Other lesion\nLung Opacity\nPulmonary fibrosis\nOther lesion\nCardiomegaly",
+  "percentage": "",
+  "date_created": "2024-05-29 14:47:10",
+  "doctor_predict": ""
 }]
