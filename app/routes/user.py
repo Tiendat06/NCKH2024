@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from controllers.UserController import UserController
 
 user = Blueprint('user', __name__)
@@ -28,4 +28,18 @@ def edit_user():
 def delete_user():
     return UserController().delete_user()
 
+@user.route('/user/profile', methods=['get'])
+def user_profile():
+    return UserController().user_profile();
 
+@user.route('/user/profile/edit_personal_information', methods=['post'])
+def edit_personal_information():
+    return UserController().edit_personal_information();
+
+@user.route('/user/get_user_info', methods=['get'])
+def get_user_info():
+    return UserController().get_user_info();
+
+@user.route('/user/profile/change_pwd', methods=['post'])
+def change_pwd():
+    return UserController().change_pwd();

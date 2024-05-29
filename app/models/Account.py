@@ -92,15 +92,26 @@ class AccountModel(DataBaseUtils):
         return False, role_id;
     
     def updateRole(self, role, acc_id):
-        print(acc_id)
-        print(role)
+        # print(acc_id)
+        # print(role)
         role_id = self.__conn.get_collection('role').find_one({'role_name': role}).get('role_id');
         result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'role_id': role_id}})
         if result:
             return True
         return False
     
+    def checkPwdIsCorrectByUserId(self, acc_id, pwd):
+        data = self.__conn.get_collection('account').find_one({'acc_id': acc_id, 'password': pwd});
+        if data:
+            return True;
+        return False;
     
+    def updatePwd(self, acc_id, newPwd):
+        result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'password': newPwd}});
+        if result.modified_count > 0:
+            return True;
+        return False;
+
     def AUTO_ACC_ID(self):
         result = self.__conn.get_collection('account').find_one({}, sort=[("acc_id", -1)])  #asc
 

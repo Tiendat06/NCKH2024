@@ -1,0 +1,136 @@
+<div class="user-profile p-5">
+    <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active p-3" id="pills-home-tab" data-toggle="pill" data-target="#pills-home"
+                type="button" role="tab" aria-controls="pills-home" style="font-size: 17px;" aria-selected="true">Personal Information</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link p-3" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile"
+                type="button" role="tab" aria-controls="pills-profile" style="font-size: 17px;" aria-selected="false">Change Password</button>
+        </li>
+        <!-- <li class="nav-item" role="presentation">
+            <button class="nav-link p-3" id="pills-contact-tab" data-toggle="pill" data-target="#pills-contact"
+                type="button" role="tab" aria-controls="pills-contact" style="font-size: 17px;" aria-selected="false">Manage Contact</button>
+        </li> -->
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="user-profile__info p-5" style="background-color: white; border-radius:20px;">
+                <div class="user-profile__title">
+                    <h5>Personal Information</h5>
+                </div>
+                <label for="fileInput">
+                    <img id="profile-img" class="m-3" style="width: 130px; height: 130px; border-radius: 50%; z-index: 1; object-fit: cover; border: 3px solid var(--main-color-update)" src="{{user._img_profile}}" alt="" srcset="">
+                </label>
+
+                <input type="file" name="fileImg" id="fileInput" style="display: none;" accept="image/*" onchange="handleUploadImgInProfile()">
+
+                <form action="" onsubmit="return false" class="d-flex flex-wrap">
+                    <input type="hidden" name="tmp_email" id="tmp_email" value="{{user_email}}">
+                    <input type="hidden" name="user_id" id="user_id" value="{{user._user_id}}">
+                    <input type="hidden" name="acc_id" id="acc_id" value="{{user._acc_id}}">
+                    <!-- <input type="hidden" name="tmp_email" id="tmp_email"> -->
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="{{user._name}}" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <!-- <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                        <label for="age">Age</label>
+                        <input type="text" name="age" id="age" placeholder="Age" value="{{user._age}}" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div> -->
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                        <label for="email">Email</label>
+                        <input type="text" name="email" id="email" placeholder="Email" value="{{user_email}}" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" name="phone" id="phone" placeholder="Phone number" value="{{user._phone}}" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" class="form-select pl-4" style="padding: 11px; border-radius: 12px" value="Female">
+                            <option value="">--Choose gender--</option>
+                            <option {% if user._gender == 'Male' %} selected {% endif %} value="Male">Male</option>
+                            <option {% if user._gender == 'Female' %} selected {% endif %} value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <label for="dob">Birthday</label>
+                        <input type="date" name="dob" id="dob" value="{{user._dob}}" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+                    <div id="error_editing_user_outer" style="width: 98%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_editing_user" class="login-form__para mb-0 text-danger">
+                            
+                        </p>
+                    </div>
+
+                    <div class="btn_s w-100 mt-3 text-right">
+                        <button type="submit" class="btn btn-primary" id="btn_submit_personal" name="btn_submit">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="user-profile__info p-5" style="background-color: white; border-radius:20px;">
+                <div class="user-profile__title mb-3">
+                    <h5>Change Password</h5>
+                </div>
+
+                <form onsubmit="return false" action="" class="d-flex flex-wrap">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <label for="current_pwd">Current Password</label>
+                        <input type="password" id="current_pwd" name="current_pwd" placeholder="Current Password" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <label for="new_pwd">New Password</label>
+                        <input type="password" name="new_pwd" id="new_pwd" placeholder="New Password" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <label for="verify_pwd">Verify Password</label>
+                        <input type="password" name="verify_pwd" id="verify_pwd" placeholder="Verify Password" class="form-control" style="padding: 22px; border-radius: 12px">
+                    </div>
+
+                    <div id="error_change_pwd_user_outer" style="width: 98%;" class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                        <p id="error_change_pwd_user" class="login-form__para mb-0 text-danger">
+                            
+                        </p>
+                    </div>
+
+                    <div class="btn_s w-100 mt-3 text-right">
+                        <button type="submit" class="btn btn-primary" id="btn_submit_change_pwd" name="btn_submit">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+        </div>
+    </div>
+</div>
+
+    <!-- overlay -->
+    <div id="overlay" class="overlay d-none">
+        <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
+            <div class="w-100 text-center" style="height: 200px">
+                <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">
+                    <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px"></div>
+                </div>
+                <div style="font-size: 25px"
+                    class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">
+                    Đang thực hiện thay đổi
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    handleUploadImgInProfile();
+    jsInUserProfile();
+</script>

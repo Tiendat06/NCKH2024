@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, jsonify
+from flask import request, render_template, redirect, jsonify, session
 from models.User import UserModel, User
 from models.Account import Account, AccountModel
 import cloudinary.uploader
@@ -7,6 +7,16 @@ class UserController:
     def __init__(self):
         self.user = UserModel()
         self.account = AccountModel()
+
+    # [GET] /user/get_user_info
+    def get_user_info(self):
+        if 'user_name' in session and 'user_img' in session:
+            user_name = session.get('user_name');
+            user_img = session.get('user_img');
+        else:
+            user_name = "Guest";
+            user_img = "https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png";
+        return jsonify({'user_name': user_name, 'user_img': user_img})
 
     # [GET]
     def index(self, pages):
@@ -31,7 +41,7 @@ class UserController:
 
         return render_template("index.html", content='index', page='user', zip_data=items_on_page, total_pages=total_pages, pages=pages)
     
-    # [POST, AJAX]
+    # [POST, AJAX]  /user/add
     def add_user(self):
         user_db = self.user;
         acc_db = self.account;
@@ -64,7 +74,7 @@ class UserController:
         user_db.createAccount(user, account);
         return jsonify(result.get('success'));
     
-    # POST, AJAX
+    # [POST, AJAX]  /user/edit
     def edit_user(self):
         user_db = self.user;
         result = {
@@ -131,7 +141,7 @@ class UserController:
 
         return jsonify(result.get('success'));
 
-    # [POST, AJAX]
+    # [POST, AJAX]  /user/delete
     def delete_user(self):
         user_model = self.user;
         result = {
@@ -146,3 +156,77 @@ class UserController:
 
         return jsonify(result.get('success'))
         
+    # [GET] /user/profile
+    def user_profile(self):
+        user_db = self.user;
+        if 'account' not in session:
+            return redirect('/');
+        user_email = session.get('account');
+        user = user_db.get_user_by_email(user_email);
+        print(user._gender);
+        return render_template("index.html", content='index', page='user_profile', user_email=user_email, user=user);
+
+    # [POST, AJAX] /user/profile/edit_personal_information
+    def edit_personal_information(self):
+        user_db = self.user;
+        result = {
+            'fail': 'Edit failed !',
+            'error': 'Your email has been contained !',
+            'empty': 'You must to fill out all fields except avatar !',
+            'success': 'Edit successfully !'
+        }
+
+        data = request.form;
+        fullname = data.get('fullname');
+        gender = data.get('gender');
+        email = data.get('email');
+        phone = data.get('phone');
+        dob = data.get('dob');
+
+        tmp_email = data.get('tmp_email');
+        user_id = data.get('user_id');
+        acc_id = data.get('acc_id');
+
+        if 'img' not in request.files:
+            img_url = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png';
+        else:
+            img = request.files['img'];
+            res = cloudinary.uploader.upload(img);
+            img_url = res['secure_url'];
+
+        if not all([fullname, gender, email, dob, phone]):
+            return jsonify(result.get('empty'));
+
+        if user_db.checkEmailIsContain(email) and email != tmp_email:
+            return jsonify(result.get('error'))
+        user = User('', user_id, acc_id, fullname, gender, email, dob, phone, img_url);
+        if not user:
+            return jsonify(result.get('fail'));
+        edit = user_db.edit_user(user)
+        if not edit:
+            return jsonify(result.get('fail'));
+
+        return jsonify(result.get('success'));
+
+    # [POST, AJAX] /user/profile/change_pwd
+    def change_pwd(self):
+        acc_id = session.get('acc_id');
+        acc_db = self.account;
+        result = {
+            'fail': 'Edit failed !',
+            'error': 'New Password is not similar to Verify Password',
+            'empty': 'You must to fill out all fields except avatar !',
+            'success': 'Edit successfully !'
+        }
+
+        data = request.form;
+        currentPwd = data.get('currentPwd');
+        newPwd = data.get('newPwd');
+        verifyPwd = data.get('verifyPwd');
+        if not acc_db.checkPwdIsCorrectByUserId(acc_id, currentPwd):
+            return jsonify(result.get('fail'));
+
+        if newPwd != verifyPwd:
+            return jsonify(result.get('error'));
+        acc_db.updatePwd(acc_id, newPwd);
+        return jsonify(result.get('success'));

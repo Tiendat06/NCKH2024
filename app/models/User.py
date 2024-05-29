@@ -150,6 +150,13 @@ class UserModel(DataBaseUtils):
             return user_data;
         return None;
 
+    def get_user_by_email(self, user_email):
+        user_data = self.__conn.get_collection('user').find_one({'email': user_email});
+        if user_data:
+            user_data = User('', user_data['user_id'], user_data['acc_id'], user_data['name'], user_data['gender'], user_email, user_data['dob'], user_data['phone'], user_data['img_profile']);
+            return user_data;
+        return None;
+
     def createAccount(self, user, account):
         user_id = self.AUTO_USE_ID();
         acc_id = AccountModel().AUTO_ACC_ID();

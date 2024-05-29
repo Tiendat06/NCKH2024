@@ -34,7 +34,8 @@ if __name__ == '__main__':
     app = Flask(__name__)
     CORS(app)
     app.secret_key = os.getenv("SECRET_KEY")
-    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY") 
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+    app.config['JSON_AS_ASCII'] = False 
     app.config['SESSION_TYPE'] = 'filesystem' 
     routes(app)
     app.run(debug=True)

@@ -1,33 +1,35 @@
 function collapsedSideBar() {
-  document.getElementById("toggleButton").addEventListener("click", function() {
-    const specificSidebar = document.getElementById("header-sidebar");
-    const sidebar = document.getElementById("sidebar");
-    const content = document.querySelector(".content");
-    const header_content = document.getElementById("header-content");
-    const sidebar_para = document.querySelectorAll(".main-sidebar__para");
-    const sidebar_item = document.querySelectorAll(".main-sidebar__item");
-    const header_title = document.querySelector("#header-navbar__title");
+  document
+    .getElementById("toggleButton")
+    .addEventListener("click", function () {
+      const specificSidebar = document.getElementById("header-sidebar");
+      const sidebar = document.getElementById("sidebar");
+      const content = document.querySelector(".content");
+      const header_content = document.getElementById("header-content");
+      const sidebar_para = document.querySelectorAll(".main-sidebar__para");
+      const sidebar_item = document.querySelectorAll(".main-sidebar__item");
+      const header_title = document.querySelector("#header-navbar__title");
 
-    for (let i = 0; i < sidebar_para.length; i++) {
-      if (
-        sidebar_para[i].classList.contains("d-none") &&
-        sidebar_item[i].classList.contains("justify-content-center")
-      ) {
-        sidebar_para[i].classList.remove("d-none");
-        sidebar_item[i].classList.remove("justify-content-center");
-      } else {
-        sidebar_para[i].classList.add("d-none");
-        sidebar_item[i].classList.add("justify-content-center");
+      for (let i = 0; i < sidebar_para.length; i++) {
+        if (
+          sidebar_para[i].classList.contains("d-none") &&
+          sidebar_item[i].classList.contains("justify-content-center")
+        ) {
+          sidebar_para[i].classList.remove("d-none");
+          sidebar_item[i].classList.remove("justify-content-center");
+        } else {
+          sidebar_para[i].classList.add("d-none");
+          sidebar_item[i].classList.add("justify-content-center");
+        }
       }
-    }
 
-    console.log(header_title);
+      console.log(header_title);
 
-    sidebar.classList.toggle("collapsed");
-    header_content.classList.toggle("collapsed");
-    specificSidebar.classList.toggle("collapsed");
-    content.classList.toggle("collapsed");
-  });
+      sidebar.classList.toggle("collapsed");
+      header_content.classList.toggle("collapsed");
+      specificSidebar.classList.toggle("collapsed");
+      content.classList.toggle("collapsed");
+    });
 }
 
 function fullScreen() {
@@ -44,7 +46,7 @@ function fullScreen() {
     }
   });
 
-function requestFullscreen() {
+  function requestFullscreen() {
     if (content.requestFullscreen) {
       content.requestFullscreen();
     } else if (content.mozRequestFullScreen) {
@@ -59,7 +61,7 @@ function requestFullscreen() {
     }
   }
 
-function exitFullscreen() {
+  function exitFullscreen() {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -99,8 +101,8 @@ function downloadImage() {
 
   // Sử dụng Fetch API để tải hình ảnh từ URL
   fetch(imageUrl)
-    .then(response => response.blob()) // Chuyển đổi dữ liệu hình ảnh thành Blob
-    .then(blob => {
+    .then((response) => response.blob()) // Chuyển đổi dữ liệu hình ảnh thành Blob
+    .then((blob) => {
       // Tạo một URL từ Blob
       var url = window.URL.createObjectURL(blob);
 
@@ -122,8 +124,8 @@ function downloadImage() {
 
 function ajaxInUserManagement() {
   // add
-  $(document).ready(function() {
-    $("#btn_add").click(function() {
+  $(document).ready(function () {
+    $("#btn_add").click(function () {
       let name_add = $("#full_name_add").val();
       let gender_add = $("#gender_add").val();
       let email_add = $("#email_add").val();
@@ -139,17 +141,17 @@ function ajaxInUserManagement() {
           gender: gender_add,
           email: email_add,
           dob: dob_add,
-          phone: phone_add
+          phone: phone_add,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#error_adding_user").html(response);
           $("#error_adding_user_outer").removeClass("d-none");
           //console.log(response);
           //alert(response.message);
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
+        },
       });
     });
   });
@@ -198,8 +200,8 @@ function ajaxInUserManagement() {
   // });
 
   // edit
-  $(document).ready(function() {
-    $("#btn_edit").click(function() {
+  $(document).ready(function () {
+    $("#btn_edit").click(function () {
       let name_edit = $("#full_name_edit").val();
       let gender_edit = $("#gender_edit").val();
       let email_edit = $("#email_edit").val();
@@ -241,21 +243,21 @@ function ajaxInUserManagement() {
           tmp_email: tmp_email,
           user_id: user_id,
           acc_id: acc_id,
-          img: img
+          img: img,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#error_editing_user").html(response);
           $("#error_editing_user_outer").removeClass("d-none");
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
+        },
       });
     });
   });
 
-  $(document).ready(function() {
-    $(".btn-show-details").on("click", function() {
+  $(document).ready(function () {
+    $(".btn-show-details").on("click", function () {
       var name = $(this).data("name");
       var gender = $(this).data("gender");
       var email = $(this).data("email");
@@ -278,8 +280,8 @@ function ajaxInUserManagement() {
     });
   });
 
-  $(document).ready(function() {
-    $(".btn-show-details-delete").on("click", function() {
+  $(document).ready(function () {
+    $(".btn-show-details-delete").on("click", function () {
       var id = $(this).data("id");
       var name = $(this).data("name");
 
@@ -291,8 +293,8 @@ function ajaxInUserManagement() {
   });
 
   // delete
-  $(document).ready(function() {
-    $("#btn-delete").click(function() {
+  $(document).ready(function () {
+    $("#btn-delete").click(function () {
       var id = $("#userIdDelete").val();
 
       $.ajax({
@@ -300,15 +302,15 @@ function ajaxInUserManagement() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-          id: id
+          id: id,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#error_delete_user").html(response);
           $("#error_delete_user_outer").removeClass("d-none");
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
+        },
       });
     });
   });
@@ -320,14 +322,14 @@ function ajaxInUserManagement() {
 // }
 
 function removeQueryString(url) {
-  var parts = url.split('?');
+  var parts = url.split("?");
   var cleanedUrl = parts[0];
   return cleanedUrl;
 }
 
 function sumUpManualBoundingBoxAndDownloadInXray() {
   // edit and download file
-  $(document).ready(function() {
+  $(document).ready(function () {
     // document.addEventListener("DOMContentLoaded", function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
@@ -338,8 +340,8 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     // image.src = removeQueryString(imgSrc);
     var editBtn = document.getElementById("editing");
     var downloadBtn = document.getElementById("downloading");
-    var undoBtn = document.getElementById('btn-undo-xray');
-    var redoBtn = document.getElementById('btn-redo-xray');
+    var undoBtn = document.getElementById("btn-undo-xray");
+    var redoBtn = document.getElementById("btn-redo-xray");
     var isClickOnBoundingBox = false;
     var isDownloadOk = false;
     var redoStackBB = [];
@@ -358,12 +360,12 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     var startX, startY, endX, endY;
 
     // Sự kiện khi nhấn nút "Edit"
-    editBtn.addEventListener("click", function(e) {
+    editBtn.addEventListener("click", function (e) {
       image.style.display = "none";
       canvas.style.display = "block";
       realImg.style.display = "none";
-      document.getElementById('xray-btn--undo').style.display = "block";
-      document.getElementById('xray-btn--redo').style.display = "block";
+      document.getElementById("xray-btn--undo").style.display = "block";
+      document.getElementById("xray-btn--redo").style.display = "block";
       isDrawing = true;
     });
 
@@ -371,7 +373,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     // canvas.addEventListener("click", function(e) {
     //   var clickX = e.offsetX;
     //   var clickY = e.offsetY;
-    
+
     //   // Kiểm tra xem click có nằm trong bounding box nào không
     //   boundingBoxes.forEach(function(box, index) {
     //     if (
@@ -384,21 +386,21 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     //       var confirmDelete = confirm("Bạn có muốn xóa bounding box này không?");
     //       if (confirmDelete) {
     //         // Xóa bounding box khỏi mảng boundingBoxes
-    //         boundingBoxes.splice(index, 1);   
-    //         isClickOnBoundingBox = true; 
+    //         boundingBoxes.splice(index, 1);
+    //         isClickOnBoundingBox = true;
     //         // Vẽ lại canvas
     //         redrawCanvas();
     //       }
     //     }
     //   });
     // });
-    
+
     // Hàm vẽ lại canvas sau khi xóa bounding box
     function redrawCanvas() {
       isDrawing = true;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-      boundingBoxes.forEach(function(box) {
+      boundingBoxes.forEach(function (box) {
         ctx.beginPath();
         ctx.rect(
           box.startX,
@@ -409,7 +411,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         ctx.strokeStyle = "red";
         ctx.lineWidth = 2;
         ctx.stroke();
-    
+
         // Vẽ lựa chọn lên bounding box
         if (box.option) {
           ctx.font = "12px Arial";
@@ -419,17 +421,17 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
       });
     }
 
-    canvas.addEventListener("mousedown", function(e) {
-      if(!isClickOnBoundingBox){
+    canvas.addEventListener("mousedown", function (e) {
+      if (!isClickOnBoundingBox) {
         isDrawing = true;
         startX = e.offsetX;
         startY = e.offsetY;
-      }else{
+      } else {
         isDrawing = false;
       }
     });
 
-    canvas.addEventListener("mousemove", function(e) {
+    canvas.addEventListener("mousemove", function (e) {
       if (isDrawing) {
         var currentX = e.offsetX;
         var currentY = e.offsetY;
@@ -438,7 +440,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
 
         // Vẽ lại tất cả các bounding box đã lưu
-        boundingBoxes.forEach(function(box) {
+        boundingBoxes.forEach(function (box) {
           ctx.beginPath();
           ctx.rect(
             box.startX,
@@ -466,14 +468,13 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
       }
     });
 
-    canvas.addEventListener("mouseup", function() {
+    canvas.addEventListener("mouseup", function () {
       isDrawing = false;
       // isDownloadOk = true;
       endX = event.offsetX;
       endY = event.offsetY;
       currentBox = { startX: startX, startY: startY, endX: endX, endY: endY }; // Lưu bounding box đang được vẽ vào biến tạm thời
       //$("#selectOptionModal").modal("show"); // Hiển thị modal
-
 
       isClickOnBoundingBox = false;
       var modal = document.getElementById("selectOptionModal");
@@ -484,20 +485,19 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     });
 
     undoBtn.addEventListener("click", function () {
-      if(boundingBoxes.length != 0 && hashMapData.length != 0){
+      if (boundingBoxes.length != 0 && hashMapData.length != 0) {
         var itemBB = boundingBoxes.pop();
-        redoStackBB.push(itemBB)
+        redoStackBB.push(itemBB);
         redrawCanvas();
         var itemHM = hashMapData.pop();
         redoStackHM.push(itemHM);
         writeDataToFront(hashMapData);
         isDrawing = false;
       }
-
     });
 
     redoBtn.addEventListener("click", function () {
-      if(redoStackBB.length != 0 && redoStackHM.length != 0){
+      if (redoStackBB.length != 0 && redoStackHM.length != 0) {
         isDrawing = false;
         boundingBoxes.push(redoStackBB.pop());
         redrawCanvas();
@@ -505,162 +505,170 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         writeDataToFront(hashMapData);
         isDrawing = false;
       }
-
     });
 
-    function writeDataToFront(hashMapData){
+    function writeDataToFront(hashMapData) {
       var htmlContent = "";
-      hashMapData.forEach(function(item) {
-        htmlContent += "<div style='cursor: pointer' class='text-light xray-predict__item w-100 mb-2'>" + 
-                        "<div class='xray-predict__title d-flex flex-wrap mb-2'>" + 
-                        "<p class='mb-0 w-75 text-left text-secondary'>"+ item +"</p>" + 
-                          "<div class='w-25 text-right'>" + 
-                                "<input type='hidden' class='delete-doctor-predict' value='"+ item + "' />"+
-                              "<i id='"+ item+"' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-pen-to-square text-right text-danger'></i>" +
-                          "</div>" + 
-                        "</div>" + 
-                      "<div style='height: 5px;background-color: #ccc;border-radius: 10px;overflow: hidden;' class='xray-percent--outer w-100'>"+
-                          "<div style='width: 100%; background-color: red' class='xray-percent h-100'></div>" + 
-                      "</div>" + 
-                    "</div>"; 
+      hashMapData.forEach(function (item) {
+        htmlContent +=
+          "<div style='cursor: pointer' class='text-light xray-predict__item w-100 mb-2'>" +
+          "<div class='xray-predict__title d-flex flex-wrap mb-2'>" +
+          "<p class='mb-0 w-75 text-left text-secondary'>" +
+          item +
+          "</p>" +
+          "<div class='w-25 text-right'>" +
+          "<input type='hidden' class='delete-doctor-predict' value='" +
+          item +
+          "' />" +
+          "<i id='" +
+          item +
+          "' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-pen-to-square text-right text-danger'></i>" +
+          "</div>" +
+          "</div>" +
+          "<div style='height: 5px;background-color: #ccc;border-radius: 10px;overflow: hidden;' class='xray-percent--outer w-100'>" +
+          "<div style='width: 100%; background-color: red' class='xray-percent h-100'></div>" +
+          "</div>" +
+          "</div>";
       });
       // <i class="fa-solid fa-pen-to-square"></i>
-      $('#profile').html(htmlContent)
+      $("#profile").html(htmlContent);
     }
 
     // Sự kiện khi nhấn nút "Save" trong modal
-    document.getElementById("saveOption").addEventListener("click", function() {
-      var selectedOption = document.getElementById("options").value;
-      console.log("Selected option:", selectedOption);
+    document
+      .getElementById("saveOption")
+      .addEventListener("click", function () {
+        var selectedOption = document.getElementById("options").value;
+        console.log("Selected option:", selectedOption);
 
-      // Lưu thông tin đã chọn vào bounding box đang được vẽ
-      currentBox.option = selectedOption;
-      // Đóng modal
-      //$("#selectOptionModal").modal("hide");
+        // Lưu thông tin đã chọn vào bounding box đang được vẽ
+        currentBox.option = selectedOption;
+        // Đóng modal
+        //$("#selectOptionModal").modal("hide");
 
-      var modal = document.getElementById("selectOptionModal");
-      modal.classList.remove("show");
-      modal.style.display = "none";
-      modal.setAttribute("aria-modal", "false");
-      modal.setAttribute("aria-hidden", "true");
+        var modal = document.getElementById("selectOptionModal");
+        modal.classList.remove("show");
+        modal.style.display = "none";
+        modal.setAttribute("aria-modal", "false");
+        modal.setAttribute("aria-hidden", "true");
 
-      // var modal = document.getElementById("selectOptionModal");
-      // modal.style.display = "none";
-      // Vẽ lựa chọn lên bounding box
-      ctx.font = "12px Arial";
-      ctx.fillStyle = "red";
-      ctx.fillText(
-        selectedOption,
-        currentBox.startX + 10,
-        currentBox.startY + 20
-      );
+        // var modal = document.getElementById("selectOptionModal");
+        // modal.style.display = "none";
+        // Vẽ lựa chọn lên bounding box
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText(
+          selectedOption,
+          currentBox.startX + 10,
+          currentBox.startY + 20
+        );
 
-      // Lưu bounding box vào mảng boundingBoxes
-      boundingBoxes.push(currentBox);
+        // Lưu bounding box vào mảng boundingBoxes
+        boundingBoxes.push(currentBox);
 
-      // Thêm phần tử vào Map
-      hashMapData.push(selectedOption);
+        // Thêm phần tử vào Map
+        hashMapData.push(selectedOption);
 
-      writeDataToFront(hashMapData);
-    
-    });
+        writeDataToFront(hashMapData);
+      });
 
     // Sự kiện khi nhấn nút "Close" trong modal
-    document.getElementById("closeModal").addEventListener("click", function() {
-      // Xóa bounding box tạm thời
-      currentBox = null;
+    document
+      .getElementById("closeModal")
+      .addEventListener("click", function () {
+        // Xóa bounding box tạm thời
+        currentBox = null;
 
-      // Đóng modal
-      //$("#selectOptionModal").modal("hide");
-      var modal = document.getElementById("selectOptionModal");
-      modal.classList.remove("show");
-      modal.style.display = "none";
-      modal.setAttribute("aria-modal", "false");
-      modal.setAttribute("aria-hidden", "true");
+        // Đóng modal
+        //$("#selectOptionModal").modal("hide");
+        var modal = document.getElementById("selectOptionModal");
+        modal.classList.remove("show");
+        modal.style.display = "none";
+        modal.setAttribute("aria-modal", "false");
+        modal.setAttribute("aria-hidden", "true");
 
-      // Vẽ lại canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-      boundingBoxes.forEach(function(box) {
-        ctx.beginPath();
-        ctx.rect(
-          box.startX,
-          box.startY,
-          box.endX - box.startX,
-          box.endY - box.startY
-        );
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // Vẽ lại canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+        boundingBoxes.forEach(function (box) {
+          ctx.beginPath();
+          ctx.rect(
+            box.startX,
+            box.startY,
+            box.endX - box.startX,
+            box.endY - box.startY
+          );
+          ctx.strokeStyle = "red";
+          ctx.lineWidth = 2;
+          ctx.stroke();
 
-        // Vẽ lựa chọn lên bounding box
-        if (box.option) {
-          ctx.font = "12px Arial";
-          ctx.fillStyle = "red";
-          ctx.fillText(box.option, box.startX + 10, box.startY + 20);
-        }
+          // Vẽ lựa chọn lên bounding box
+          if (box.option) {
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "red";
+            ctx.fillText(box.option, box.startX + 10, box.startY + 20);
+          }
+        });
       });
-    });
 
     var isDownloading = false;
     // Sự kiện khi nhấn nút "Download"
-        downloadBtn.addEventListener("click", async function() {
-          var count = 0;
-          if(isDownloading){
-            // alert("You must wait 5s")
-            return;
+    downloadBtn.addEventListener("click", async function () {
+      var count = 0;
+      if (isDownloading) {
+        // alert("You must wait 5s")
+        return;
+      }
+      isDownloading = await true;
+      // Lấy reference đến canvas và context
+      if (boundingBoxes.length != 0 && hashMapData.length != 0) {
+        var imageUrl = document.getElementById("img_link_download").src;
+        var proxyUrl = "xray/proxy-image?url=" + encodeURIComponent(imageUrl);
+
+        var imageClass = new Image();
+        // Đảm bảo sử dụng cross-origin
+        // Using like this, system will know that imgs from another place are safety
+        imageClass.crossOrigin = "Anonymous";
+
+        imageClass.onload = function () {
+          // Vẽ hình ảnh lên canvas
+          ctx.drawImage(imageClass, 0, 0);
+        };
+
+        imageClass.src = proxyUrl;
+
+        canvas.toBlob(function (blob) {
+          if (count == 0) {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "image_with_bounding_box.jpg";
+            link.click();
+            count = count + 1;
           }
-          isDownloading = await true;
-          // Lấy reference đến canvas và context
-          if(boundingBoxes.length != 0 && hashMapData.length != 0){
-            var imageUrl = document.getElementById("img_link_download").src;
-            var proxyUrl = "xray/proxy-image?url=" + encodeURIComponent(imageUrl);
-
-            var imageClass = new Image();
-            // Đảm bảo sử dụng cross-origin
-            // Using like this, system will know that imgs from another place are safety
-            imageClass.crossOrigin = "Anonymous";
-
-            imageClass.onload = function() {
-              // Vẽ hình ảnh lên canvas
-              ctx.drawImage(imageClass, 0, 0);
-            };
-
-            imageClass.src = proxyUrl;
-
-            canvas.toBlob(function(blob) {
-              if(count == 0){
-                var link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = "image_with_bounding_box.jpg";
-                link.click();
-                count = count + 1;
-              }
-            }, "image/jpeg");
-            isDrawing = false;
-            redrawCanvas();
-          } else{
-            if(count == 0){
-              downloadImage();
-              isDrawing = false;
-              redrawCanvas();
-              count = count + 1;
-            }
-          }
+        }, "image/jpeg");
+        isDrawing = false;
+        redrawCanvas();
+      } else {
+        if (count == 0) {
+          downloadImage();
+          isDrawing = false;
           redrawCanvas();
+          count = count + 1;
+        }
+      }
+      redrawCanvas();
 
-          setTimeout(async function() {
-              isDownloading = await false;
-              isDrawing = false;
-          }, 15000);
-        });
-
+      setTimeout(async function () {
+        isDownloading = await false;
+        isDrawing = false;
+      }, 15000);
+    });
   });
 }
 
 function jsAjaxChangRangeInXray() {
-  $(document).ready(function() {
-    $("#myRange").on("input", function() {
+  $(document).ready(function () {
+    $("#myRange").on("input", function () {
       var formData = new FormData();
 
       let img_link = $("#img_link_predict").val();
@@ -677,9 +685,9 @@ function jsAjaxChangRangeInXray() {
 
         processData: false,
         contentType: false,
-        data: formData
+        data: formData,
       })
-        .done(response => {
+        .done((response) => {
           $("#xray-general__predict").html(response);
           // success: function(response) {
           // },
@@ -688,7 +696,7 @@ function jsAjaxChangRangeInXray() {
           // }
           // sumUpManualBoundingBoxAndDownloadInXray()
         })
-        .fail(error => {
+        .fail((error) => {
           console.log(error);
         });
     });
@@ -697,24 +705,24 @@ function jsAjaxChangRangeInXray() {
 
 function jsInXray() {
   //   check
-  $(document).ready(function() {
-    $("#checking").click(function() {
+  $(document).ready(function () {
+    $("#checking").click(function () {
       $("#form").submit();
     });
   });
 
   // overlay
   // document.addEventListener("DOMContentLoaded", function () {
-  $(document).ready(function() {
+  $(document).ready(function () {
     const form = document.getElementById("form");
     const overlay = document.getElementById("overlay");
 
-    form.addEventListener("submit", function(event) {
+    form.addEventListener("submit", function (event) {
       event.preventDefault(); // Ngăn chặn form submit mặc định
       //overlay.style.display = 'block'; // Hiển thị overlay
       $("#overlay").removeClass("d-none");
 
-      setTimeout(function() {
+      setTimeout(function () {
         //overlay.style.display = 'none'; // Ẩn overlay
         $("#overlay").addClass("d-none");
 
@@ -725,8 +733,8 @@ function jsInXray() {
   // })
 
   // add record
-  $(document).ready(function() {
-    $("#btn_add-record").click(function() {
+  $(document).ready(function () {
+    $("#btn_add-record").click(function () {
       var name = $("#full_name_add").val();
       var PID = $("#number_add").val();
       var age = $("#age_add").val();
@@ -750,22 +758,22 @@ function jsInXray() {
           address: address,
           dob: dob,
           email: email,
-          predict: predict
+          predict: predict,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#error_adding_record_outer").removeClass("d-none");
           $("#error_adding_record").html(response);
         },
-        error: function(err) {
+        error: function (err) {
           console.log(err);
-        }
+        },
       });
     });
   });
 
   // open-img
-  $(document).ready(function() {
-    $("#xray-img__small").click(function() {
+  $(document).ready(function () {
+    $("#xray-img__small").click(function () {
       // var imgUrl = $(this).attr('src');
       var imgUrl = document.getElementById("xray-img__small").src;
       console.log(imgUrl);
@@ -841,10 +849,10 @@ function jsInXray() {
   // });
 }
 
-function jsInPatient(){
+function jsInPatient() {
   // delete
-  $(document).ready(function(){
-    $(".btn-show-details-delete").on("click", function() {
+  $(document).ready(function () {
+    $(".btn-show-details-delete").on("click", function () {
       var id = $(this).data("id");
       var name = $(this).data("name");
 
@@ -878,8 +886,8 @@ function jsInPatient(){
   // });
 
   // show details record
-  $(document).ready(function(){
-    $(".btn-show-details-medical-record").click(function(){
+  $(document).ready(function () {
+    $(".btn-show-details-medical-record").click(function () {
       var patient_id = $(this).data("patient_id");
       // console.log(patient_id);
       var name = $(this).data("name");
@@ -892,40 +900,39 @@ function jsInPatient(){
           patient_id: patient_id,
           name: name,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#more-patient-medical-record").html(response);
           // $("#error_editing_user_outer").removeClass("d-none");
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
-      })
-
-    })
+        },
+      });
+    });
   });
 
   // show img of record
-  $(document).ready(function(){
-    $(".btn-show-details-xray-img").click(function(){
-      var m_rec_id = $(this).data('m_rec_id');
-      var img_before = $(this).data('img_before');
-      var img_last = $(this).data('img_last');
-      var medical_predict = $(this).data('medical_predict');
+  $(document).ready(function () {
+    $(".btn-show-details-xray-img").click(function () {
+      var m_rec_id = $(this).data("m_rec_id");
+      var img_before = $(this).data("img_before");
+      var img_last = $(this).data("img_last");
+      var medical_predict = $(this).data("medical_predict");
 
       console.log(img_before);
       console.log(img_last);
       console.log(medical_predict);
-      console.log($(".img-left"))
+      console.log($(".img-left"));
 
-      $("#img-left").attr('src', img_before);
-      $("#img-right").attr('src', img_last);
+      $("#img-left").attr("src", img_before);
+      $("#img-right").attr("src", img_last);
       $("#medical_predict").val(medical_predict);
     });
   });
 
   // edit
-  $(document).ready(function(){
-    $('.btn-show-details').on('click', function(){
+  $(document).ready(function () {
+    $(".btn-show-details").on("click", function () {
       var patient_id = $(this).data("patient_id");
       var name = $(this).data("name");
       var age = $(this).data("age");
@@ -952,8 +959,8 @@ function jsInPatient(){
     });
   });
 
-  $(document).ready(function(){
-    $("#btn_edit").click(function(){
+  $(document).ready(function () {
+    $("#btn_edit").click(function () {
       let patient_id = $("#patient_id").val();
       let name_edit = $("#full_name_edit").val();
       let age_edit = $("#age_edit").val();
@@ -981,17 +988,16 @@ function jsInPatient(){
           email_edit: email_edit,
           date_created: date_created,
         }),
-        success: function(response) {
+        success: function (response) {
           $("#error_editing_user").html(response);
           $("#error_editing_user_outer").removeClass("d-none");
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
-      })
+        },
+      });
     });
   });
-
 }
 
 // function changeRange(){
@@ -1008,7 +1014,7 @@ function handleUploadImg() {
   const fileInput = document.getElementById("upload");
   const img = document.getElementById("xray-img--output");
   const editImg = document.getElementById("img_link_download");
-  const canvas = document.getElementById('canvas');
+  const canvas = document.getElementById("canvas");
   img.style.display = "block";
   editImg.style.display = "none";
   canvas.style.display = "none";
@@ -1018,14 +1024,14 @@ function handleUploadImg() {
   if (file) {
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       const imgDataUrl = e.target.result;
 
       // Tạo một hình ảnh mới
       const image = new Image();
 
       // Khi hình ảnh đã được tải lên
-      image.onload = function() {
+      image.onload = function () {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
@@ -1115,3 +1121,127 @@ function handleUploadImg() {
 //         console.log(error);
 //     }
 // });
+
+function handleUploadImgInProfile() {
+  const fileInput = document.getElementById("fileInput");
+  const img = document.getElementById("profile-img");
+
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+function jsInUserProfile() {
+  $(document).ready(function () {
+    $("#btn_submit_personal").click(function () {
+      // console.log('hi world');
+      $("#overlay").removeClass("d-none");
+      var fullname = $("#fullname").val();
+      var email = $("#email").val();
+      var phone = $("#phone").val();
+      var gender = $("#gender").val();
+      var dob = $("#dob").val();
+
+      var tmp_email = $("#tmp_email").val();
+      var user_id = $("#user_id").val();
+      var acc_id = $("#acc_id").val();
+      var img = document.getElementById("fileInput");
+
+      var formData = new FormData();
+      formData.append("fullname", fullname);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("gender", gender);
+      formData.append("dob", dob);
+      formData.append("tmp_email", tmp_email);
+      formData.append("user_id", user_id);
+      formData.append("acc_id", acc_id);
+      formData.append("img", img.files[0]);
+
+      $.ajax({
+        url: "/user/profile/edit_personal_information",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (response) {
+          $("#error_editing_user").html(response);
+          $("#error_editing_user_outer").removeClass("d-none");
+        },
+        error: function (error) {
+          console.log(error);
+        },
+        complete: function () {
+          $("#overlay").addClass("d-none");
+        },
+      });
+    });
+  });
+
+  $(document).ready(function(){
+    $("#btn_submit_change_pwd").click(function(){
+      var currentPwd = $('#current_pwd').val();
+      var newPwd = $('#new_pwd').val();
+      var verifyPwd = $('#verify_pwd').val();
+
+      var formData = new FormData();
+      formData.append('currentPwd', currentPwd);
+      formData.append('newPwd', newPwd);
+      formData.append('verifyPwd', verifyPwd);
+
+      $.ajax({
+        url: "/user/profile/change_pwd",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (response) {
+          $("#error_change_pwd_user").html(response);
+          $("#error_change_pwd_user_outer").removeClass("d-none");
+        },
+        error: function (error) {
+          console.log(error);
+        },
+        complete: function () {
+          $("#overlay").addClass("d-none");
+        },
+      })
+    })
+  });
+}
+
+function getCookie(cookieName) {
+  var name = cookieName + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var cookieArray = decodedCookie.split(";");
+  for (var i = 0; i < cookieArray.length; i++) {
+    var cookie = cookieArray[i];
+    while (cookie.charAt(0) == " ") {
+      cookie = cookie.substring(1);
+    }
+    if (cookie.indexOf(name) == 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+  return "";
+}
+
+function getUserInformationForHeader() {
+  fetch("/user/get_user_info")
+    .then((response) => response.json())
+    .then((data) => {
+      var userName = data.user_name;
+      var userImg = data.user_img;
+      $("#navbar_username").text(userName);
+      $("#navbar_user_img").attr("src", userImg);
+    })
+    .catch((error) => console.error("Error:", error));
+}

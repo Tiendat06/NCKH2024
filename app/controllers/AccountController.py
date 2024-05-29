@@ -40,6 +40,8 @@ class AccountController:
         self.user.resetPassword(acc_id)
         return redirect("/account")
     
+    
+    
 
 
 

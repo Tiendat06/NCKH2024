@@ -1,7 +1,9 @@
-from flask import render_template, request, session, redirect
+from flask import render_template, request, session, redirect, make_response, jsonify
 from datetime import datetime
 from models.Account import Account, AccountModel
 from models.User import User, UserModel
+from flask.sessions import SecureCookieSessionInterface
+from itsdangerous import URLSafeTimedSerializer
 class LogController:
     def __init__(self):
         self.account = AccountModel()
@@ -26,8 +28,20 @@ class LogController:
         print(self.account.checkLogin(data)[1])
         
         if self.account.checkLogin(data)[0]:
-            session['account'] = email
-            return redirect('/')
+            session['account'] = email;
+            user = self.user.get_user_by_email(email);
+            response = make_response(redirect('/'));
+            # Thiết lập cookie trên đối tượng response
+            response.set_cookie('user_name', user._name)
+            response.set_cookie('user_img', user._img_profile)
+            session['user_name'] = user._name;
+            session['user_img'] = user._img_profile;
+            session['user_id'] = user._user_id;
+            session['acc_id'] = user._acc_id;
+            # print(user._name);
+            # print(user._img_profile);
+            
+            return response
         elif not self.account.checkLogin(data)[0] and self.account.checkLogin(data)[1] == 'ROL0000003':
             error = 'Your account has been banned!';
             return render_template("/log/login.html", error=error);
