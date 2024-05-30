@@ -11,7 +11,8 @@
   "date_created": {
     "$date": "2024-02-03T00:00:00.000Z"
   },
-  "doctor_predict": "Viem Phoi"
+  "doctor_predict": "Viem Phoi",
+  "user_id": "USE0000001"
 },
 {
   "_id": {
@@ -24,7 +25,8 @@
   "medical_predict": "Pleural effusion\nPleural effusion\nPleural effusion\nCardiomegaly\nAortic enlargement",
   "percentage": "",
   "date_created": "2024-04-27 23:35:10",
-  "doctor_predict": ""
+  "doctor_predict": "",
+  "user_id": "USE0000001"
 },
 {
   "_id": {
@@ -37,7 +39,8 @@
   "medical_predict": "Pleural effusion\nPleural effusion\nPleural effusion\nCardiomegaly\nAortic enlargement",
   "percentage": "",
   "date_created": "2024-05-29 12:52:19",
-  "doctor_predict": ""
+  "doctor_predict": "",
+  "user_id": "USE0000001"
 },
 {
   "_id": {
@@ -50,5 +53,20 @@
   "medical_predict": "Other lesion\nLung Opacity\nPulmonary fibrosis\nOther lesion\nCardiomegaly",
   "percentage": "",
   "date_created": "2024-05-29 14:47:10",
-  "doctor_predict": ""
+  "doctor_predict": "",
+  "user_id": "USE0000001"
+},
+{
+  "_id": {
+    "$oid": "6658411bae8f553b725a4f17"
+  },
+  "m_rec_id": "MDR0000005",
+  "patient_id": "PAT0000002",
+  "img_before": "/static/img/img.png",
+  "img_last": "/static/img/data/img.png",
+  "medical_predict": "Pleural thickening\nPulmonary fibrosis\nLung Opacity\nPleural thickening\nCardiomegaly",
+  "percentage": "",
+  "date_created": "2024-05-30 16:04:27",
+  "doctor_predict": "",
+  "user_id": "USE0000001"
 }]
