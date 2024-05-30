@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 
 .Python
+routes/apis/
 videos/
 build/
 runs/
@@ -114,4 +115,4 @@ venv.bak/
 *.onnx
 # *.pt
 *.engine
-routes/apis/
+
