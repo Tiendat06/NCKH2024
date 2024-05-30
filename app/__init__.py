@@ -53,7 +53,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 if __name__ == '__main__':
     app = Flask(__name__);
     ssl = SSLify(app);
-    CORS(app)
+    CORS(app);
     app.secret_key = os.getenv("SECRET_KEY")
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config['JSON_AS_ASCII'] = False 
