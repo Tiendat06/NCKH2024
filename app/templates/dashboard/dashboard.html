@@ -81,12 +81,12 @@
                 </div>
 
                 <div class="personality__img text-center position-relative" style="z-index: 99; transform:translateY(-40px); width: 80%">
-                    <img class="" style="width: 80px;" src="{{url_for('static', filename='img/user_profile.png')}}" alt="" srcset="">
+                    <img class="" id="dashboard_userimg" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--main-color-update)" src="{{url_for('static', filename='img/user_profile.png')}}" alt="" srcset="">
                 </div>
 
                 <div style="" class="personality__info--details pt-5 text-center">
                     <div class="personality__info--name">
-                        <h5 style="color: #5d5d5d;">Jake Johnson</h5>
+                        <h5 style="color: #5d5d5d;" id="dashboard-username">Jake Johnson</h5>
                     </div>
 
                     <div class="personality__info--position d-flex justify-content-center">

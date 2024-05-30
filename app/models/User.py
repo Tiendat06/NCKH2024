@@ -145,7 +145,7 @@ class UserModel(DataBaseUtils):
         return None
 
     def get_user_by_id(self, user_id):
-        user_data = self.get_collection('user').find_one({'user_id': user_id})
+        user_data = self.__conn.get_collection('user').find_one({'user_id': user_id})
         if user_data:
             return user_data;
         return None;

@@ -2,15 +2,17 @@
     <thead>
         <th>#</th>
         <th>Patient name</th>
+        <th>Doctor name</th>
         <th>Date created</th>
         <th>Action</th>
     </thead>
 
     <tbody>
-        {% for record in medical_record_list %}
+        {% for record, user in medical_record_list %}
         <tr>
             <td>{{loop.index}}</td>
             <td>{{patient_name}}</td>
+            <td>{{user._name}}</td>
             <td>{{record._date_created}}</td>
             <td>
                 <a data-m_rec_id="{{record._m_rec_id}}" data-img_before="{{record._img_before}}" data-img_last="{{record._img_last}}" data-medical_predict="{{record._medical_predict}}" data-toggle="modal" data-target="#show-xray-image" class="btn mb-0 btn-show-details-xray-img">

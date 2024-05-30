@@ -126,6 +126,7 @@
 }
 
 .personality__background{
+    /* transform: translateY(20px); */
     width: 80%; 
     height: 100px; 
     background-color: var(--main-color-update);

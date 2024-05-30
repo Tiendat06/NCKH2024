@@ -2,6 +2,7 @@ from database import DataBaseUtils
 from flask import request
 from models.builder.BuilderPatient import BuilderPatient
 from models.MedicalRecord import MedicalRecord
+from models.User import UserModel, User
 
 class Patient():
     def __init__(self, patient_id, name, age, img, phone, PID, gender, address, date_created, dob, email):
@@ -109,6 +110,7 @@ class Patient():
 class PatientModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils();
+        self.__user_db = UserModel();
     
     def addPatient(self, patient: Patient):
         result = self.__conn.get_collection('patient').insert_one(patient)
@@ -141,7 +143,7 @@ class PatientModel(DataBaseUtils):
                                                                    'dob': patient._dob,
                                                                    'email': patient._email,
                                                                 }})
-        if result.modified_count > 0:
+        if result.acknowledged and result.matched_count > 0:
             return True
         return False
     
@@ -150,9 +152,9 @@ class PatientModel(DataBaseUtils):
 
     def view_medical_record(self, patient_id):
         medical_record_data = self.__conn.get_collection('medical_record').find({'patient_id': patient_id});
-        data = []
+        data = [];
+        user_list = [];
         if medical_record_data:
-            print("hi lo")
             for medical_record in medical_record_data:
                 m_rec_id = medical_record.get('m_rec_id');
                 img_before = medical_record.get('img_before');
@@ -161,9 +163,15 @@ class PatientModel(DataBaseUtils):
                 percentage = medical_record.get('percentage');
                 date_created = medical_record.get('date_created');
                 doctor_predict = medical_record.get('doctor_predict');
-                medical_record_model = MedicalRecord(m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict);
+                user_id = medical_record.get('user_id');
+
+                user = self.__user_db.get_user_by_id(user_id);
+
+                user_model = User('', user_id, user['acc_id'], user['name'], user['gender'], user['email'], user['dob'], user['phone'], user['img_profile']);
+                medical_record_model = MedicalRecord(m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict, user_id);
                 data.append(medical_record_model);
-            return data;
+                user_list.append(user_model);
+            return data, user_list;
         return None;
 
 
@@ -185,7 +193,7 @@ class PatientModel(DataBaseUtils):
                 date_created = patient.get('date_created');
                 dob = patient.get('dob');
                 email = patient.get('email');
-                print(id)
+                # print(id)
 
                 # patient_item = Patient(id, name, age, img, phone, PIDs, gender, address, date_created, dob, email);
                 # BUILDER PATTERN FOR PATIENT [TTD]

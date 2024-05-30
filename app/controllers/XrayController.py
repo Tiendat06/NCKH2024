@@ -231,6 +231,7 @@ class XrayController:
         patient_dob = data.get('dob');
         patient_email = data.get('email');
         date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+        user_id = session.get("user_id");
 
         medical_record_id = self.medicalRecord.AUTO_MDR_ID();
         img_before = session.get('relative_path_to_save');
@@ -270,7 +271,8 @@ class XrayController:
             'medical_predict': medical_predict,
             'percentage': '',
             'date_created': date_created,
-            'doctor_predict': ''
+            'doctor_predict': '',
+            'user_id': user_id
         }
 
         if not self.patient.checkPatientIsContainByPID(patient_PID):

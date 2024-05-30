@@ -4,7 +4,7 @@ import random
 import string
 
 class MedicalRecord:
-    def __init__(self, m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict):
+    def __init__(self, m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict, user_id):
         self.__m_rec_id = m_rec_id;
         self.__patient_id = patient_id;
         self.__img_before = img_before;
@@ -13,7 +13,7 @@ class MedicalRecord:
         self.__percentage = percentage;
         self.__date_created = date_created;
         self.__doctor_predict = doctor_predict;
-        
+        self.__user_id = user_id;
 
     @property
     def _m_rec_id(self):
@@ -78,6 +78,14 @@ class MedicalRecord:
     @_doctor_predict.setter
     def _doctor_predict(self, value):
         self.__doctor_predict = value
+
+    @property
+    def _user_id(self):
+        return self.__user_id
+
+    @_user_id.setter
+    def _user_id(self, value):
+        self.__user_id = value
 
 
 class MedicalRecordModel(DataBaseUtils):

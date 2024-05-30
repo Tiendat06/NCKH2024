@@ -1140,6 +1140,7 @@ function handleUploadImgInProfile() {
 }
 
 function jsInUserProfile() {
+  // change personal information
   $(document).ready(function () {
     $("#btn_submit_personal").click(function () {
       // console.log('hi world');
@@ -1186,6 +1187,7 @@ function jsInUserProfile() {
     });
   });
 
+  // change pwd
   $(document).ready(function(){
     $("#btn_submit_change_pwd").click(function(){
       var currentPwd = $('#current_pwd').val();
@@ -1241,7 +1243,9 @@ function getUserInformationForHeader() {
       var userName = data.user_name;
       var userImg = data.user_img;
       $("#navbar_username").text(userName);
+      $("#dashboard-username").text(userName);
       $("#navbar_user_img").attr("src", userImg);
+      $("#dashboard_userimg").attr("src", userImg);
     })
     .catch((error) => console.error("Error:", error));
 }

@@ -22,7 +22,6 @@ class PatientController:
 
 #   [POST] /patient/edit
     def edit_patient(self):
-        print("hi world")
         patient_db = self.patient_model;
         result = {
             'fail': 'Edit failed !',
@@ -109,6 +108,15 @@ class PatientController:
         data = request.get_json();
         patient_id = data.get('patient_id');
         patient_name = data.get('name');
-        medical_record_list = list(patient_model.view_medical_record(patient_id));
 
-        return render_template("/patient/patient_medical_record.html", content='index', page='patient', patient_name=patient_name, medical_record_list=medical_record_list);
+        medical_record_list, user_list = [], [];
+        medical_record_list, user_list = (patient_model.view_medical_record(patient_id));
+
+        zip_data = zip(medical_record_list, user_list);
+        zip_data_list = list(zip_data)
+
+        # user_list = [];
+        # for user in medical_record_list:
+        #     user_list.append(user._user_id);
+
+        return render_template("/patient/patient_medical_record.html", content='index', page='patient', patient_name=patient_name, medical_record_list=zip_data_list);
