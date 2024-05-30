@@ -18,7 +18,7 @@ class UserController:
             user_img = "https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png";
         return jsonify({'user_name': user_name, 'user_img': user_img})
 
-    # [GET]
+    # [GET] /user
     def index(self, pages):
         user_db = self.user;
         pages = int(pages);

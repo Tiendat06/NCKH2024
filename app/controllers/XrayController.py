@@ -25,11 +25,12 @@ class XrayController:
         config_path = os.path.join(base_dir, "data", "vinbigdata.yaml")
         self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True)
 
-    # [GET]
+    # [GET] 
     def index(self):
 
         return render_template("index.html", content = 'index', page = 'xray')
     
+    # [GET, POST] /xray
     def load_data(self, app):
         ndet = 0
 
@@ -129,7 +130,7 @@ class XrayController:
             return render_template('index.html', content = 'index', page = 'xray')    
 
 
-    # [POST, AJAX]
+    # [POST, AJAX] /xray/ajax/changeRange
     def load_data_ajax(self, app):
         ndet = 0
 
@@ -209,7 +210,7 @@ class XrayController:
                 # Trả về một thông báo lỗi cho client
                 return render_template('/xray/change_range.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
 
-    # [GET]
+    # [GET] /xray/proxy-image
     def sendImg(self):
         image_url = request.args.get('url')
         print(image_url)
@@ -218,7 +219,7 @@ class XrayController:
         return send_file(BytesIO(response.content), mimetype='image/jpeg')
     
     
-    # [POST, AJAX]
+    # [POST, AJAX] /xray/saveRecord
     def saveRecord(self):
         data = request.get_json();
         patient_id = self.patient.AUTO_PAT_ID();
@@ -253,7 +254,7 @@ class XrayController:
             'patient_id': patient_id,
             'name': patient_name,
             'age': patient_age,
-            'img': '',
+            'img': 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png',
             'phone': patient_phone,
             'PID': patient_PID,
             'gender': patient_gender,

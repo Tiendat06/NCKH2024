@@ -6,6 +6,7 @@ class PatientController:
     def __init__(self):
         self.patient_model = PatientModel();
 
+    # [GET] /patient
     def index(self, pages):
         patient_db = self.patient_model;
         pages = int(pages);
@@ -63,18 +64,7 @@ class PatientController:
                     .setPatientMailBuilder(email)
                     .build()
                 );
-        
-        print(patient_id);
-        print(name);
-        print(age);
-        print(img);
-        print(phone);
-        print(Pid);
-        print(gender);
-        print(address);
-        print(date_created);
-        print(dob);
-        print(email);
+
         if not patient_model:
             return jsonify(result.get('fail'));
         edit = patient_db.edit_patient(patient_model);

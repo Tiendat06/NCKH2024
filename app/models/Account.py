@@ -112,6 +112,13 @@ class AccountModel(DataBaseUtils):
             return True;
         return False;
 
+    def findAccountByAccId(self, acc_id):
+        result = self.__conn.get_collection('account').find_one({'acc_id': acc_id});
+        if result:
+            account = Account(result['_id'], result['username'], result['password'], result['acc_id'], result['role_id']);
+            return account;
+        return None;
+
     def AUTO_ACC_ID(self):
         result = self.__conn.get_collection('account').find_one({}, sort=[("acc_id", -1)])  #asc
 

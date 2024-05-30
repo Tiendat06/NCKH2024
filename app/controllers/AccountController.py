@@ -7,7 +7,7 @@ class AccountController:
         self.account = AccountModel()
         self.user = UserModel()
 
-    # [GET]
+    # [GET] /account
     def index(self, pages):
         user_db = self.user
 
@@ -30,12 +30,12 @@ class AccountController:
 
         return render_template("index.html", content='index', page='account', zip_data=items_on_page, total_pages=total_pages, pages=pages)
 
-    # [GET]
+    # [GET] /account/changeRole/<role_name>/<acc_id>
     def updateRole(self, role_name, acc_id):
         self.account.updateRole(role_name, acc_id)
         return redirect("/account")
     
-    # [GET]
+    # [GET] /account/resetPassword/<acc_id>
     def resetPassword(self, acc_id):
         self.user.resetPassword(acc_id)
         return redirect("/account")

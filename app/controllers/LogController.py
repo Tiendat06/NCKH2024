@@ -1,21 +1,75 @@
-from flask import render_template, request, session, redirect, make_response, jsonify
+from flask import abort, render_template, request, session, redirect, make_response, jsonify, url_for
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+import requests
 from models.Account import Account, AccountModel
 from models.User import User, UserModel
-from flask.sessions import SecureCookieSessionInterface
-from itsdangerous import URLSafeTimedSerializer
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+from itsdangerous import SignatureExpired, URLSafeTimedSerializer
+from flask_mail import Message, Mail
+
 class LogController:
     def __init__(self):
         self.account = AccountModel()
         self.user = UserModel();
+    
+    # [GET] /log/login_gmail
+    def loginByGoogle(self, flow):
+        authorization_url, state = flow.authorization_url()
+        session["state"] = state
+        return redirect(authorization_url)
 
-    # [GET]
+    # [GET] /log/login
     def login(self):
         if 'account' in session:
             return redirect('/')
         return render_template('/log/login.html');
 
-    # [POST]
+    # [GET] /log/callback
+    def callback(self, flow, GOOGLE_CLIENT_ID):
+        flow.fetch_token(authorization_response=request.url)
+
+        if not session["state"] == request.args["state"]:
+            abort(500)  # State does not match!
+
+        credentials = flow.credentials
+        request_session = requests.session()
+        cached_session = cachecontrol.CacheControl(request_session)
+        token_request = google.auth.transport.requests.Request(session=cached_session)
+
+        id_info = id_token.verify_oauth2_token(
+            id_token=credentials._id_token,
+            request=token_request,
+            audience=GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=10,
+        )
+
+        session["google_id"] = id_info.get("sub")
+        session["name"] = id_info.get("name")
+        email = session["account"] = id_info.get("email");
+        user = self.user.get_user_by_email(email);
+        session['user_name'] = user._name;
+        session['user_img'] = user._img_profile;
+        session['user_id'] = user._user_id;
+        session['acc_id'] = user._acc_id;
+        account = self.account.findAccountByAccId(user._acc_id);
+        if account._role_id == 'ROL0000003':
+            error = 'Your account has been banned!';
+            return render_template("/log/login.html", error=error);
+        return redirect("/");
+
+
+    def protected_area(self):
+        print(session.get("account"))
+        return "Hi world";
+
+    # [POST] /log/login
     def loginPost(self):
         email = request.form.get("email")
         pwd = request.form.get("pwd")
@@ -49,17 +103,21 @@ class LogController:
             error = "Invalid email or password !";
             return render_template("/log/login.html", error=error)
         
-    # [GET]
+    # [GET] /log/login
     def logout(self):
+        google_id = session.get("google_id");
         session.clear();
+        session['google_id'] = google_id;
         return redirect('/')
     
-    # [GET]
+    # [GET] /log/register
     def register(self):
         return render_template('/log/login.html', register="register")
     
-    # [POST]
-    def registerPost(self):
+    # [POST] /log/register
+    def registerPost(self, app):
+        mail = Mail(app);
+        
         user_db = self.user;
         fullname = request.form.get('fullname');
         phone = request.form.get('phone')
@@ -82,11 +140,28 @@ class LogController:
 
         user = User('', '', '', fullname, gender, email, date_formatted, phone, default_img_profile)
         account = Account('', '', pwd, '', 'ROL0000002');
-        # print(user)
-        # print(account)
 
         result = self.user.createAccount(user, account);
+
+        s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"));
+        token = s.dumps(email, salt='email-confirms');
+        msg = Message('Confirm Email', sender='tiendat79197@gmail.com', recipients=[email]);
+        confirm_url = url_for('log.confirm_email', token=token, _external=True)
+        # print(token)
+
+        msg.body = f'Click the link below to confirm your email:\n{confirm_url}'
+        # mail.send(msg);
         return render_template('/log/login.html', register="register", result = result)
+
+    def confirm_email(self, token):
+        # print("sec key:",os.getenv("SECRET_KEY"));
+        s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"))
+        try:
+            email = s.loads(token, salt='email-confirms')
+            return render_template("/log/verified.html");
+        except SignatureExpired:
+            print("hi world !!!!!")
+            return '<h1>The token is expired!</h1>';
 
 
 

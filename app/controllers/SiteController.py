@@ -5,14 +5,14 @@ class SiteController:
     def __init__(self):
         self.account = AccountModel()
 
-    # [GET]
+    # [GET] /
     def index(self):
         if 'account' not in session:
             return redirect('/home')
         
         return render_template("index.html", content = 'index', page = 'index')
         
-    # [GET]
+    # [GET] /home
     def home(self):
         if 'account' in session:
             return redirect('/')

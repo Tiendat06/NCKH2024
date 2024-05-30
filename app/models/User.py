@@ -210,8 +210,6 @@ class UserModel(DataBaseUtils):
             return 'Delete Successfully';
         return 'Delete Failed';
         
-
-
     def AUTO_USE_ID(self):
         result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #desc
 

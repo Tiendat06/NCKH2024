@@ -8,7 +8,7 @@ patient = Blueprint('patient', __name__);
 def index_none_pagination():
     return PatientController().index(1);
 
-# [GET]
+# [GET] 
 @patient.route('/patient/<pages>', methods=['get'])
 def index(pages):
     return PatientController().index(pages)
