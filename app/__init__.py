@@ -58,10 +58,10 @@ if __name__ == '__main__':
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config['JSON_AS_ASCII'] = False 
     app.config['SESSION_TYPE'] = 'filesystem'
-    app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER");
-    app.config['MAIL_PORT'] = os.getenv("MAIL_PORT")
-    app.config['MAIL_USE_TLS'] = os.getenv("MAIL_TLS");
-    app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME");
-    app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD");
+    # app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER");
+    # app.config['MAIL_PORT'] = os.getenv("MAIL_PORT")
+    # app.config['MAIL_USE_TLS'] = os.getenv("MAIL_TLS");
+    # app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME");
+    # app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD");
     routes(app)
     app.run(debug=True)
