@@ -80,6 +80,6 @@ def registerPost():
 
 @log.route('/log/confirm_email/<token>')
 def confirm_email(token):
-        # s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"));
+    # s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"));
     return LogController().confirm_email(token);
 # log.add_url_rule('/log/login', 'loginPost', LogController.loginPost(), methods=['POST'])

@@ -39,7 +39,6 @@ cloudinary.config(
 # change to https request (use for gmail)
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-
 # apps = Blueprint("app", __name__);
 
 # @app.route('/', methods=['get'])
@@ -47,8 +46,6 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 #     return render_template('index.html')
 # getApp(app)
 # db = DataBaseUtils()
-
-
 
 if __name__ == '__main__':
     app = Flask(__name__);
@@ -63,5 +60,5 @@ if __name__ == '__main__':
     app.config['MAIL_USE_TLS'] = os.getenv("MAIL_TLS");
     app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME");
     app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD");
-    routes(app)
+    routes(app);
     app.run(debug=True)

@@ -1,6 +1,7 @@
 from database import DataBaseUtils
 from models.Account import AccountModel, Account
 from models.Role import Role, RoleModel
+import secrets
 
 class User:
     def __init__(self, _id, user_id, acc_id, name, gender, email, dob, phone, img_profile):
@@ -158,11 +159,11 @@ class UserModel(DataBaseUtils):
         return None;
 
     def createAccount(self, user, account):
-        user_id = self.AUTO_USE_ID();
-        acc_id = AccountModel().AUTO_ACC_ID();
+        # user_id = self.AUTO_USE_ID();
+        # acc_id = AccountModel().AUTO_ACC_ID();
         user_json = {
-            'user_id': user_id,
-            'acc_id': acc_id,
+            'user_id': user._user_id,
+            'acc_id': account._acc_id,
             'name': user._name,
             'gender': user._gender,
             'email': user._email,
@@ -173,7 +174,7 @@ class UserModel(DataBaseUtils):
 
         account_json = {
             'password': account.get_password(),
-            'acc_id': acc_id,
+            'acc_id': account._acc_id,
             'username': account.get_username(),
             'role_id': account.get_role_id(),
         }
@@ -184,6 +185,11 @@ class UserModel(DataBaseUtils):
         if result_user.acknowledged and result_acc.acknowledged:
             return 'Register Successfully';
         return 'Register Failed';
+
+    def generateOTPcode(self, length=6):
+        digits = "0123456789"
+        otp = ''.join(secrets.choice(digits) for _ in range(length))
+        return otp;
 
     def edit_user(self, user):
 
