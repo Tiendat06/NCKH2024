@@ -1250,3 +1250,50 @@ function getUserInformationForHeader() {
     })
     .catch((error) => console.error("Error:", error));
 }
+
+function jsInHome(){
+  // show medical record in details by PID
+  $(document).ready(function(){
+    $(".btn-show-details-medical-record").click(function(){
+      var Pid = $("#pid").val();
+      console.log(Pid);
+      if(Pid != undefined || Pid != ''){
+        $.ajax({
+          url: "/home/medical_record",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            Pid: Pid,
+          }),
+          success: function (response) {
+            $("#more-patient-medical-record").html(response);
+            // $("#error_editing_user_outer").removeClass("d-none");
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+      }
+    });
+
+  });
+
+    // show img of record
+  $(document).ready(function () {
+      $(".btn-show-details-xray-img").click(function () {
+        var m_rec_id = $(this).data("m_rec_id");
+        var img_before = $(this).data("img_before");
+        var img_last = $(this).data("img_last");
+        var medical_predict = $(this).data("medical_predict");
+  
+        console.log(img_before);
+        console.log(img_last);
+        console.log(medical_predict);
+        console.log($(".img-left"));
+  
+        $("#img-left").attr("src", img_before);
+        $("#img-right").attr("src", img_last);
+        $("#medical_predict").val(medical_predict);
+      });
+  });
+}

@@ -52,8 +52,14 @@ class LogController:
 
         session["google_id"] = id_info.get("sub")
         session["name"] = id_info.get("name")
+        user = self.user.get_user_by_email(id_info.get("email"));
+        if user == None:
+            error = 'Your email has not been created';
+            
+            # session.pop('account');
+            return render_template("/log/login.html", error=error);
+    
         email = session["account"] = id_info.get("email");
-        user = self.user.get_user_by_email(email);
         session['user_name'] = user._name;
         session['user_img'] = user._img_profile;
         session['user_id'] = user._user_id;
@@ -61,7 +67,9 @@ class LogController:
         account = self.account.findAccountByAccId(user._acc_id);
         if account._role_id == 'ROL0000003':
             error = 'Your account has been banned!';
+            session.pop('account');
             return render_template("/log/login.html", error=error);
+        
         return redirect("/");
 
     def protected_area(self):

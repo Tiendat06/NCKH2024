@@ -1,7 +1,7 @@
 
 {% include './include/header.html' %}
 <body class="bg--outside {% if not register %} login-body {% endif %}  d-flex justify-content-center align-items-center m-auto">
-    <form method="post" action="{% if register %}/log/register{% endif %}">
+    <form method="post" action="{% if register %}/log/register{% endif %}{% if not register %}/log/login{% endif %}">
         <div class="container p-5">
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="login col-lg-12 bg-white d-flex flex-wrap">

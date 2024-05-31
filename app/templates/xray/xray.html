@@ -10,11 +10,13 @@
             Add Record
         </button>
     </div>
-    <form style="" id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2" enctype="multipart/form-data">
-        <div style="background-color: #fff;border-radius: 10px;" class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
+    <form style="" id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2"
+        enctype="multipart/form-data">
+        <div style="background-color: #fff;border-radius: 10px;"
+            class="col-lg-12 col-md-12 col-sm-12 pt-3 pb-3 d-flex flex-wrap">
             <div class="xray-slider w-100 form-group d-flex flex-wrap justify-content-end" style="float: right">
-                <input style="" class="w-25 form-range form-control p-3 col-lg-12 col-md-12 col-sm-12" type="range" name="range"
-                    id="myRange" min="0" max="1" step="0.1"
+                <input style="" class="w-25 form-range form-control p-3 col-lg-12 col-md-12 col-sm-12" type="range"
+                    name="range" id="myRange" min="0" max="1" step="0.1"
                     value="{% if conf_thres %}{{conf_thres}}{% else %}0{% endif %}" />
                 <p class="col-lg-12 col-md-12 col-sm-12 mt-2 d-flex flex-wrap justify-content-end">
                     Value:
@@ -32,7 +34,8 @@
                         cursor: pointer;
                         " class="xray-img--small mb-3 w-100">
 
-                        <img data-toggle="modal" data-target="#xray-open__img" id="xray-img__small" style="height: 60px; object-fit: cover" class="profile-img w-100"
+                        <img data-toggle="modal" data-target="#xray-open__img" id="xray-img__small"
+                            style="height: 60px; object-fit: cover" class="profile-img w-100"
                             src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
                             alt="" srcset="" />
                     </div>
@@ -44,13 +47,16 @@
                         class="profile-img text-center"
                         src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
                         alt="" srcset="" />
-                        <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
+                    <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
                         </div> -->
-                        <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain" class="profile-img text-center"></canvas>
-                    
+                    <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain"
+                        class="profile-img text-center"></canvas>
+
                     <!-- <input type="hidden" name="img_link_download" id="img_link_download" value="{{user_image_local}}" /> -->
-                    <img style="width: 330px!important; height: 330px!important" hidden src="{% if user_image_local %}{{user_image_local}}{% else %}/static/img/xray-img-check.png{% endif %}" id="img_link_download" alt="">
-                    
+                    <img style="width: 330px!important; height: 330px!important" hidden
+                        src="{% if user_image_local %}{{user_image_local}}{% else %}/static/img/xray-img-check.png{% endif %}"
+                        id="img_link_download" alt="">
+
                     {% if user_image %}
                     <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
                     {% endif %}
@@ -72,8 +78,10 @@
 
                         <div class="tab-content w-100" id="myTabContent">
                             <!-- { if zip_data %} -->
-                            <div style="display:{% if user_image %}none;{% else %}block;{% endif %}" class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-3 d-flex flex-wrap justify-content-center">
-                                <div style="display:{% if user_image %}none;{% else %}block;{% endif %}" class="alert alert-danger mb-0">
+                            <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
+                                class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-3 d-flex flex-wrap justify-content-center">
+                                <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
+                                    class="alert alert-danger mb-0">
                                     <p class="mb-0">There is no disease</p>
                                 </div>
                             </div>
@@ -86,10 +94,10 @@
                                             {{sick_name_eng}} ({{sick_name}})
                                         </p>
                                         <!-- <div> -->
-                                            <p class="mb-0 w-25 text-right text-secondary">
-                                                {{percentage}}%
-                                            </p>
-                                            <!-- <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i> -->
+                                        <p class="mb-0 w-25 text-right text-secondary">
+                                            {{percentage}}%
+                                        </p>
+                                        <!-- <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i> -->
                                         <!-- </div> -->
                                     </div>
                                     <div style="
@@ -125,7 +133,7 @@
                                             class="xray-percent h-100"></div>
                                     </div>
                                 </div> -->
-                                
+
                                 <!-- { for sick_name, percentage, sick_name_eng, colors in zip_data %} -->
                                 <!-- <div style="cursor: pointer" class="text-light xray-predict__item w-100 mb-2">
                                     <div class="xray-predict__title d-flex flex-wrap mb-2">
@@ -153,11 +161,13 @@
                             </div>
 
                             <div class="d-flex flex-wrap justify-content-end">
-                                <div class="text-right xray-btn--undo tab-pane mt-4" id="xray-btn--undo" style="display: none;">
+                                <div class="text-right xray-btn--undo tab-pane mt-4" id="xray-btn--undo"
+                                    style="display: none;">
                                     <a id="btn-undo-xray" class="btn btn-warning">Undo</a>
                                 </div>
 
-                                <div class="text-right xray-btn--redo tab-pane mt-4 ml-3" id="xray-btn--redo" style="display: none;">
+                                <div class="text-right xray-btn--redo tab-pane mt-4 ml-3" id="xray-btn--redo"
+                                    style="display: none;">
                                     <a id="btn-redo-xray" class="btn btn-purple">Redo</a>
                                 </div>
                             </div>
@@ -171,7 +181,8 @@
 
             <div class="xray-btn mt-5 d-flex flex-wrap justify-content-end col-lg-3 col-md-3 col-sm-3 mt-3 ml-auto">
                 <div class="xray-btn-upload  col-lg-6 text-right">
-                    <label for="upload" onclick="" id="upload_button" class="btn btn-info" style="width: 105px;">Upload</label>
+                    <label for="upload" onclick="" id="upload_button" class="btn btn-info"
+                        style="width: 105px;">Upload</label>
                     <input id="upload" type="file" name="file" style="display: none" accept="image/*"
                         class="form-control" onchange="handleUploadImg()" />
                 </div>
@@ -225,7 +236,9 @@
                     <div class="modal-body">
                         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home_add" role="tab" aria-controls="home" aria-selected="true"><i class="fa-solid fa-heart-pulse"></i> Medical Record</a>
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home_add" role="tab"
+                                    aria-controls="home" aria-selected="true"><i class="fa-solid fa-heart-pulse"></i>
+                                    Medical Record</a>
                             </li>
                             <!-- <li class="nav-item">
                               <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile_add" role="tab" aria-controls="profile" aria-selected="false">Patient</a>
@@ -235,35 +248,37 @@
                             </li> -->
                         </ul>
 
-                          <div class="tab-content" id="myTabContent">
+                        <div class="tab-content" id="myTabContent">
                             <!-- add record -->
-                            <div class="tab-pane fade show active d-flex flex-wrap" id="home_add" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="tab-pane fade show active d-flex flex-wrap" id="home_add" role="tabpanel"
+                                aria-labelledby="home-tab">
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
 
                                         <div class="form-group">
                                             <label for="full_name_add">Full name</label>
-                                            <input class="form-control" type="text" name="full_name_add" id="full_name_add"
-                                                placeholder="Full name" required />
+                                            <input class="form-control" type="text" name="full_name_add"
+                                                id="full_name_add" placeholder="Full name" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="number_add">PID</label>
                                             <input class="form-control" type="number" name="number_add" id="number_add"
                                                 placeholder="PID" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="age_add">Age</label>
                                             <input class="form-control" type="text" name="age_add" id="age_add"
                                                 placeholder="Age" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="phone_add">Phone number</label>
-                                            <input class="form-control" placeholder="Phone number" type="number" name="phone_add" id="phone_add" required />
+                                            <input class="form-control" placeholder="Phone number" type="number"
+                                                name="phone_add" id="phone_add" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="gender_add">Gender</label>
                                             <select class="form-control" name="gender_add" id="gender_add">
@@ -282,24 +297,26 @@
                                             <input class="form-control" type="text" name="address_add" id="address_add"
                                                 placeholder="Address" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="date_add">Birthday</label>
                                             <input type="date" class="form-control" name="date_add" id="date_add">
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="email_add">Email</label>
                                             <input class="form-control" type="email" name="email_add" id="email_add"
                                                 placeholder="Email" required />
                                         </div>
-            
+
                                         <div class="form-group">
                                             <label for="doctor_predict_add">Prediction</label>
                                             <!-- <input class="form-control" type="date" name="dob_add" id="dob_add" required /> -->
-                                            <textarea class="form-control" style="white-space: pre-wrap;" name="doctor_predict_add" id="doctor_predict_add" cols="30" rows="5" contenteditable="true">{% for item in sick_name %}{{ item }}{% if not loop.last %}&#13;&#10;{% endif %}{% endfor %}</textarea>
+                                            <textarea class="form-control" style="white-space: pre-wrap;"
+                                                name="doctor_predict_add" id="doctor_predict_add" cols="30" rows="5"
+                                                contenteditable="true">{% for item in sick_name %}{{ item }}{% if not loop.last %}&#13;&#10;{% endif %}{% endfor %}</textarea>
                                         </div>
-            
+
                                         <!-- <div class="form-group">
                                             <label for="phone_add">Phone number</label>
                                             <input class="form-control" type="number" name="phone_add" id="phone_add"
@@ -309,11 +326,13 @@
                                 </div>
                             </div>
                             <!-- add patient if not exist -->
-                            <div class="tab-pane fade" id="profile_add" role="tabpanel" aria-labelledby="profile-tab">hello 2</div>
+                            <div class="tab-pane fade" id="profile_add" role="tabpanel" aria-labelledby="profile-tab">
+                                hello 2</div>
 
-                            <div class="tab-pane fade" id="contact_add" role="tabpanel" aria-labelledby="contact-tab">hello 3</div>
-                          </div>
-                        
+                            <div class="tab-pane fade" id="contact_add" role="tabpanel" aria-labelledby="contact-tab">
+                                hello 3</div>
+                        </div>
+
                     </div>
 
                     <div id="error_adding_record_outer" style="width: 90%"
@@ -334,84 +353,88 @@
     </div>
 
     <!-- choosing disease modal -->
-    <div class="modal fade" id="selectOptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="selectOptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Select disease</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select disease</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="options">Disease:</label>
+                    <select class="form-control" id="options">
+                        {% for disease in disease_list %}
+                        <option value="{{disease._disease_name_eng}}">{{disease._disease_name}} -
+                            {{disease._disease_name_eng}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveOption">Save</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <label for="options">Disease:</label>
-              <select class="form-control" id="options">
-                {% for disease in disease_list %}
-                    <option value="{{disease._disease_name_eng}}">{{disease._disease_name}} - {{disease._disease_name_eng}}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>
-              <button type="button" class="btn btn-primary" id="saveOption">Save</button>
-            </div>
-          </div>
         </div>
     </div>
-    
+
     <!-- open img -->
     <!-- Modal -->
-<style>
-    .img-container {
-        position: relative;
-    }
-    
-    .img-zoom-result {
-        position: absolute;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-        display: none;
-        width: 200px; /* Độ rộng của vùng phóng to */
-        height: 200px; /* Độ cao của vùng phóng to */
-        z-index: 9999;
-    }
-    
-</style>
+    <style>
+        .img-container {
+            position: relative;
+        }
 
-<div class="modal fade" id="xray-open__img" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Xray image</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="d-flex flex-wrap justify-content-center img-container">
-                <img width="800" height="800" id="xray-img--show" src="" alt="" srcset="">
-                <div id="zoomed-in-section" class="img-zoom-result"></div>
+        .img-zoom-result {
+            position: absolute;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            display: none;
+            width: 200px;
+            /* Độ rộng của vùng phóng to */
+            height: 200px;
+            /* Độ cao của vùng phóng to */
+            z-index: 9999;
+        }
+    </style>
+
+    <div class="modal fade" id="xray-open__img" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xray image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-wrap justify-content-center img-container">
+                        <img width="800" height="800" id="xray-img--show" src="" alt="" srcset="">
+                        <div id="zoomed-in-section" class="img-zoom-result"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-        </div>
-      </div>
     </div>
-  </div>
-   
-<script>
-    jsInXray();
-    sumUpManualBoundingBoxAndDownloadInXray();
-    jsAjaxChangRangeInXray()
-    $(document).ajaxComplete(function() {
-        $(document).ready(function(){
-            jsAjaxChangRangeInXray()
-            sumUpManualBoundingBoxAndDownloadInXray();
-            jsInXray();
-        })
-    });
 
-</script>
+    <script>
+        jsInXray();
+        sumUpManualBoundingBoxAndDownloadInXray();
+        jsAjaxChangRangeInXray()
+        $(document).ajaxComplete(function () {
+            $(document).ready(function () {
+                jsAjaxChangRangeInXray()
+                sumUpManualBoundingBoxAndDownloadInXray();
+                jsInXray();
+            })
+        });
+
+    </script>
 </div>

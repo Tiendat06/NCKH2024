@@ -127,7 +127,6 @@ class PatientModel(DataBaseUtils):
     def getPatientByPID(self, PID):
         result = self.__conn.get_collection('patient').find_one({'PID': PID});
         if result:
-            # patient = Patient(result['patient_id'], result['name'], result['age'], result['gender']);  # Assuming these are the patient attributes
             return result;
         return None;
 
@@ -149,6 +148,30 @@ class PatientModel(DataBaseUtils):
     
     def delete_patient(self):
         pass
+
+    def view_medical_record_by_PID(self, PID):
+        medical_record_data = self.__conn.get_collection('medical_record').find({'PID': PID});
+        data = [];
+        user_list = [];
+        if medical_record_data:
+            for medical_record in medical_record_data:
+                m_rec_id = medical_record.get('m_rec_id');
+                img_before = medical_record.get('img_before');
+                img_last = medical_record.get('img_last');
+                medical_predict = medical_record.get('medical_predict');
+                percentage = medical_record.get('percentage');
+                date_created = medical_record.get('date_created');
+                doctor_predict = medical_record.get('doctor_predict');
+                user_id = medical_record.get('user_id');
+
+                user = self.__user_db.get_user_by_id(user_id);
+
+                user_model = User('', user_id, user['acc_id'], user['name'], user['gender'], user['email'], user['dob'], user['phone'], user['img_profile']);
+                medical_record_model = MedicalRecord(m_rec_id, patient_id, img_before, img_last, medical_predict, percentage, date_created, doctor_predict, user_id);
+                data.append(medical_record_model);
+                user_list.append(user_model);
+            return data, user_list;
+        return None;
 
     def view_medical_record(self, patient_id):
         medical_record_data = self.__conn.get_collection('medical_record').find({'patient_id': patient_id});

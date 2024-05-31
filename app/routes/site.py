@@ -23,3 +23,7 @@ def index():
 @login_is_required
 def home():
     return SiteController().index();
+
+@site.route('/home/medical_record', methods=['post'])
+def home_medical_record():
+    return SiteController().home_medical_record();

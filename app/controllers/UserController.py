@@ -201,7 +201,7 @@ class UserController:
         acc_id = data.get('acc_id');
 
         if 'img' not in request.files:
-            img_url = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png';
+            img_url = session.get('user_img');
         else:
             img = request.files['img'];
             res = cloudinary.uploader.upload(img);
@@ -219,6 +219,7 @@ class UserController:
         if not edit:
             return jsonify(result.get('fail'));
 
+        session['user_img'] = img_url;
         return jsonify(result.get('success'));
 
     # [POST, AJAX] /user/profile/change_pwd
