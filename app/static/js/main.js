@@ -316,11 +316,6 @@ function ajaxInUserManagement() {
   });
 }
 
-// function deleteDoctorPredict(data){
-//   var value = document.getElementsByClassName(data);
-//   console.log(value.value);
-// }
-
 function removeQueryString(url) {
   var parts = url.split("?");
   var cleanedUrl = parts[0];
