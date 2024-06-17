@@ -49,7 +49,7 @@
                         alt="" srcset="" />
                     <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
                         </div> -->
-                    <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain"
+                    <canvas id="canvas" style="display: none; width:80%; height: 90%" width="330"
                         class="profile-img text-center"></canvas>
 
                     <!-- <input type="hidden" name="img_link_download" id="img_link_download" value="{{user_image_local}}" /> -->
@@ -321,22 +321,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="form-group">
-                            <label for="options">Disease:</label>
-                            <select class="form-control" id="options">
-                                {% for disease in disease_list %}
-                                <option value="{{disease._disease_name_eng}}">{{disease._disease_name}} -
-                                    {{disease._disease_name_eng}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="note-id">Note</label>
-                            <textarea name="note-id" id="note-id" class="form-control" cols="30" rows="5"></textarea>
-                        </div>
-                    </div>
+                    <label for="options">Disease:</label>
+                    <select class="form-control" id="options">
+                        {% for disease in disease_list %}
+                        <option value="{{disease._disease_name_eng}}">{{disease._disease_name}} -
+                            {{disease._disease_name_eng}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>

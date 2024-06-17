@@ -5,12 +5,6 @@ import os
 xray = Blueprint('xray', __name__)
 app = None
 
-# [GET]
-# @xray.route('/xray', methods=['get'])
-# def index():
-#     global xray
-#     return XrayController().index();
-
 # [GET, POST]
 @xray.route('/xray', methods=['post', 'get'])
 def load_data():

@@ -216,6 +216,17 @@ function ajaxInUserManagement() {
       let acc_id = $("#acc_id").val();
       let img = $("#img_edit").val();
 
+      // console.log(avatar_edit.length)
+
+      // var formData = new FormData();
+      // formData.append('name', name_edit);
+      // formData.append('gender', gender_edit);
+      // formData.append('email', email_edit);
+      // formData.append('dob', dob_edit);
+      // formData.append('phone', phone_edit);
+      // formData.append('tmp_email', tmp_email);
+      // formData.append('user_id', user_id);
+      // formData.append('acc_id', acc_id);
 
       $.ajax({
         url: "/user/edit",
@@ -311,13 +322,6 @@ function removeQueryString(url) {
   return cleanedUrl;
 }
 
-function onClickItem(event) {
-    console.log('hi world')
-    var itemId = event.target.id;
-    
-    
-}
-
 function sumUpManualBoundingBoxAndDownloadInXray() {
   // edit and download file
   $(document).ready(function () {
@@ -334,36 +338,24 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     var undoBtn = document.getElementById("btn-undo-xray");
     var redoBtn = document.getElementById("btn-redo-xray");
     var isClickOnBoundingBox = false;
+    var isDownloadOk = false;
     var redoStackBB = [];
     var redoStackHM = [];
-    var redoStackNote = [];
     var currentBox = null;
     var boundingBoxes = [];
     var hashMapData = [];
-    var hashMapNote = [];
+
+    // canvas.width = image.width;
+    // canvas.height = image.height;
+    canvas.width = 330;
+    canvas.height = 330;
+    canvas.style.objectFit = "contain";
 
     var isDrawing = false;
     var startX, startY, endX, endY;
-    canvas.width = 330;
-    canvas.height = 330;
 
     // Sự kiện khi nhấn nút "Edit"
     editBtn.addEventListener("click", function (e) {
-      // var imgSplit = image.src.split('?')
-      // image.src = imgSplit[0];
-      // console.log("split:"+image.src);
-
-      // console.log("Width:"+image.width);
-      // console.log("Height:"+image.height);
-  
-      // canvas.width = ( image.width) ;
-      // canvas.height = ( image.height) ;
-      // canvas.width = canvas.clientWidth;
-      // canvas.height = canvas.clientHeight;
-
-      // image.src = imgSplit[0]+"?"+imgSplit[1];
-      canvas.style.objectFit = "contain";
-
       image.style.display = "none";
       canvas.style.display = "block";
       realImg.style.display = "none";
@@ -372,44 +364,57 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
       isDrawing = true;
     });
 
+    // // xóa bounding box
+    // canvas.addEventListener("click", function(e) {
+    //   var clickX = e.offsetX;
+    //   var clickY = e.offsetY;
 
+    //   // Kiểm tra xem click có nằm trong bounding box nào không
+    //   boundingBoxes.forEach(function(box, index) {
+    //     if (
+    //       clickX >= box.startX &&
+    //       clickX <= box.endX &&
+    //       clickY >= box.startY &&
+    //       clickY <= box.endY
+    //     ) {
+    //       // Hiển thị modal confirm
+    //       var confirmDelete = confirm("Bạn có muốn xóa bounding box này không?");
+    //       if (confirmDelete) {
+    //         // Xóa bounding box khỏi mảng boundingBoxes
+    //         boundingBoxes.splice(index, 1);
+    //         isClickOnBoundingBox = true;
+    //         // Vẽ lại canvas
+    //         redrawCanvas();
+    //       }
+    //     }
+    //   });
+    // });
+
+    // Hàm vẽ lại canvas sau khi xóa bounding box
     function redrawCanvas() {
-        isDrawing = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-        boundingBoxes.forEach(function (box) {
-          ctx.beginPath();
-          ctx.rect(
-            box.startX,
-            box.startY,
-            box.endX - box.startX,
-            box.endY - box.startY
-          );
-      
-          ctx.strokeStyle = "red";
-          ctx.lineWidth = 2;
-          ctx.stroke();
-      
-          // Vẽ lựa chọn lên bounding box
-          if (box.option) {
-            ctx.font = "12px Arial";
-            ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-            // Tính toán kích thước văn bản
-            var textWidth = ctx.measureText(box.option).width;
-            var textHeight = 12; // 12px Arial
-      
-            // Vẽ nền đỏ cho văn bản
-            ctx.fillStyle = "red";
-            ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-            // Vẽ văn bản trắng lên trên
-            ctx.fillStyle = "white";
-            ctx.fillText(box.option, box.startX, box.startY - 13);
-          }
-        });
+      isDrawing = true;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+      boundingBoxes.forEach(function (box) {
+        ctx.beginPath();
+        ctx.rect(
+          box.startX,
+          box.startY,
+          box.endX - box.startX,
+          box.endY - box.startY
+        );
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Vẽ lựa chọn lên bounding box
+        if (box.option) {
+          ctx.font = "12px Arial";
+          ctx.fillStyle = "red";
+          ctx.fillText(box.option, box.startX + 10, box.startY + 20);
+        }
+      });
     }
-      
 
     canvas.addEventListener("mousedown", function (e) {
       if (!isClickOnBoundingBox) {
@@ -422,53 +427,42 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     });
 
     canvas.addEventListener("mousemove", function (e) {
-        if (isDrawing) {
-          var currentX = e.offsetX;
-          var currentY = e.offsetY;
-      
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-      
-          // Vẽ lại tất cả các bounding box đã lưu
-          boundingBoxes.forEach(function (box) {
-            ctx.beginPath();
-            ctx.rect(
-              box.startX,
-              box.startY,
-              box.endX - box.startX,
-              box.endY - box.startY
-            );
-            ctx.strokeStyle = "red";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-      
-            // Vẽ lựa chọn lên bounding box
-            if (box.option) {
-              ctx.font = "12px Arial";
-              ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-              // Tính toán kích thước văn bản
-              var textWidth = ctx.measureText(box.option).width;
-              var textHeight = 12; // 12px Arial
-      
-              // Vẽ nền đỏ cho văn bản
-              ctx.fillStyle = "red";
-              ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-              // Vẽ văn bản trắng lên trên
-              ctx.fillStyle = "white";
-              ctx.fillText(box.option, box.startX, box.startY - 13);
-            }
-          });
-      
+      if (isDrawing) {
+        var currentX = e.offsetX;
+        var currentY = e.offsetY;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+
+        // Vẽ lại tất cả các bounding box đã lưu
+        boundingBoxes.forEach(function (box) {
           ctx.beginPath();
-          ctx.rect(startX, startY, currentX - startX, currentY - startY);
+          ctx.rect(
+            box.startX,
+            box.startY,
+            box.endX - box.startX,
+            box.endY - box.startY
+          );
           ctx.strokeStyle = "red";
           ctx.lineWidth = 2;
           ctx.stroke();
-        }
+
+          // Vẽ lựa chọn lên bounding box
+          if (box.option) {
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "red";
+            ctx.fillText(box.option, box.startX + 10, box.startY + 20);
+          }
+        });
+
+        ctx.beginPath();
+        ctx.rect(startX, startY, currentX - startX, currentY - startY);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
     });
-      
+
     canvas.addEventListener("mouseup", function () {
       isDrawing = false;
       // isDownloadOk = true;
@@ -492,11 +486,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         redrawCanvas();
         var itemHM = hashMapData.pop();
         redoStackHM.push(itemHM);
-
-        var itemNote = hashMapNote.pop();
-        redoStackNote.push(itemNote);
-
-        writeDataToFront(hashMapData, hashMapNote);
+        writeDataToFront(hashMapData);
         isDrawing = false;
       }
     });
@@ -507,28 +497,25 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
         boundingBoxes.push(redoStackBB.pop());
         redrawCanvas();
         hashMapData.push(redoStackHM.pop());
-        hashMapNote.push(redoStackNote.pop());
-        writeDataToFront(hashMapData, hashMapNote);
+        writeDataToFront(hashMapData);
         isDrawing = false;
       }
     });
 
-    function writeDataToFront(hashMapData, hashMapNote) {
+    function writeDataToFront(hashMapData) {
       var htmlContent = "";
-      var indexNote = 0;
       hashMapData.forEach(function (item) {
-
         htmlContent +=
           "<div style='cursor: pointer' class='text-light xray-predict__item w-100 mb-2'>" +
           "<div class='xray-predict__title d-flex flex-wrap mb-2'>" +
           "<p class='mb-0 w-75 text-left text-secondary'>" +
-          item + ' ('+ hashMapNote[indexNote] + ')' +
+          item +
           "</p>" +
           "<div class='w-25 text-right'>" +
           "<input type='hidden' class='delete-doctor-predict' value='" +
           item +
           "' />" +
-          "<i onclick='onClickItem(event)' id='" +
+          "<i id='" +
           item +
           "' style='font-size: 18px' class='doctor-predict-icon fa-solid fa-pen-to-square text-right text-danger'></i>" +
           "</div>" +
@@ -537,68 +524,64 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
           "<div style='width: 100%; background-color: red' class='xray-percent h-100'></div>" +
           "</div>" +
           "</div>";
-
-          indexNote++;
       });
       // <i class="fa-solid fa-pen-to-square"></i>
       $("#profile").html(htmlContent);
     }
-    
+
     // Sự kiện khi nhấn nút "Save" trong modal
-    document.getElementById("saveOption").addEventListener("click", function () {
+    document
+      .getElementById("saveOption")
+      .addEventListener("click", function () {
         var selectedOption = document.getElementById("options").value;
-        var noteOption = document.getElementById("note-id").value;
-        // console.log("Selected option:", selectedOption);
-    
+        console.log("Selected option:", selectedOption);
+
         // Lưu thông tin đã chọn vào bounding box đang được vẽ
         currentBox.option = selectedOption;
-        
         // Đóng modal
+        //$("#selectOptionModal").modal("hide");
+
         var modal = document.getElementById("selectOptionModal");
         modal.classList.remove("show");
         modal.style.display = "none";
         modal.setAttribute("aria-modal", "false");
         modal.setAttribute("aria-hidden", "true");
-    
+
+        // var modal = document.getElementById("selectOptionModal");
+        // modal.style.display = "none";
         // Vẽ lựa chọn lên bounding box
         ctx.font = "12px Arial";
-        ctx.textBaseline = "top"; // Đặt baseline văn bản
-    
-        // Tính toán kích thước văn bản
-        var textWidth = ctx.measureText(selectedOption).width;
-        var textHeight = 12; // 12px Arial
-    
-        // Vẽ nền đỏ cho văn bản
         ctx.fillStyle = "red";
-        ctx.fillRect(currentBox.startX, currentBox.startY - 13, textWidth, textHeight);
-    
-        // Vẽ văn bản trắng lên trên
-        ctx.fillStyle = "white";
-        ctx.fillText(selectedOption, currentBox.startX, currentBox.startY - 13);
-    
+        ctx.fillText(
+          selectedOption,
+          currentBox.startX + 10,
+          currentBox.startY + 20
+        );
+
         // Lưu bounding box vào mảng boundingBoxes
         boundingBoxes.push(currentBox);
-    
+
         // Thêm phần tử vào Map
         hashMapData.push(selectedOption);
-        hashMapNote.push(noteOption);
-        
-        $("#note-id").html('');
 
-        writeDataToFront(hashMapData, hashMapNote);
-    });
+        writeDataToFront(hashMapData);
+      });
 
-    document.getElementById("closeModal").addEventListener("click", function () {
+    // Sự kiện khi nhấn nút "Close" trong modal
+    document
+      .getElementById("closeModal")
+      .addEventListener("click", function () {
         // Xóa bounding box tạm thời
         currentBox = null;
-      
+
         // Đóng modal
+        //$("#selectOptionModal").modal("hide");
         var modal = document.getElementById("selectOptionModal");
         modal.classList.remove("show");
         modal.style.display = "none";
         modal.setAttribute("aria-modal", "false");
         modal.setAttribute("aria-hidden", "true");
-      
+
         // Vẽ lại canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
@@ -613,27 +596,15 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
           ctx.strokeStyle = "red";
           ctx.lineWidth = 2;
           ctx.stroke();
-      
+
           // Vẽ lựa chọn lên bounding box
           if (box.option) {
             ctx.font = "12px Arial";
-            ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-            // Tính toán kích thước văn bản
-            var textWidth = ctx.measureText(box.option).width;
-            var textHeight = 12; // 12px Arial
-      
-            // Vẽ nền đỏ cho văn bản
             ctx.fillStyle = "red";
-            ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-            // Vẽ văn bản trắng lên trên
-            ctx.fillStyle = "white";
-            ctx.fillText(box.option, box.startX, box.startY - 13);
+            ctx.fillText(box.option, box.startX + 10, box.startY + 20);
           }
         });
-    });
-      
+      });
 
     var isDownloading = false;
     // Sự kiện khi nhấn nút "Download"
@@ -692,39 +663,24 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
 function jsAjaxChangRangeInXray() {
   $(document).ready(function () {
-    // abort previous request
-    // let currentRequest;
-    // Locking
-    let isLocked = false;
     $("#myRange").on("input", function () {
-      // if(currentRequest){
-      //   currentRequest.abort();
-      // }
-      if(isLocked) return
       var formData = new FormData();
 
-      isLocked = true;
-      $('#overlay').removeClass('d-none');
       let img_link = $("#img_link_predict").val();
       let range = $("#myRange").val();
       $("#rangeValue").text(range);
       formData.append("img_link", img_link);
       formData.append("range", range);
-    //   console.log(img_link);
-    //   console.log(range);
+      console.log(img_link);
+      console.log(range);
 
-      currentRequest = $.ajax({
+      $.ajax({
         url: "/xray/ajax/changeRange",
         type: "POST",
 
         processData: false,
         contentType: false,
         data: formData,
-        complete: function(){
-          isLocked = false;
-          $('#overlay').addClass('d-none');
-
-        }
       })
         .done((response) => {
           $("#xray-general__predict").html(response);
@@ -1114,6 +1070,52 @@ function handleUploadImg() {
     reader.readAsDataURL(file);
   }
 }
+
+// function handleUploadImg() {
+//   // console.log(this)
+//   const fileInput = document.getElementById("upload");
+//   const img = document.getElementById("xray-img--output");
+//   var editImg = document.getElementById('img_link_download');
+//   img.style.display = 'block';
+//   editImg.style.display = 'none';
+//   console.log(img);
+//   console.log(fileInput);
+
+//   const file = fileInput.files[0];
+
+//   const file_path = fileInput.files[0].name;
+//   console.log(file_path);
+
+//   if (file) {
+//     const reader = new FileReader();
+
+//     reader.onload = function (e) {
+//       img.src = e.target.result;
+//       console.log(e.target.result);
+//       // console.log('hello')
+//     };
+//     reader.readAsDataURL(file);
+//   }
+// }
+
+// $.ajax({
+//     url: '/xray/ajax/changeRange',
+//     type: 'POST',
+//     contentType: 'application/json',
+//     data: JSON.stringify({
+//         img_link: img_link,
+//         range: range,
+
+//     }),
+//     success: function(response) {
+//         $('#myTabContent').html(response)
+//         //$('#error_editing_user_outer').removeClass('d-none')
+
+//     },
+//     error: function(error) {
+//         console.log(error);
+//     }
+// });
 
 function handleUploadImgInProfile() {
   const fileInput = document.getElementById("fileInput");

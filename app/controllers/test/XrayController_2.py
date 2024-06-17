@@ -86,7 +86,6 @@ class XrayController:
 
                         # resize img
                         image_re = cv2.imread(path_to_save_local)
-                        # height, width, channels = image_re.shape
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
@@ -169,9 +168,7 @@ class XrayController:
                         path_to_save_local = session.get('relative_path_to_save_local');
                         cv2.imwrite(path_to_save_local, frame)
 
-                        image_re = cv2.imread(path_to_save_local);
-                        # height, width, channels = image_re.shape
-
+                        image_re = cv2.imread(path_to_save_local)
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 

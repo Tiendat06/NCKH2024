@@ -183,7 +183,7 @@ class UserModel(DataBaseUtils):
 
 
         if result_user.acknowledged and result_acc.acknowledged:
-            return 'Register Successfully!! Please check your email to confirm';
+            return 'Register Successfully!! Check your email to confirm';
         return 'Register Failed!!';
 
     def generateOTPcode(self, length=6):
