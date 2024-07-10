@@ -27,3 +27,11 @@ def sendImg():
 @xray.route('/xray/saveRecord', methods=['post'])
 def saveRecord():
     return XrayController().saveRecord();
+
+@xray.route('/xray/show_body_target', methods=['post'])
+def show_body_target():
+    return XrayController().show_body_target();
+
+@xray.route('/xray/upload_ratio', methods=['post'])
+def upload_ratio():
+    return XrayController().uploadRatio();

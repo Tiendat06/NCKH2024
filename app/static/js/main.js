@@ -77,23 +77,6 @@ function fullScreen() {
   }
 }
 
-// function handleUploadImg() {
-//   const fileInput = document.getElementById("fileInput");
-//   const img = document.getElementById("xray-img");
-
-//   const file = fileInput.files[0];
-
-//   if (file) {
-//     const reader = new FileReader();
-
-//     reader.onload = function (e) {
-//       img.src = e.target.result;
-//     };
-
-//     reader.readAsDataURL(file);
-//   }
-// }
-
 function downloadImage() {
   // var imgElement = document.getElementById("xray-img--output");
 
@@ -312,10 +295,10 @@ function removeQueryString(url) {
 }
 
 function onClickItem(event) {
-    console.log('hi world')
-    var itemId = event.target.id;
-    
-    
+  console.log('hi world')
+  var itemId = event.target.id;
+
+
 }
 
 function sumUpManualBoundingBoxAndDownloadInXray() {
@@ -355,7 +338,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
       // console.log("Width:"+image.width);
       // console.log("Height:"+image.height);
-  
+
       // canvas.width = ( image.width) ;
       // canvas.height = ( image.height) ;
       // canvas.width = canvas.clientWidth;
@@ -374,42 +357,42 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
 
 
     function redrawCanvas() {
-        isDrawing = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-        boundingBoxes.forEach(function (box) {
-          ctx.beginPath();
-          ctx.rect(
-            box.startX,
-            box.startY,
-            box.endX - box.startX,
-            box.endY - box.startY
-          );
-      
-          ctx.strokeStyle = "red";
-          ctx.lineWidth = 2;
-          ctx.stroke();
-      
-          // Vẽ lựa chọn lên bounding box
-          if (box.option) {
-            ctx.font = "12px Arial";
-            ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-            // Tính toán kích thước văn bản
-            var textWidth = ctx.measureText(box.option).width;
-            var textHeight = 12; // 12px Arial
-      
-            // Vẽ nền đỏ cho văn bản
-            ctx.fillStyle = "red";
-            ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-            // Vẽ văn bản trắng lên trên
-            ctx.fillStyle = "white";
-            ctx.fillText(box.option, box.startX, box.startY - 13);
-          }
-        });
+      isDrawing = true;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+      boundingBoxes.forEach(function (box) {
+        ctx.beginPath();
+        ctx.rect(
+          box.startX,
+          box.startY,
+          box.endX - box.startX,
+          box.endY - box.startY
+        );
+
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Vẽ lựa chọn lên bounding box
+        if (box.option) {
+          ctx.font = "12px Arial";
+          ctx.textBaseline = "top"; // Đặt baseline văn bản
+
+          // Tính toán kích thước văn bản
+          var textWidth = ctx.measureText(box.option).width;
+          var textHeight = 12; // 12px Arial
+
+          // Vẽ nền đỏ cho văn bản
+          ctx.fillStyle = "red";
+          ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
+
+          // Vẽ văn bản trắng lên trên
+          ctx.fillStyle = "white";
+          ctx.fillText(box.option, box.startX, box.startY - 13);
+        }
+      });
     }
-      
+
 
     canvas.addEventListener("mousedown", function (e) {
       if (!isClickOnBoundingBox) {
@@ -422,53 +405,53 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
     });
 
     canvas.addEventListener("mousemove", function (e) {
-        if (isDrawing) {
-          var currentX = e.offsetX;
-          var currentY = e.offsetY;
-      
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-      
-          // Vẽ lại tất cả các bounding box đã lưu
-          boundingBoxes.forEach(function (box) {
-            ctx.beginPath();
-            ctx.rect(
-              box.startX,
-              box.startY,
-              box.endX - box.startX,
-              box.endY - box.startY
-            );
-            ctx.strokeStyle = "red";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-      
-            // Vẽ lựa chọn lên bounding box
-            if (box.option) {
-              ctx.font = "12px Arial";
-              ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-              // Tính toán kích thước văn bản
-              var textWidth = ctx.measureText(box.option).width;
-              var textHeight = 12; // 12px Arial
-      
-              // Vẽ nền đỏ cho văn bản
-              ctx.fillStyle = "red";
-              ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-              // Vẽ văn bản trắng lên trên
-              ctx.fillStyle = "white";
-              ctx.fillText(box.option, box.startX, box.startY - 13);
-            }
-          });
-      
+      if (isDrawing) {
+        var currentX = e.offsetX;
+        var currentY = e.offsetY;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+
+        // Vẽ lại tất cả các bounding box đã lưu
+        boundingBoxes.forEach(function (box) {
           ctx.beginPath();
-          ctx.rect(startX, startY, currentX - startX, currentY - startY);
+          ctx.rect(
+            box.startX,
+            box.startY,
+            box.endX - box.startX,
+            box.endY - box.startY
+          );
           ctx.strokeStyle = "red";
           ctx.lineWidth = 2;
           ctx.stroke();
-        }
+
+          // Vẽ lựa chọn lên bounding box
+          if (box.option) {
+            ctx.font = "12px Arial";
+            ctx.textBaseline = "top"; // Đặt baseline văn bản
+
+            // Tính toán kích thước văn bản
+            var textWidth = ctx.measureText(box.option).width;
+            var textHeight = 12; // 12px Arial
+
+            // Vẽ nền đỏ cho văn bản
+            ctx.fillStyle = "red";
+            ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
+
+            // Vẽ văn bản trắng lên trên
+            ctx.fillStyle = "white";
+            ctx.fillText(box.option, box.startX, box.startY - 13);
+          }
+        });
+
+        ctx.beginPath();
+        ctx.rect(startX, startY, currentX - startX, currentY - startY);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
     });
-      
+
     canvas.addEventListener("mouseup", function () {
       isDrawing = false;
       // isDownloadOk = true;
@@ -522,7 +505,7 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
           "<div style='cursor: pointer' class='text-light xray-predict__item w-100 mb-2'>" +
           "<div class='xray-predict__title d-flex flex-wrap mb-2'>" +
           "<p class='mb-0 w-75 text-left text-secondary'>" +
-          item + ' ('+ hashMapNote[indexNote] + ')' +
+          item + ' (' + hashMapNote[indexNote] + ')' +
           "</p>" +
           "<div class='w-25 text-right'>" +
           "<input type='hidden' class='delete-doctor-predict' value='" +
@@ -538,102 +521,102 @@ function sumUpManualBoundingBoxAndDownloadInXray() {
           "</div>" +
           "</div>";
 
-          indexNote++;
+        indexNote++;
       });
       // <i class="fa-solid fa-pen-to-square"></i>
       $("#profile").html(htmlContent);
     }
-    
+
     // Sự kiện khi nhấn nút "Save" trong modal
     document.getElementById("saveOption").addEventListener("click", function () {
-        var selectedOption = document.getElementById("options").value;
-        var noteOption = document.getElementById("note-id").value;
-        // console.log("Selected option:", selectedOption);
-    
-        // Lưu thông tin đã chọn vào bounding box đang được vẽ
-        currentBox.option = selectedOption;
-        
-        // Đóng modal
-        var modal = document.getElementById("selectOptionModal");
-        modal.classList.remove("show");
-        modal.style.display = "none";
-        modal.setAttribute("aria-modal", "false");
-        modal.setAttribute("aria-hidden", "true");
-    
-        // Vẽ lựa chọn lên bounding box
-        ctx.font = "12px Arial";
-        ctx.textBaseline = "top"; // Đặt baseline văn bản
-    
-        // Tính toán kích thước văn bản
-        var textWidth = ctx.measureText(selectedOption).width;
-        var textHeight = 12; // 12px Arial
-    
-        // Vẽ nền đỏ cho văn bản
-        ctx.fillStyle = "red";
-        ctx.fillRect(currentBox.startX, currentBox.startY - 13, textWidth, textHeight);
-    
-        // Vẽ văn bản trắng lên trên
-        ctx.fillStyle = "white";
-        ctx.fillText(selectedOption, currentBox.startX, currentBox.startY - 13);
-    
-        // Lưu bounding box vào mảng boundingBoxes
-        boundingBoxes.push(currentBox);
-    
-        // Thêm phần tử vào Map
-        hashMapData.push(selectedOption);
-        hashMapNote.push(noteOption);
-        
-        $("#note-id").html('');
+      var selectedOption = document.getElementById("options").value;
+      var noteOption = document.getElementById("note-id").value;
+      // console.log("Selected option:", selectedOption);
 
-        writeDataToFront(hashMapData, hashMapNote);
+      // Lưu thông tin đã chọn vào bounding box đang được vẽ
+      currentBox.option = selectedOption;
+
+      // Đóng modal
+      var modal = document.getElementById("selectOptionModal");
+      modal.classList.remove("show");
+      modal.style.display = "none";
+      modal.setAttribute("aria-modal", "false");
+      modal.setAttribute("aria-hidden", "true");
+
+      // Vẽ lựa chọn lên bounding box
+      ctx.font = "12px Arial";
+      ctx.textBaseline = "top"; // Đặt baseline văn bản
+
+      // Tính toán kích thước văn bản
+      var textWidth = ctx.measureText(selectedOption).width;
+      var textHeight = 12; // 12px Arial
+
+      // Vẽ nền đỏ cho văn bản
+      ctx.fillStyle = "red";
+      ctx.fillRect(currentBox.startX, currentBox.startY - 13, textWidth, textHeight);
+
+      // Vẽ văn bản trắng lên trên
+      ctx.fillStyle = "white";
+      ctx.fillText(selectedOption, currentBox.startX, currentBox.startY - 13);
+
+      // Lưu bounding box vào mảng boundingBoxes
+      boundingBoxes.push(currentBox);
+
+      // Thêm phần tử vào Map
+      hashMapData.push(selectedOption);
+      hashMapNote.push(noteOption);
+
+      $("#note-id").html('');
+
+      writeDataToFront(hashMapData, hashMapNote);
     });
 
     document.getElementById("closeModal").addEventListener("click", function () {
-        // Xóa bounding box tạm thời
-        currentBox = null;
-      
-        // Đóng modal
-        var modal = document.getElementById("selectOptionModal");
-        modal.classList.remove("show");
-        modal.style.display = "none";
-        modal.setAttribute("aria-modal", "false");
-        modal.setAttribute("aria-hidden", "true");
-      
-        // Vẽ lại canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
-        boundingBoxes.forEach(function (box) {
-          ctx.beginPath();
-          ctx.rect(
-            box.startX,
-            box.startY,
-            box.endX - box.startX,
-            box.endY - box.startY
-          );
-          ctx.strokeStyle = "red";
-          ctx.lineWidth = 2;
-          ctx.stroke();
-      
-          // Vẽ lựa chọn lên bounding box
-          if (box.option) {
-            ctx.font = "12px Arial";
-            ctx.textBaseline = "top"; // Đặt baseline văn bản
-      
-            // Tính toán kích thước văn bản
-            var textWidth = ctx.measureText(box.option).width;
-            var textHeight = 12; // 12px Arial
-      
-            // Vẽ nền đỏ cho văn bản
-            ctx.fillStyle = "red";
-            ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
-      
-            // Vẽ văn bản trắng lên trên
-            ctx.fillStyle = "white";
-            ctx.fillText(box.option, box.startX, box.startY - 13);
-          }
-        });
+      // Xóa bounding box tạm thời
+      currentBox = null;
+
+      // Đóng modal
+      var modal = document.getElementById("selectOptionModal");
+      modal.classList.remove("show");
+      modal.style.display = "none";
+      modal.setAttribute("aria-modal", "false");
+      modal.setAttribute("aria-hidden", "true");
+
+      // Vẽ lại canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0); // Vẽ lại hình ảnh
+      boundingBoxes.forEach(function (box) {
+        ctx.beginPath();
+        ctx.rect(
+          box.startX,
+          box.startY,
+          box.endX - box.startX,
+          box.endY - box.startY
+        );
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Vẽ lựa chọn lên bounding box
+        if (box.option) {
+          ctx.font = "12px Arial";
+          ctx.textBaseline = "top"; // Đặt baseline văn bản
+
+          // Tính toán kích thước văn bản
+          var textWidth = ctx.measureText(box.option).width;
+          var textHeight = 12; // 12px Arial
+
+          // Vẽ nền đỏ cho văn bản
+          ctx.fillStyle = "red";
+          ctx.fillRect(box.startX, box.startY - 13, textWidth, textHeight);
+
+          // Vẽ văn bản trắng lên trên
+          ctx.fillStyle = "white";
+          ctx.fillText(box.option, box.startX, box.startY - 13);
+        }
+      });
     });
-      
+
 
     var isDownloading = false;
     // Sự kiện khi nhấn nút "Download"
@@ -700,18 +683,18 @@ function jsAjaxChangRangeInXray() {
       // if(currentRequest){
       //   currentRequest.abort();
       // }
-      if(isLocked) return
+      if (isLocked) return
       var formData = new FormData();
 
       isLocked = true;
-      $('#overlay').removeClass('d-none');
+      // $('#overlay').removeClass('d-none');
       let img_link = $("#img_link_predict").val();
       let range = $("#myRange").val();
       $("#rangeValue").text(range);
       formData.append("img_link", img_link);
       formData.append("range", range);
-    //   console.log(img_link);
-    //   console.log(range);
+      //   console.log(img_link);
+      //   console.log(range);
 
       currentRequest = $.ajax({
         url: "/xray/ajax/changeRange",
@@ -720,9 +703,9 @@ function jsAjaxChangRangeInXray() {
         processData: false,
         contentType: false,
         data: formData,
-        complete: function(){
+        complete: function () {
           isLocked = false;
-          $('#overlay').addClass('d-none');
+          // $('#overlay').addClass('d-none');
 
         }
       })
@@ -815,77 +798,109 @@ function jsInXray() {
     $("#xray-img__small").click(function () {
       // var imgUrl = $(this).attr('src');
       var imgUrl = document.getElementById("xray-img__small").src;
-      console.log(imgUrl);
-
       $("#xray-img--show").attr("src", imgUrl);
     });
   });
 
-  //   $(document).ready(function() {
-  //     $("#xray-img--show").mousemove(function(event) {
-  //         var posX = event.pageX;
-  //         var posY = event.pageY;
-  //         var zoomedInWidth = $(".img-zoom-result").width();
-  //         var zoomedInHeight = $(".img-zoom-result").height();
+  // open-img-show-body
+  $(document).ready(function () {
+    $("#xray-img--small-body").click(function () {
+      // var imgUrl = $(this).attr('src');
+      var imgUrl = document.getElementById("xray-img--small-body").src;
+      // console.log('hi world'); 
+      $("#xray-img--show-body").attr("src", imgUrl);
+    });
+  });
 
-  //         // Điều chỉnh vị trí hiển thị của vùng phóng to gần con chuột
-  //         $(".img-zoom-result").css({
-  //             display: "block",
-  //             left: posX + 10, // Thêm khoảng cách 10px để vùng phóng to không che khuất con chuột
-  //             top: posY + 10
-  //         });
+  $(document).ready(function () {
+    var selectedOptions = [];
+    let isLocked = false;
+    $('#btn__body-target--submit').click(function () {
+      $('#overlay__show-body').removeClass('d-none');
+      if (isLocked) return
 
-  //         // Tính toán vị trí hiển thị của hình ảnh phóng to bằng cách lấy vị trí hiện tại của con chuột
-  //         var imgWidth = $(this).width();
-  //         var imgHeight = $(this).height();
-  //         var bgPosX = -(posX - $(this).offset().left) * 3; // Tính toán vị trí X phù hợp với scale 3 lần
-  //         var bgPosY = -(posY - $(this).offset().top) * 3; // Tính toán vị trí Y phù hợp với scale 3 lần
+      isLocked = true;
 
-  //         // Cập nhật vị trí và kích thước của hình ảnh phóng to
-  //         $(".img-zoom-result").css({
-  //             backgroundImage: "url('" + $(this).attr("src") + "')",
-  //             backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
-  //             backgroundPosition: bgPosX + "px " + bgPosY + "px"
-  //         });
-  //     }).mouseout(function() {
-  //         $(".img-zoom-result").css("display", "none");
-  //     });
-  // });
+      $('input[name="checkbox__body-target"]:checked').each(function () {
+        selectedOptions.push($(this).val());
+      });
+      console.log(selectedOptions);
+      var img = document.getElementById("upload-body");
 
-  // $(document).ready(function() {
-  //   $(document).on('mousemove', '#xray-open__img', function(event) {
-  //       var posX = event.pageX;
-  //       var posY = event.pageY;
-  //       var modalOffset = $("#xray-open__img").offset();
-  //       var imgOffset = $("#xray-img--show").offset();
-  //       var imgWidth = $("#xray-img--show").width();
-  //       var imgHeight = $("#xray-img--show").height();
-  //       var zoomedInWidth = $(".img-zoom-result").width();
-  //       var zoomedInHeight = $(".img-zoom-result").height();
+      var formData = new FormData();
+      console.log(img.files[0]);
+      formData.append("file", img.files[0]);
+      formData.append('checkbox', selectedOptions);
+      selectedOptions.splice(0, selectedOptions.length);
+      
+      $.ajax({
+        type: 'POST',
+        url: '/xray/show_body_target',
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+          $('#body-target--showed').html(response);
+        },
+        fail: function (error) {
+          console.log(error);
+        },
+        complete: function () {
+          $('#overlay__show-body').addClass('d-none');
+          isLocked = false;
+        }
+      })
+    })
+  })
 
-  //       // Tính toán vị trí hiển thị của vùng phóng to gần con chuột
-  //       var zoomX = posX - modalOffset.left - imgOffset.left - zoomedInWidth / 2;
-  //       var zoomY = posY - modalOffset.top - imgOffset.top - zoomedInHeight / 2;
+  $(document).ready(function () {
+    let isLocked = false;
+    $('#btn__upload-ratio').click(function () {
+      console.log('hi world');
+      $('#overlay__show-body').removeClass('d-none');
+      if (isLocked) return
 
-  //       // Kiểm tra vị trí của vùng phóng to để không cho nó ra khỏi hình ảnh
-  //       if (zoomX < 0) zoomX = 0;
-  //       if (zoomY < 0) zoomY = 0;
-  //       if (zoomX > imgWidth - zoomedInWidth) zoomX = imgWidth - zoomedInWidth;
-  //       if (zoomY > imgHeight - zoomedInHeight) zoomY = imgHeight - zoomedInHeight;
+      isLocked = true;
 
-  //       // Cập nhật vị trí và kích thước của vùng phóng to
-  //       $(".img-zoom-result").css({
-  //           display: "block",
-  //           left: posX - zoomedInWidth / 2,
-  //           top: posY - zoomedInHeight / 2,
-  //           backgroundImage: "url('" + $("#xray-img--show").attr("src") + "')",
-  //           backgroundSize: (imgWidth * 3) + "px " + (imgHeight * 3) + "px",
-  //           backgroundPosition: "-" + zoomX * 3 + "px -" + zoomY * 3 + "px"
-  //       });
-  //   }).on('mouseleave', '#xray-open__img', function() {
-  //       $(".img-zoom-result").css("display", "none");
-  //   });
-  // });
+      var img = document.getElementById("upload-ratio");
+
+      var formData = new FormData();
+      // console.log(img.files[0]);
+      formData.append("file", img.files[0]);
+      // formData.append('checkbox', selectedOptions);
+      // selectedOptions.splice(0, selectedOptions.length);
+      
+      $.ajax({
+        type: 'POST',
+        url: '/xray/upload_ratio',
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+          console.log(response);
+
+          $('#xray-img-ratio').attr('src', response.processed_image_url+"?random_code="+generateCode(8));
+        },
+        fail: function (error) {
+          console.log(error);
+        },
+        complete: function () {
+          $('#overlay__show-body').addClass('d-none');
+          isLocked = false;
+        }
+      })
+    })
+  })
+}
+
+function generateCode(length = 8) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 function jsInPatient() {
@@ -1039,16 +1054,6 @@ function jsInPatient() {
   });
 }
 
-// function changeRange(){
-// var rangeInput = document.getElementById("myRange");
-
-// rangeInput.addEventListener("input", function() {
-//     var value = rangeInput.value;
-
-//     document.getElementById("rangeValue").textContent = value;
-// });
-// }
-
 function handleUploadImg() {
   const fileInput = document.getElementById("upload");
   const img = document.getElementById("xray-img--output");
@@ -1115,9 +1120,46 @@ function handleUploadImg() {
   }
 }
 
+function handleUploadImgInAjaxBody() {
+  // console.log('hi world');
+  const fileInput = document.getElementById("upload-body");
+  const img = document.getElementById("xray-img--show-body");
+
+  // console.log(fileInput);
+  // console.log(img)
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
 function handleUploadImgInProfile() {
   const fileInput = document.getElementById("fileInput");
   const img = document.getElementById("profile-img");
+
+  const file = fileInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+function handleUploadImgRatio(fileInputId, imgId){
+  const fileInput = document.getElementById(fileInputId);
+  const img = document.getElementById(imgId);
 
   const file = fileInput.files[0];
 
@@ -1181,8 +1223,8 @@ function jsInUserProfile() {
   });
 
   // change pwd
-  $(document).ready(function(){
-    $("#btn_submit_change_pwd").click(function(){
+  $(document).ready(function () {
+    $("#btn_submit_change_pwd").click(function () {
       var currentPwd = $('#current_pwd').val();
       var newPwd = $('#new_pwd').val();
       var verifyPwd = $('#verify_pwd').val();
@@ -1241,7 +1283,7 @@ function getUserInformationForHeader() {
       $("#navbar_user_img").attr("src", userImg);
       $("#dashboard_userimg").attr("src", userImg);
       console.log(roleId);
-      if(roleId == 'ROL0000002'){
+      if (roleId == 'ROL0000002') {
         $("#side-bar__account").addClass("d-none");
         $("#side-bar__user").addClass("d-none");
       }
@@ -1249,13 +1291,13 @@ function getUserInformationForHeader() {
     .catch((error) => console.error("Error:", error));
 }
 
-function jsInHome(){
+function jsInHome() {
   // show medical record in details by PID
-  $(document).ready(function(){
-    $(".btn-show-details-medical-record").click(function(){
+  $(document).ready(function () {
+    $(".btn-show-details-medical-record").click(function () {
       var Pid = $("#pid").val();
       console.log(Pid);
-      if(Pid != undefined || Pid != ''){
+      if (Pid != undefined || Pid != '') {
         $.ajax({
           url: "/home/medical_record",
           type: "POST",
@@ -1276,22 +1318,22 @@ function jsInHome(){
 
   });
 
-    // show img of record
+  // show img of record
   $(document).ready(function () {
-      $(".btn-show-details-xray-img").click(function () {
-        var m_rec_id = $(this).data("m_rec_id");
-        var img_before = $(this).data("img_before");
-        var img_last = $(this).data("img_last");
-        var medical_predict = $(this).data("medical_predict");
-  
-        console.log(img_before);
-        console.log(img_last);
-        console.log(medical_predict);
-        console.log($(".img-left"));
-  
-        $("#img-left").attr("src", img_before);
-        $("#img-right").attr("src", img_last);
-        $("#medical_predict").val(medical_predict);
-      });
+    $(".btn-show-details-xray-img").click(function () {
+      var m_rec_id = $(this).data("m_rec_id");
+      var img_before = $(this).data("img_before");
+      var img_last = $(this).data("img_last");
+      var medical_predict = $(this).data("medical_predict");
+
+      console.log(img_before);
+      console.log(img_last);
+      console.log(medical_predict);
+      console.log($(".img-left"));
+
+      $("#img-left").attr("src", img_before);
+      $("#img-right").attr("src", img_last);
+      $("#medical_predict").val(medical_predict);
+    });
   });
 }
