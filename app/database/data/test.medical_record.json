@@ -69,4 +69,18 @@
   "date_created": "2024-05-30 16:04:27",
   "doctor_predict": "",
   "user_id": "USE0000001"
+},
+{
+  "_id": {
+    "$oid": "66585955ae8f553b725a58b3"
+  },
+  "m_rec_id": "MDR0000006",
+  "patient_id": "PAT0000004",
+  "img_before": "/static/img/230px-Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg",
+  "img_last": "/static/img/data/230px-Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg",
+  "medical_predict": "ILD",
+  "percentage": "",
+  "date_created": "2024-05-30 17:47:49",
+  "doctor_predict": "",
+  "user_id": "USE0000001"
 }]

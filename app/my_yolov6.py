@@ -172,6 +172,9 @@ class my_yolov6():
         if len(det):
             det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
             for *xyxy, conf, cls in reversed(det):
+                # x1, y1, x2, y2 = [int(coord) for coord in xyxy]
+                # # Do something with the bounding box coordinates (x1, y1, x2, y2)
+                # print(f"Bounding box coordinates: ({x1}, {y1}) - ({x2}, {y2})")
                 class_num = int(cls)  # integer class
                 label = f'{self.class_names[class_num]} {conf:.2f}'
                 # label_name = f'{label_mapping.get(class_num)} {conf:.2f}'
@@ -184,6 +187,7 @@ class my_yolov6():
                 sick_name.append(f'{self.class_names[class_num]}')
                 sick_name_eng.append(f'{label_mapping.get(class_num)}')
                 colors.append(color_global)
+                # print("XY: ", *xyxy);
                 
                 # sick_name.append(label_name)
         img_src = np.asarray(img_src)

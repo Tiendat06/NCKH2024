@@ -5,12 +5,6 @@ import os
 xray = Blueprint('xray', __name__)
 app = None
 
-# [GET]
-# @xray.route('/xray', methods=['get'])
-# def index():
-#     global xray
-#     return XrayController().index();
-
 # [GET, POST]
 @xray.route('/xray', methods=['post', 'get'])
 def load_data():
@@ -33,3 +27,11 @@ def sendImg():
 @xray.route('/xray/saveRecord', methods=['post'])
 def saveRecord():
     return XrayController().saveRecord();
+
+@xray.route('/xray/show_body_target', methods=['post'])
+def show_body_target():
+    return XrayController().show_body_target();
+
+@xray.route('/xray/upload_ratio', methods=['post'])
+def upload_ratio():
+    return XrayController().uploadRatio();

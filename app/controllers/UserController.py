@@ -13,14 +13,21 @@ class UserController:
         if 'user_name' in session and 'user_img' in session:
             user_name = session.get('user_name');
             user_img = session.get('user_img');
+            acc_id = session.get("acc_id");
+            account = self.account.findAccountByAccId(acc_id);
+            role_id = account._role_id;
+            # print(role_id);
         else:
             user_name = "Guest";
             user_img = "https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png";
-        return jsonify({'user_name': user_name, 'user_img': user_img})
+            role_id = 'ROL0000002';
+        return jsonify({'user_name': user_name, 'user_img': user_img, 'role_id': role_id});
 
     # [GET] /user
     def index(self, pages):
         user_db = self.user;
+        # self.account.checkRole();
+
         pages = int(pages);
         per_page = 8;
         start = (pages - 1) * per_page;
@@ -39,12 +46,14 @@ class UserController:
         print(start)
         print(end)
 
-        return render_template("index.html", content='index', page='user', zip_data=items_on_page, total_pages=total_pages, pages=pages)
+        return redirect("/") if self.account.checkRole() else render_template("index.html", content='index', page='user', zip_data=items_on_page, total_pages=total_pages, pages=pages)
     
     # [POST, AJAX]  /user/add
     def add_user(self):
         user_db = self.user;
         acc_db = self.account;
+        self.account.checkRole();
+
         result = {
             'empty': 'Please fill out all fields !',
             'error': 'Your email has been contained !',
@@ -77,6 +86,8 @@ class UserController:
     # [POST, AJAX]  /user/edit
     def edit_user(self):
         user_db = self.user;
+        self.account.checkRole();
+
         result = {
             'fail': 'Edit failed !',
             'error': 'Your email has been contained !',
@@ -144,6 +155,8 @@ class UserController:
     # [POST, AJAX]  /user/delete
     def delete_user(self):
         user_model = self.user;
+        self.account.checkRole();
+
         result = {
             'fail': 'Delete failed !',
             'success': 'Delete successfully !'
@@ -188,7 +201,7 @@ class UserController:
         acc_id = data.get('acc_id');
 
         if 'img' not in request.files:
-            img_url = 'https://res.cloudinary.com/dervs0fx5/image/upload/v1709054146/cl0hmsqdjl1lwnahek0i.png';
+            img_url = session.get('user_img');
         else:
             img = request.files['img'];
             res = cloudinary.uploader.upload(img);
@@ -206,6 +219,7 @@ class UserController:
         if not edit:
             return jsonify(result.get('fail'));
 
+        session['user_img'] = img_url;
         return jsonify(result.get('success'));
 
     # [POST, AJAX] /user/profile/change_pwd

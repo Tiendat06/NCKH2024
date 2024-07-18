@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, session
+from flask import Blueprint, abort, session, redirect
 from controllers.SiteController import SiteController
 
 site = Blueprint('site', __name__)
@@ -6,7 +6,8 @@ site = Blueprint('site', __name__)
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return abort(401)  # Authorization required
+            # return abort(401)  # Authorization required
+            return redirect("/home");
         else:
             return function()
 
@@ -22,3 +23,7 @@ def index():
 @login_is_required
 def home():
     return SiteController().index();
+
+@site.route('/home/medical_record', methods=['post'])
+def home_medical_record():
+    return SiteController().home_medical_record();

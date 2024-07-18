@@ -181,9 +181,23 @@
         cursor: pointer;
         " class="xray-img--small mb-3 w-100">
 
-        <img data-toggle="modal" data-target="#xray-open__img" id="xray-img__small" style="height: 60px; object-fit: cover" class="profile-img w-100"
-            src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
+        <img data-toggle="modal" data-target="#xray-open__img" id="xray-img__small"
+            style="height: 60px; object-fit: cover" class="profile-img w-100"
+            src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt=""
+            srcset="" />
+    </div>
+    <div style="
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #387181;
+        cursor: pointer;
+        " class="xray-img--small-body mb-3 w-100">
+
+        <img data-toggle="modal" data-target="#xray-open__show-body" id="xray-img--small-body"
+            style="height: 60px; object-fit: cover" class="profile-img w-100"
+            src="{% if origin_img %}{{origin_img}}{% else %}/static/img/body-target.png{% endif %}"
             alt="" srcset="" />
+
     </div>
 </div>
 
@@ -191,15 +205,17 @@
     style="height: 400px; border: 1px solid var(--para-link); border-radius: 10px">
     <img width="80%" style="height: 90% !important; object-fit: contain" id="xray-img--output"
         class="profile-img text-center"
-        src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}"
-        alt="" srcset="" />
-        <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
+        src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt="" srcset="" />
+    <!-- <div class="d-flex flex-wrap justify-content-center align-items-center">
         </div> -->
-        <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain" class="profile-img text-center"></canvas>
-    
+    <canvas id="canvas" style="display: none;" width="330" height="90%" style="object-fit: contain"
+        class="profile-img text-center"></canvas>
+
     <!-- <input type="hidden" name="img_link_download" id="img_link_download" value="{{user_image_local}}" /> -->
-    <img style="width: 330px!important; height: 330px!important" hidden src="{% if user_image_local %}{{user_image_local}}{% else %}/static/img/xray-img-check.png{% endif %}" id="img_link_download" alt="">
-    
+    <img style="width: 330px!important; height: 330px!important" hidden
+        src="{% if user_image_local %}{{user_image_local}}{% else %}/static/img/xray-img-check.png{% endif %}"
+        id="img_link_download" alt="">
+
     {% if user_image %}
     <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
     {% endif %}
@@ -210,8 +226,8 @@
     <div class="xray-predict__btn d-flex flex-wrap text-center w-100">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                    aria-controls="home" aria-selected="true">AI Result</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">AI Result</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
@@ -221,8 +237,10 @@
 
         <div class="tab-content w-100" id="myTabContent">
             <!-- { if zip_data %} -->
-            <div style="display:{% if user_image %}none;{% else %}block;{% endif %}" class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-3 d-flex flex-wrap justify-content-center">
-                <div style="display:{% if user_image %}none;{% else %}block;{% endif %}" class="alert alert-danger mb-0">
+            <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
+                class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-3 d-flex flex-wrap justify-content-center">
+                <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
+                    class="alert alert-danger mb-0">
                     <p class="mb-0">There is no disease</p>
                 </div>
             </div>
@@ -235,10 +253,10 @@
                             {{sick_name_eng}} ({{sick_name}})
                         </p>
                         <!-- <div> -->
-                            <p class="mb-0 w-25 text-right text-secondary">
-                                {{percentage}}%
-                            </p>
-                            <!-- <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i> -->
+                        <p class="mb-0 w-25 text-right text-secondary">
+                            {{percentage}}%
+                        </p>
+                        <!-- <i style="font-size: 18px" class="fa-solid fa-circle-minus text-danger"></i> -->
                         <!-- </div> -->
                     </div>
                     <div style="

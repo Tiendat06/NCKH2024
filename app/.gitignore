@@ -11,6 +11,7 @@ __pycache__/
 .Python
 routes/apis/
 videos/
+routes/apis
 build/
 runs/
 develop-eggs/

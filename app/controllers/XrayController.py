@@ -8,22 +8,39 @@ from models.Disease import DiseaseModel
 from models.Patient import PatientModel
 from models.MedicalRecord import MedicalRecordModel
 from models.User import UserModel
+from models.BodyTarget import BodyTargetModel
 import os
 from random import random
 import cv2
 from my_yolov6 import my_yolov6
 import cloudinary.uploader
+import io
+from datetime import datetime
+import numpy as np
+import torch
+import torchvision
+import torchxrayvision as xrv
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.use('Agg')  # Sử dụng backend 'Agg' cho matplotlib
+from skimage.io import imread
+from skimage.measure import find_contours
+
 class XrayController:
     def __init__(self):
         self.account = AccountModel();
         self.disease = DiseaseModel();
         self.patient = PatientModel();
         self.medicalRecord = MedicalRecordModel();
+        self.body_target = BodyTargetModel();
         self.user = UserModel();
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt")
-        config_path = os.path.join(base_dir, "data", "vinbigdata.yaml")
-        self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True)
+        base_dir = os.path.dirname(os.path.abspath(__file__));
+        weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt");
+        config_path = os.path.join(base_dir, "data", "vinbigdata.yaml");
+        self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True);
+        self.PROCESSED_FOLDER = 'static/img/body_target';
+        self.UPLOAD_FOLDER = 'static/img/ratio';
+        self.model = xrv.baseline_models.chestx_det.PSPNet();
 
     # [GET] 
     def index(self):
@@ -33,7 +50,8 @@ class XrayController:
     # [GET, POST] /xray
     def load_data(self, app):
         ndet = 0
-
+        body_list = [];
+        body_list = self.body_target.getAllBodyTarget();
         # Nếu là POST (gửi file)
         if request.method == "POST":
             # current_path = request.path;
@@ -86,6 +104,7 @@ class XrayController:
 
                         # resize img
                         image_re = cv2.imread(path_to_save_local)
+                        # height, width, channels = image_re.shape
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
@@ -110,25 +129,24 @@ class XrayController:
                         
                         zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
                         doctor_zip_data = zip_data;
-                        # print(real_percentage)
-                        return render_template("index.html", user_image = path_ , user_image_local = img_local, disease_list = disease_list, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
+
+                        return render_template("index.html", user_image = path_ , body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image_local = img_local, disease_list = disease_list, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
-                        return render_template('index.html',user_image = '/static/img/'+ image.filename, conf_thres = 0.3,
+                        return render_template('index.html', body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image = '/static/img/'+ image.filename, conf_thres = 0.3,
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
                 else:
                     # Nếu không có file thì yêu cầu tải file
-                    return render_template('index.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+                    return render_template('index.html', body_list=body_list, msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
 
             except Exception as ex:
                 # Nếu lỗi thì thông báo
                 print(ex)
-                return render_template('index.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+                return render_template('index.html', body_list=body_list, msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
 
         else:
             # Nếu là GET thì hiển thị giao diện upload
-            return render_template('index.html', content = 'index', page = 'xray')    
-
+            return render_template('index.html', body_list=body_list, content = 'index', page = 'xray')    
 
     # [POST, AJAX] /xray/ajax/changeRange
     def load_data_ajax(self, app):
@@ -168,7 +186,9 @@ class XrayController:
                         path_to_save_local = session.get('relative_path_to_save_local');
                         cv2.imwrite(path_to_save_local, frame)
 
-                        image_re = cv2.imread(path_to_save_local)
+                        image_re = cv2.imread(path_to_save_local);
+                        # height, width, channels = image_re.shape
+
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
@@ -195,10 +215,10 @@ class XrayController:
                         zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
                         doctor_zip_data = zip_data;
 
-                        return render_template("/xray/change_range.html", user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
+                        return render_template("/xray/change_range.html", origin_img = session.get('relative_path_to_save'), user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
-                        return render_template('/xray/change_range.html',user_image = img_local , conf_thres= conf_thres_ajax,
+                        return render_template('/xray/change_range.html',user_image = img_local , origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi
@@ -217,7 +237,6 @@ class XrayController:
         response = requests.get(image_url)
 
         return send_file(BytesIO(response.content), mimetype='image/jpeg')
-    
     
     # [POST, AJAX] /xray/saveRecord
     def saveRecord(self):
@@ -291,3 +310,98 @@ class XrayController:
             return jsonify(result.get('fail'));
         
         return jsonify(result.get('success'));
+
+    # [POST, AJAX] /xray/show_body_target
+    def show_body_target(self):
+        try:
+            file = request.files['file']
+            img = imread(file)
+            
+            # Get selected indices from checkboxes
+            checkbox = request.form.getlist('checkbox')
+            selected_indices = []
+            if checkbox:
+                str_numbers = checkbox[0].split(',')
+                selected_indices = [int(num_str) for num_str in str_numbers if num_str.isdigit()]
+            
+            # Normalize the image
+            img = xrv.datasets.normalize(img, 255)
+
+            # If the image is 2D (grayscale), add an extra dimension to make it (height, width, 1)
+            if img.ndim == 2:
+                img = img[:, :, None]
+
+            # If the image has 4 channels (RGBA), discard the alpha channel
+            if img.shape[2] == 4:
+                img = img[:, :, :3]
+
+            # Transpose the image to move the channel dimension to the first position (1, height, width)
+            img = img.transpose((2, 0, 1))
+
+            # Apply the transforms
+            transform = torchvision.transforms.Compose([
+                xrv.datasets.XRayCenterCrop(),
+                xrv.datasets.XRayResizer(512)
+            ])
+            img = transform(img)
+
+            # Convert the image to a PyTorch tensor
+            img = torch.from_numpy(img).unsqueeze(0)
+
+            with torch.no_grad():
+                pred = self.model(img)
+
+            pred = 1 / (1 + np.exp(-pred))  # sigmoid
+            pred[pred < 0.5] = 0
+            pred[pred > 0.5] = 1
+
+            # Plot the contours on the image
+            fig, ax = plt.subplots()
+            ax.imshow(img[0, 0], cmap='gray')
+            combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
+
+            contour_colors = ['red', 'red', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'black',
+                            'orange', 'purple', 'green', 'brown', 'gray', 'lime']
+
+            for idx, i in enumerate(selected_indices):
+                if idx >= len(contour_colors):
+                    break  # Ensure we don't go out of bounds
+                mask = pred[0, i].numpy()
+                combined_mask[mask > 0] = idx + 1
+                contours = find_contours(combined_mask, level=idx + 0.1)
+                for contour in contours:
+                    ax.plot(contour[:, 1], contour[:, 0], linestyle='--', linewidth=1, color=contour_colors[idx])
+
+            ax.axis('off')
+
+            # Tạo tên file duy nhất bằng timestamp
+            filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
+            filepath = os.path.join(self.PROCESSED_FOLDER, filename)
+            plt.savefig(filepath)
+            print(filepath)
+            plt.close()
+
+            # Trả về URL của hình ảnh đã lưu
+            return render_template('xray/body_target.html', img_after=url_for('static', filename=f'img/body_target/{filename}', _external=True))
+        
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            # Handle exceptions and provide feedback
+            return str(e), 500
+
+    # [POST, AJAX] /xray/upload_ratio
+    def uploadRatio(self):
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part"}), 400
+
+        file = request.files['file']
+
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+
+        if file:
+            file_path = os.path.join(self.UPLOAD_FOLDER, file.filename)
+            file.save(file_path)
+            processed_image_path = self.body_target.process_image(file_path)
+            return jsonify({"processed_image_url": processed_image_path})

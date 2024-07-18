@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/predict_NEW" enctype="multipart/form-data" method="post">
+        <input type="file" name="file" id="file">
+        <label for="checkbox_1">1</label>
+        <input type="checkbox" name="checkbox" value="1" id="checkbox_1">
+        <label for="checkbox_2">2</label>
+        <input type="checkbox" name="checkbox" value="2" id="checkbox_2">
+        <label for="checkbox_3">3</label>
+        <input type="checkbox" name="checkbox" value="3" id="checkbox_3">
+        <button type="submit">Submit</button>
+    </form>
+    <img style="object-fit: contain;" src="{{img_after}}" alt="">
+</body>
+</html>

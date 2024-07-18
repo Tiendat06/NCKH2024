@@ -1,5 +1,6 @@
 from database import DataBaseUtils
-from flask import redirect
+from flask import redirect, session
+
 
 class Account:
     # ___id = ''
@@ -76,21 +77,23 @@ class AccountModel(DataBaseUtils):
         self.__conn = DataBaseUtils.get_connection();
     
     def checkLogin(self, data):
-        acc_pwd = self.__conn.get_collection('account').find_one({'password': data['password']});
         acc_email = self.__conn.get_collection('user').find_one({'email': data['email']});
-        # acc_id = self.__conn.get_collection('user').find_one({'email': data['email']}).get('acc_id');
-        # print(acc_email.get('acc_id'));
-        # print(acc_pwd.get('role_id'));
-        # acc_role = self.__conn.get_collection('account').find_one({'acc_id': acc_id.get('role_id')});
-
-        # print(acc_role)
-        role_id = '';
+        # account = 
+        acc_pwd = self.__conn.get_collection('account').find_one({'acc_id': acc_email['acc_id'], 'password': data['password']});
+        role_id = 'ROL0000003';
 
         if acc_email and acc_pwd and acc_pwd.get('role_id') != 'ROL0000003':
             role_id = acc_pwd.get('role_id');
             return True, role_id;
         return False, role_id;
     
+    def updateRoleById(self, acc_id, role_id):
+        result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'role_id': role_id}})
+        if result.modified_count > 0:
+            return True;
+        return False;
+
+
     def updateRole(self, role, acc_id):
         # print(acc_id)
         # print(role)
@@ -109,6 +112,14 @@ class AccountModel(DataBaseUtils):
     def updatePwd(self, acc_id, newPwd):
         result = self.__conn.get_collection('account').update_one({'acc_id': acc_id}, {"$set": {'password': newPwd}});
         if result.modified_count > 0:
+            return True;
+        return False;
+
+    def checkRole(self):
+        acc_id = session.get("acc_id");
+        account = self.findAccountByAccId(acc_id);
+        role_id = account._role_id;
+        if role_id == 'ROL0000002':
             return True;
         return False;
 

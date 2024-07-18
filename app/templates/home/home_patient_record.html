@@ -1,0 +1,79 @@
+<table class="table table-hover">
+    <thead>
+        <th>#</th>
+        <th>Patient name</th>
+        <th>Doctor name</th>
+        <th>Date created</th>
+        <th>Action</th>
+    </thead>
+
+    <tbody>
+        {% for record, user in medical_record_list %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{patient_name}}</td>
+            <td>{{user._name}}</td>
+            <td>{{record._date_created}}</td>
+            <td>
+                <a data-m_rec_id="{{record._m_rec_id}}" data-img_before="{{record._img_before}}"
+                    data-img_last="{{record._img_last}}" data-medical_predict="{{record._medical_predict}}"
+                    data-toggle="modal" data-target="#show-xray-image" class="btn mb-0 btn-show-details-xray-img">
+                    <i class="fa-solid fa-eye text-primary"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!--    more img -->
+<div class="modal fade" id="show-xray-image">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form onsubmit="return false" method="post">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Medical Record</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="xray-img d-flex flex-wrap">
+                        <div class="img-left text-center col-lg-6">
+                            <img style="width: 330px!important; height: 330px!important;" id="img-left" src="" alt=""
+                                srcset="">
+                        </div>
+                        <div class="img-right text-center col-lg-6">
+                            <img id="img-right" src="" alt="" srcset="">
+                        </div>
+                    </div>
+
+                    <div class="medical_predict mt-4 pr-2 pl-2 mb-4">
+                        <h6 class="medical_predict--para mb-3">Medical predict</h6>
+                        <textarea placeholder="Medical Predict" name="medical_predict" class="form-control"
+                            id="medical_predict" cols="30" disabled rows="5" contenteditable="true"></textarea>
+                    </div>
+                </div>
+
+                <div id="error_adding_user_outer" style="width: 90%;"
+                    class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                    <p id="error_adding_user" class="login-form__para mb-0 text-danger">
+
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                    <!-- <button id="btn_add" class="btn btn-primary">Submit</button> -->
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>
