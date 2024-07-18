@@ -39,6 +39,7 @@ cloudinary.config(
 # change to https request (use for gmail)
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+# ok
 
 # apps = Blueprint("app", __name__);
 
