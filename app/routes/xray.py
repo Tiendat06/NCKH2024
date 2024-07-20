@@ -35,3 +35,7 @@ def show_body_target():
 @xray.route('/xray/upload_ratio', methods=['post'])
 def upload_ratio():
     return XrayController().uploadRatio();
+
+@xray.route('/xray/upload_contours', methods=['post'])
+def upload_contours():
+    return XrayController().uploadContours();

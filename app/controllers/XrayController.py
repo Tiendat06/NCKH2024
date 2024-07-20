@@ -38,8 +38,10 @@ class XrayController:
         weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt");
         config_path = os.path.join(base_dir, "data", "vinbigdata.yaml");
         self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True);
-        self.PROCESSED_FOLDER = 'static/img/body_target';
-        self.UPLOAD_FOLDER = 'static/img/ratio';
+        self.PROCESSED_FOLDER = os.path.join('static', 'img', 'body_target');# 'static/img/body_target';
+        self.UPLOAD_FOLDER = os.path.join('static', 'img', 'ratio'); # 'static/img/ratio';
+        self.PROCESSED_FOLDER_CONTOURS = os.path.join('static', 'img', 'contours');# 'static/img/body_target';
+        self.UPLOAD_FOLDER_CONTOURS = os.path.join('static', 'img', 'upload_contours'); # 'static/img/ratio';
         self.model = xrv.baseline_models.chestx_det.PSPNet();
 
     # [GET] 
@@ -377,8 +379,9 @@ class XrayController:
             # Tạo tên file duy nhất bằng timestamp
             filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
             filepath = os.path.join(self.PROCESSED_FOLDER, filename)
+            # print(filepath);
             plt.savefig(filepath)
-            print(filepath)
+            # print(filepath)
             plt.close()
 
             # Trả về URL của hình ảnh đã lưu
@@ -404,4 +407,159 @@ class XrayController:
             file_path = os.path.join(self.UPLOAD_FOLDER, file.filename)
             file.save(file_path)
             processed_image_path = self.body_target.process_image(file_path)
-            return jsonify({"processed_image_url": processed_image_path})
+            return jsonify({"processed_image_url": processed_image_path});
+
+    # [POST, AJAX] /xray/upload_contours
+    def uploadContours(self):
+        if 'file' not in request.files:
+            return 'No file part'
+        file = request.files['file']
+        if file.filename == '':
+            return 'No selected file'
+        if file:
+            filename = file.filename
+            filepath = os.path.join(self.UPLOAD_FOLDER_CONTOURS, filename)
+            file.save(filepath)
+
+            # Load and process the image
+            img = imread(filepath)
+            img = xrv.datasets.normalize(img, 255)
+            if img.ndim == 2:
+                img = img[:, :, None]
+            if img.shape[2] == 4:
+                img = img[:, :, :3]
+            img = img.transpose((2, 0, 1))
+
+            transform = torchvision.transforms.Compose([
+                xrv.datasets.XRayCenterCrop(),
+                xrv.datasets.XRayResizer(512)
+            ])
+            img = transform(img)
+            img = torch.from_numpy(img).unsqueeze(0)  # Add batch dimension
+
+            with torch.no_grad():
+                pred = self.model(img)
+
+            pred = torch.sigmoid(pred).numpy()
+            pred[pred < 0.5] = 0
+            pred[pred >= 0.5] = 1
+
+            plt.figure(figsize=(12, 6))
+            combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
+            plt.subplot(1, 2, 2)
+            plt.imshow(img[0, 0], cmap='gray')
+            # plt.title('Contours')
+            plt.axis('off')
+
+            target_indices = [4, 5]
+            for idx, i in enumerate(target_indices):
+                mask = pred[0, i]
+                combined_mask[mask > 0] = idx + 1
+                contours = find_contours(combined_mask, level=idx + 0.1)
+                for contour in contours:
+                    if i == 4:
+                        bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
+                        point1 = contour[bottom_right_idx]
+                        point2 = contour[(bottom_right_idx - 25) % len(contour)]
+                        point3 = contour[(bottom_right_idx + 25) % len(contour)]
+                        angle = self.body_target.calculate_angle(point1, point2, point3)
+                        plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
+                        mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
+                        plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
+                                 va='center')
+                    else:
+                        bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
+                        point4 = contour[bottom_left_idx]
+                        point5 = contour[(bottom_left_idx - 25) % len(contour)]
+                        point6 = contour[(bottom_left_idx + 25) % len(contour)]
+                        angle = self.body_target.calculate_angle(point4, point5, point6)
+                        plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
+                        mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
+                        plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
+                                 va='center')
+
+            plt.tight_layout()
+            contour_filename = f'contour_{filename}'
+            contour_filepath = os.path.join(self.PROCESSED_FOLDER_CONTOURS, contour_filename)
+            plt.savefig(contour_filepath)
+            plt.close()
+
+            return jsonify({"processed_image_url": f'/static/img/contours/{contour_filename}'})
+        # print("it's oke");
+        # if 'file' not in request.files:
+        #     print("No file")
+        #     return 'No file part'
+        # file = request.files['file']
+        # if file.filename == '':
+        #     print("no file selected");
+        #     return 'No selected file'
+        # if file:
+        #     filename = file.filename
+        #     filepath = os.path.join(self.UPLOAD_FOLDER_CONTOURS, filename)
+        #     file.save(filepath)
+        #
+        #     # Load and process the image
+        #     img = imread(filepath)
+        #     img = xrv.datasets.normalize(img, 255)
+        #     if img.ndim == 2:
+        #         img = img[:, :, None]
+        #     if img.shape[2] == 4:
+        #         img = img[:, :, :3]
+        #     img = img.transpose((2, 0, 1))
+        #     transform = torchvision.transforms.Compose([
+        #         xrv.datasets.XRayCenterCrop(),
+        #         xrv.datasets.XRayResizer(512)
+        #     ])
+        #     img = transform(img)
+        #     img = torch.from_numpy(img)
+        #
+        #     with torch.no_grad():
+        #         pred = self.model(img)
+        #
+        #     pred = 1 / (1 + np.exp(-pred))
+        #     pred[pred < 0.5] = 0
+        #     pred[pred > 0.5] = 1
+        #
+        #     plt.figure(figsize=(12, 6))
+        #     combined_mask = np.zeros_like(img[0], dtype=np.uint8)
+        #     plt.subplot(1, 2, 2)
+        #     plt.imshow(img[0], cmap='gray')
+        #     plt.title('Contours')
+        #     plt.axis('off')
+        #
+        #     target_indices = [4, 5]
+        #     for idx, i in enumerate(target_indices):
+        #         mask = pred[0, i]
+        #         combined_mask[mask > 0] = idx + 1
+        #         contours = find_contours(combined_mask, level=idx + 0.1)
+        #         for contour in contours:
+        #             if i == 4:
+        #                 bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
+        #                 point1 = contour[bottom_right_idx]
+        #                 point2 = contour[(bottom_right_idx - 25) % len(contour)]
+        #                 point3 = contour[(bottom_right_idx + 25) % len(contour)]
+        #                 angle = self.body_target.calculate_angle(point1, point2, point3)
+        #                 plt.plot([point1[1], point2[1]], [point1[0], point2[0]], 'r-', linewidth=1)
+        #                 plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
+        #                 mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
+        #                 plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
+        #                          va='center')
+        #             else:
+        #                 bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
+        #                 point4 = contour[bottom_left_idx]
+        #                 point5 = contour[(bottom_left_idx - 25) % len(contour)]
+        #                 point6 = contour[(bottom_left_idx + 25) % len(contour)]
+        #                 angle = self.body_target.calculate_angle(point4, point5, point6)
+        #                 plt.plot([point4[1], point5[1]], [point4[0], point5[0]], 'r-', linewidth=1)
+        #                 plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
+        #                 mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
+        #                 plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
+        #                          va='center')
+        #
+        #     plt.tight_layout()
+        #     contour_filename = os.path.join(self.PROCESSED_FOLDER_CONTOURS, f'contour_{filename}')
+        #     plt.savefig(contour_filename)
+        #     plt.close()
+        #     return jsonify({"processed_image_url": f'/static/img/contours/contour_{filename}'});
+
+            # return f'File processed and saved at /static/contours/contour_{filename}'

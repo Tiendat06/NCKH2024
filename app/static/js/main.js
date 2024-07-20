@@ -804,7 +804,7 @@ function jsInXray() {
 
   // open-img-show-body
   $(document).ready(function () {
-    $("#xray-img--small-body").click(function () {
+    $("#pills-body-target-tab").click(function () {
       // var imgUrl = $(this).attr('src');
       var imgUrl = document.getElementById("xray-img--small-body").src;
       // console.log('hi world'); 
@@ -812,6 +812,7 @@ function jsInXray() {
     });
   });
 
+  // check body target
   $(document).ready(function () {
     var selectedOptions = [];
     let isLocked = false;
@@ -853,10 +854,11 @@ function jsInXray() {
     })
   })
 
+  // upload ratio
   $(document).ready(function () {
     let isLocked = false;
     $('#btn__upload-ratio').click(function () {
-      console.log('hi world');
+      // console.log('hi world');
       $('#overlay__show-body').removeClass('d-none');
       if (isLocked) return
 
@@ -877,7 +879,7 @@ function jsInXray() {
         processData: false,
         data: formData,
         success: function (response) {
-          console.log(response);
+          // console.log(response);
 
           $('#xray-img-ratio').attr('src', response.processed_image_url+"?random_code="+generateCode(8));
         },
@@ -890,6 +892,49 @@ function jsInXray() {
         }
       })
     })
+  })
+
+  $(document).ready(function (){
+    $('#btn__upload-angle').click(function (){
+
+    })
+  })
+
+//   upload contours
+  $(document).ready(function () {
+      let isLocked = false;
+      $('#btn__upload-contours').click(function (){
+          $('#overlay__show-body').removeClass('d-none');
+
+          var formData = new FormData();
+          var img = document.getElementById("upload-contours");
+          formData.append("file", img.files[0]);
+          if (isLocked) return
+
+          isLocked = true;
+
+          $.ajax({
+            type: 'POST',
+            url: '/xray/upload_contours',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response){
+                document.getElementById('xray-img-contours').style = 'margin-right: 500px !important;';
+
+                $('#xray-img-contours').attr('src', response.processed_image_url+"?random_code="+generateCode(8));
+            },
+            error: function (error){
+                console.log(error);
+            },
+            complete: function (xhr, status){
+                console.log(status);
+                $('#overlay__show-body').addClass('d-none');
+                isLocked = false;
+            }
+          })
+      })
+
   })
 }
 
@@ -1171,6 +1216,10 @@ function handleUploadImgRatio(fileInputId, imgId){
     };
 
     reader.readAsDataURL(file);
+    if(fileInputId === 'upload-contours'){
+        document.getElementById('xray-img-contours').style = 'margin-right: 0 !important;';
+    }
+
   }
 }
 

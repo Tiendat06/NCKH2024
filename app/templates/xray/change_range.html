@@ -186,19 +186,19 @@
             src="{% if user_image %}{{user_image}}{% else %}/static/img/xray-img-check.png{% endif %}" alt=""
             srcset="" />
     </div>
-    <div style="
-        border-radius: 10px;
-        overflow: hidden;
-        border: 2px solid #387181;
-        cursor: pointer;
-        " class="xray-img--small-body mb-3 w-100">
-
-        <img data-toggle="modal" data-target="#xray-open__show-body" id="xray-img--small-body"
-            style="height: 60px; object-fit: cover" class="profile-img w-100"
-            src="{% if origin_img %}{{origin_img}}{% else %}/static/img/body-target.png{% endif %}"
-            alt="" srcset="" />
-
-    </div>
+{#    <div style="#}
+{#        border-radius: 10px;#}
+{#        overflow: hidden;#}
+{#        border: 2px solid #387181;#}
+{#        cursor: pointer;#}
+{#        " class="xray-img--small-body mb-3 w-100">#}
+{##}
+{#        <img data-toggle="modal" data-target="#xray-open__show-body" id="xray-img--small-body"#}
+{#            style="height: 60px; object-fit: cover" class="profile-img w-100"#}
+{#            src="{% if origin_img %}{{origin_img}}{% else %}/static/img/body-target.png{% endif %}"#}
+{#            alt="" srcset="" />#}
+{##}
+{#    </div>#}
 </div>
 
 <div class="xray-img__predict bg-light p-3 col-lg-8 col-md-10 col-sm-10 d-flex justify-content-center align-items-center"
@@ -217,7 +217,7 @@
         id="img_link_download" alt="">
 
     {% if user_image %}
-    <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
+        <input type="hidden" name="img_link_predict" id="img_link_predict" value="{{user_image}}" />
     {% endif %}
     <!-- <img style="object-fit: contain; height: 100%; width: 100%" src="" class="d-none" id="xray-img--real" alt="" srcset=""> -->
 </div>

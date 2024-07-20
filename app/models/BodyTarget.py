@@ -9,7 +9,11 @@ import torch
 import torchvision
 import matplotlib.pyplot as plt
 import torchxrayvision as xrv
+from skimage import measure, transform
 from skimage.measure import find_contours
+from skimage.transform import resize
+from skimage.feature import canny
+from skimage.morphology import closing, square
 
 class BodyTarget:
     def __init__(self, body_target_id, body_target_name):
@@ -66,7 +70,7 @@ class BodyTargetModel:
         except Exception as e:
             print(f"Error fetching image from URL: {e}")
             return None
-        
+
     def process_image(self, file_path):
         img = skimage.io.imread(file_path)
         img = xrv.datasets.normalize(img, 255)
@@ -214,4 +218,74 @@ class BodyTargetModel:
         plt.savefig(processed_image_path)
         plt.close()
 
-        return processed_image_path
+        return processed_image_path;
+
+    def calculate_angle(self, p1, p2, p3):
+        vector1 = np.array(p2) - np.array(p1)
+        vector2 = np.array(p3) - np.array(p1)
+        unit_vector1 = vector1 / np.linalg.norm(vector1)
+        unit_vector2 = vector2 / np.linalg.norm(vector2)
+        dot_product = np.dot(unit_vector1, unit_vector2)
+        angle = np.arccos(dot_product)
+        return np.degrees(angle)
+
+    def center_images(self, image):
+        threshold = 0.1  # Ngưỡng để xác định pixel không phải màu trắng
+        mask = image > threshold
+
+        # Nếu không có pixel nào khác màu trắng, trả lại hình ảnh gốc
+        if not np.any(mask):
+            return image
+
+        # Tìm bounding box của phần chứa thông tin X-quang
+        props = measure.regionprops(measure.label(mask))
+        if not props:
+            return image  # Không tìm thấy vùng chứa thông tin, trả lại hình ảnh gốc
+
+        largest_region = max(props, key=lambda r: r.area)
+        min_row, min_col, max_row, max_col = largest_region.bbox
+
+        # Cắt hình ảnh theo bounding box
+        cropped_image = image[min_row:max_row, min_col:max_col]
+
+        # Căn giữa hình ảnh đã cắt
+        centered_image = np.zeros_like(image)
+        center_row, center_col = image.shape[0] // 2, image.shape[1] // 2
+        start_row = max(center_row - cropped_image.shape[0] // 2, 0)
+        start_col = max(center_col - cropped_image.shape[1] // 2, 0)
+        centered_image[start_row:start_row + cropped_image.shape[0],
+        start_col:start_col + cropped_image.shape[1]] = cropped_image
+
+        return centered_image
+
+    def split_image_vertically(self, image_path, output_folder):
+        try:
+            # Open the local image
+            # os.makedirs(output_folder)
+            img = Image.open(f'{image_path}')
+
+            # Get image dimensions
+            width, height = img.size
+
+            # Calculate the split line
+            mid_width = width // 2
+
+            # Crop the image into two halves
+            left_half = img.crop((0, 0, mid_width, height))
+            right_half = img.crop((mid_width, 0, width, height))
+
+            # Extract the image name and extension from path
+            image_name = os.path.basename(image_path)
+            name, ext = os.path.splitext(image_name)
+
+            # Save the two halves with the original name
+            left_half_path = os.path.join(output_folder, f"{name}_left{ext}")
+            right_half_path = os.path.join(output_folder, f"{name}_right{ext}")
+            left_half.save(left_half_path)
+            right_half.save(right_half_path)
+
+            return left_half_path, right_half_path
+
+        except Exception as e:
+            print(f"Error processing the image: {e}")
+        return None, None
