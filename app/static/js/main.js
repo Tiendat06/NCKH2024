@@ -801,16 +801,17 @@ function jsInXray() {
       $("#xray-img--show").attr("src", imgUrl);
     });
   });
+// app
 
   // open-img-show-body
-  $(document).ready(function () {
-    $("#pills-body-target-tab").click(function () {
-      // var imgUrl = $(this).attr('src');
-      var imgUrl = document.getElementById("xray-img--small-body").src;
-      // console.log('hi world'); 
-      $("#xray-img--show-body").attr("src", imgUrl);
-    });
-  });
+  // $(document).ready(function () {
+  //   $("#pills-body-target-tab").click(function () {
+  //     // var imgUrl = $(this).attr('src');
+  //     var imgUrl = document.getElementById("xray-img--small-body").src;
+  //     // console.log('hi world');
+  //     $("#xray-img--show-body").attr("src", imgUrl);
+  //   });
+  // });
 
   // check body target
   $(document).ready(function () {
@@ -936,6 +937,59 @@ function jsInXray() {
       })
 
   })
+
+
+  $(document).ready(function (){
+    $('#btn-submit__body-target').click(function (){
+      let selectedBodyOptions = [];
+      let selectedFunctionOptions = [];
+      let img_url = document.getElementById('body-target__img').src;
+      const fileInput = document.getElementById('upload-ratio');
+      const file = fileInput.files[0];
+
+      $('input[name="checkbox__body-target"]:checked').each(function () {
+        selectedBodyOptions.push($(this).val());
+      });
+
+      $('input[name="checkbox__body-target--function"]:checked').each(function () {
+        selectedFunctionOptions.push($(this).val());
+      });
+
+      // console.log(selectedBodyOptions);
+      // console.log(selectedFunctionOptions);
+      // console.log(img_url);
+      var formData = new FormData();
+      formData.append('body-options', JSON.stringify(selectedBodyOptions));
+      formData.append('function-options', JSON.stringify(selectedFunctionOptions));
+      formData.append('file', file);
+
+      $('#overlay__show-body').removeClass('d-none');
+      fetch('/xray/combine_body_target', {
+        method: 'POST',
+        body: formData
+      })
+          .then(response => response.json())
+          .then(data => {
+            // console.log(data)
+            img_url = data['img_url']
+            console.log(data)
+            if (data['isAngle'] == true){
+              document.getElementById('body-target__img').style = 'margin-right: 450px; width: 100%; height: 100%';
+            } else{
+              document.getElementById('body-target__img').style = 'margin-right: 0';
+            }
+            document.getElementById('body-target__img').src = img_url;
+          })
+          .catch(error => {
+            console.log(error)
+          })
+          .finally(() => {
+            $('#overlay__show-body').addClass('d-none');
+          })
+    })
+
+  })
+
 }
 
 function generateCode(length = 8) {

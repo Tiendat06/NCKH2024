@@ -13,17 +13,17 @@
 
     <ul class="nav nav-pills mb-3 col-lg-12 col-md-12 col-sm-12" id="pills-tab" role="tablist">
         <li class="nav-item col-lg-6 col-md-6 col-sm-6" role="presentation">
-            <button style="font-size: 17px" class="nav-link active w-100 p-2" id="pills-main-tab" data-toggle="pill" data-target="#pills-main" type="button" role="tab" aria-controls="pills-main" aria-selected="true">Home</button>
+            <button style="font-size: 17px" class="nav-link w-100 p-2" id="pills-main-tab" data-toggle="pill" data-target="#pills-main" type="button" role="tab" aria-controls="pills-main" aria-selected="true">Home</button>
         </li>
         <li class="nav-item col-lg-6 col-md-6 col-sm-6" role="presentation">
-            <button style="font-size: 17px" class="nav-link w-100 p-2" id="pills-body-target-tab" data-toggle="pill" data-target="#pills-body-target" type="button" role="tab" aria-controls="pills-body-target" aria-selected="false">Body target</button>
+            <button style="font-size: 17px" class="nav-link w-100 p-2 active" id="pills-body-target-tab" data-toggle="pill" data-target="#pills-body-target" type="button" role="tab" aria-controls="pills-body-target" aria-selected="false">Body target</button>
         </li>
 {#        <li class="nav-item col-lg-4 col-md-4 col-sm-4" role="presentation">#}
 {#            <button class="nav-link w-100" id="pills-contact-tab" data-toggle="pill" data-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>#}
 {#        </li>#}
     </ul>
     <div class="tab-content col-lg-12 col-md-12 col-sm-12" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane fade " id="pills-main" role="tabpanel" aria-labelledby="pills-home-tab">
             <form style="" id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2"
                 enctype="multipart/form-data">
                 <div style="background-color: #fff; border-radius: 10px"
@@ -189,42 +189,56 @@
                 </div>
             </form>
         </div>
-        <div class="tab-pane fade" id="pills-body-target" role="tabpanel" aria-labelledby="pills-profile-tab">
 
-            <div class="body-target--outer p-5" style="background-color: #fff; border-radius: 10px">
-                <div class="row p-3">
-                    <div class="col-2">
-                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                            aria-orientation="vertical">
-                            <button class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
-                                data-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
-                                aria-selected="true">
-                                Body target
-                            </button>
-                            <button class="nav-link" id="v-pills-profile-tab" data-toggle="pill"
-                                data-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile"
-                                aria-selected="false">
-                                Cardiopulmonary ratio
-                            </button>
-                            <button class="nav-link" id="v-pills-contours-tab" data-toggle="pill" data-target="#v-pills-contours" type="button" role="tab" aria-controls="v-pills-contours" aria-selected="false">
-                                Diaphragm angle
-                            </button>
-{#                        <button class="nav-link" id="v-pills-settings-tab" data-toggle="pill" data-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>#}
-                        </div>
-                    </div>
-                    <div class="col-10">
-                        <div class="tab-content" id="v-pills-tabContent">
-                            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
-                                aria-labelledby="v-pills-home-tab">
-                                <div class="modal-body">
-                                    <div class="d-flex flex-wrap justify-content-center img-container"
-                                        id="body-target--showed" style="border: 1px solid var(--para-link); border-radius: 10px">
-                                        <img width="512" height="512" id="xray-img--show-body" src="" alt=""
-                                            srcset="" />
+        <div class="tab-pane fade show active" id="pills-body-target" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+            <div class="body-target p-5 d-flex flex-wrap justify-content-between" style="background-color: #fff">
+                <div style="border-radius: 20px; border: 1px solid var(--para-link)" class="overflow-hidden p-3 col-lg-8 col-md-8 col-sm-8 d-flex flex-wrap justify-content-center">
+                    <img height="500" id="body-target__img" style="" src="/static/img/body-target.png" alt="">
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group position-relative h-100">
+                        <div id="accordion">
+                            <div class="card overflow-hidden" style="border: 1px solid #ccc;">
+                                <div class="card-header p-2" id="headingOne">
+                                    <h5 class="mb-0">
+                                    <button class="btn w-100 m-0 mb-1 mt-1 p-0" style="color: #000" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Function
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="form-group form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="checkbox__body-target--function" value="ratio" id="check-Cardiopulmonary" />
+                                            <label class="form-check-label"
+                                                   for="check-Cardiopulmonary">Cardiopulmonary ratio</label>
+                                        </div>
+
+                                        <div class="form-group form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="checkbox__body-target--function" value="angle"
+                                                   id="check-Diaphragm" />
+                                            <label class="form-check-label"
+                                                   for="check-Diaphragm">Diaphragm angle</label>
+                                        </div>
                                     </div>
-                                    <div class="collapse" id="collapseExample">
-                                        <div class="d-flex flex-wrap mt-3 pl-3 pr-3">
-                                            {% for body in body_list %}
+                                </div>
+                            </div>
+                            <div class="card overflow-hidden mt-3" style="border: 1px solid #ccc;">
+                                <div class="card-header p-2" id="headingTwo">
+                                    <h5 class="mb-0">
+                                    <button class="btn w-100 m-0 mb-1 mt-1 p-0" style="color: #000" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Department Zoning
+                                    </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body d-flex flex-wrap">
+                                        {% for body in body_list %}
                                             <div class="form-group form-check col-lg-4 col-md-4 col-sm-3">
                                                 <input type="checkbox" class="form-check-input"
                                                     name="checkbox__body-target" value="{{body._body_target_id}}"
@@ -232,106 +246,183 @@
                                                 <label class="form-check-label"
                                                     for="check-{{body._body_target_id}}">{{body._body_target_name}}</label>
                                             </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="d-flex flex-wrap justify-content-end">
-                                            <div class="xray-btn-upload mr-3">
-                                                <label for="upload-body" onclick="" id="upload_button-body"
-                                                    class="btn btn-info" style="width: 105px">Upload</label>
-                                                <input id="upload-body" type="file" name="file" style="display: none"
-                                                    accept="image/*" class="form-control"
-                                                    onchange="handleUploadImgInAjaxBody()" />
-                                            </div>
-                                            <button type="button" class="btn btn-danger" id="btn__body-target--submit">
-                                                Submit
-                                            </button>
-                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
-                                <div class="modal-footer mt-4">
-{#                                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">#}
-{#                                        Close#}
-{#                                    </button>#}
-                                    <p class="text-right">
-                                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample"
-                                            role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            Body target
-                                        </a>
-                                    </p>
-                                </div>
                             </div>
-
-                            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
-                                aria-labelledby="v-pills-profile-tab">
-                                <div class="modal-body">
-                                    <div class="d-flex flex-wrap justify-content-center img-container"
-                                        id="body-target--showed-ratio" style="border: 1px solid var(--para-link); border-radius: 10px">
-                                        <img width="512" height="512" id="xray-img-ratio" src="/static/img/body-target.png" alt=""
-                                            srcset="" />
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer mt-4">
-                                    <button type="button" class="btn btn-secondary mr-3" id="btn__upload-ratio">
-                                        Check
-                                    </button>
-                                        <div class="xray-btn-upload">
-                                            <label for="upload-ratio" onclick="" id="upload_button-body"
-                                                class="btn btn-info" style="width: 105px">Upload</label>
-                                            <input id="upload-ratio" type="file" name="file" style="display: none"
-                                                accept="image/*" class="form-control"
-                                                onchange="handleUploadImgRatio('upload-ratio', 'xray-img-ratio')" />
-                                        </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="v-pills-contours" role="tabpanel" aria-labelledby="pills-contact-tab">
-                                <div class="modal-body">
-                                    <div class="d-flex flex-wrap justify-content-center img-container overflow-hidden"
-                                        id="body-target--showed-contours" style="border: 1px solid var(--para-link); border-radius: 10px">
-                                        <img width="" height="512" style="" id="xray-img-contours" src="/static/img/body-target.png" alt=""
-                                            srcset="" />
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer mt-4">
-                                    <button type="button" class="btn btn-secondary mr-3" id="btn__upload-contours">
-                                        Check
-                                    </button>
-                                        <div class="xray-btn-upload" id="btn__upload-angle">
-                                            <label for="upload-contours" onclick="" id="upload_button-body"
-                                                class="btn btn-info" style="width: 105px">Upload</label>
-                                            <input id="upload-contours" type="file" name="file" style="display: none"
-                                                accept="image/*" class="form-control"
-                                                onchange="handleUploadImgRatio('upload-contours', 'xray-img-contours')" />
-                                        </div>
-                                </div>
-                            </div>
-
                         </div>
-                    </div>
-                </div>
-                                <!-- overlay -->
-                <div id="overlay__show-body" class="overlay d-none">
-                    <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
-                        <div class="w-100 text-center" style="height: 200px">
-                            <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">
-                                <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px">
-                                </div>
+
+                        <div style="bottom: 0; right: 0" class="body-target__btn position-absolute d-flex flex-wrap">
+                            <div class="xray-btn-upload">
+                                <label for="upload-ratio" onclick="" id="upload_button-body"
+                                       class="btn btn-info" style="width: 105px">Upload</label>
+                                <input id="upload-ratio" type="file" name="file" style="display: none"
+                                       accept="image/*" class="form-control"
+                                       onchange="handleUploadImgRatio('upload-ratio', 'body-target__img')" />
                             </div>
-                            <div style="font-size: 25px"
-                                class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">
-                                Đang thực hiện tính toán
-                            </div>
+                            <button type="submit" id="btn-submit__body-target" class="btn btn-success ml-2" style="width: 105px">Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+{#            <div class="body-target--outer p-5" style="background-color: #fff; border-radius: 10px">#}
+{#                <div class="row p-3">#}
+{#                    <div class="col-2">#}
+{#                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"#}
+{#                            aria-orientation="vertical">#}
+{#                            <button class="nav-link active" style="border: 1px solid #ccc; background-color: #066ac9; color: #fff" id="v-pills-home-tab" data-toggle="pill"#}
+{#                                data-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"#}
+{#                                aria-selected="true">#}
+{#                                Body target#}
+{#                            </button>#}
+{#                            <button class="nav-link btn btn-primary" style="border: 1px solid #ccc; background-color: #066ac9; color: #fff" id="v-pills-profile-tab" data-toggle="pill"#}
+{#                                data-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile"#}
+{#                                aria-selected="false">#}
+{#                                Cardiopulmonary ratio#}
+{#                            </button>#}
+{#                            <button class="nav-link btn btn-primary" style="border: 1px solid #ccc; background-color: #066ac9; color: #fff" id="v-pills-contours-tab" data-toggle="pill" data-target="#v-pills-contours" type="button" role="tab" aria-controls="v-pills-contours" aria-selected="false">#}
+{#                                Diaphragm angle#}
+{#                            </button>#}
+{#                            <button class="nav-link btn btn-primary" style="border: 1px solid #ccc; background-color: #066ac9; color: #fff" id="v-pills-contours-tab" data-toggle="pill" data-target="#v-pills-contours" type="button" role="tab" aria-controls="v-pills-contours" aria-selected="false">#}
+{#                                Detection#}
+{#                            </button>#}
+{#                        <button class="nav-link" id="v-pills-settings-tab" data-toggle="pill" data-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-10">#}
+{#                        <div class="tab-content" id="v-pills-tabContent">#}
+{#                            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"#}
+{#                                aria-labelledby="v-pills-home-tab">#}
+{#                                <div class="modal-body">#}
+{#                                    <div class="d-flex flex-wrap justify-content-center img-container"#}
+{#                                        id="body-target--showed" style="border: 1px solid var(--para-link); border-radius: 10px">#}
+{#                                        <img width="512" height="512" src="/static/img/body-target.png" id="xray-img--show-body" src="" alt=""#}
+{#                                            srcset="" />#}
+{#                                    </div>#}
+{#                                    <div class="collapse" id="collapseExample">#}
+{#                                        <div class="d-flex flex-wrap mt-3 pl-3 pr-3">#}
+{#                                            {% for body in body_list %}#}
+{#                                            <div class="form-group form-check col-lg-4 col-md-4 col-sm-3">#}
+{#                                                <input type="checkbox" class="form-check-input"#}
+{#                                                    name="checkbox__body-target" value="{{body._body_target_id}}"#}
+{#                                                    id="check-{{body._body_target_id}}" />#}
+{#                                                <label class="form-check-label"#}
+{#                                                    for="check-{{body._body_target_id}}">{{body._body_target_name}}</label>#}
+{#                                            </div>#}
+{#                                            {% endfor %}#}
+{#                                        </div>#}
+{#                                        <div class="d-flex flex-wrap justify-content-end">#}
+{#                                            <div class="xray-btn-upload mr-3">#}
+{#                                                <label for="upload-body" onclick="" id="upload_button-body"#}
+{#                                                    class="btn btn-info" style="width: 105px">Upload</label>#}
+{#                                                <input id="upload-body" type="file" name="file" style="display: none"#}
+{#                                                    accept="image/*" class="form-control"#}
+{#                                                    onchange="handleUploadImgInAjaxBody()" />#}
+{#                                            </div>#}
+{#                                            <button type="button" class="btn btn-danger" id="btn__body-target--submit">#}
+{#                                                Submit#}
+{#                                            </button>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="modal-footer mt-4">#}
+{#                                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">#}
+{#                                        Close#}
+{#                                    </button>#}
+{#                                    <p class="text-right">#}
+{#                                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample"#}
+{#                                            role="button" aria-expanded="false" aria-controls="collapseExample">#}
+{#                                            Body target#}
+{#                                        </a>#}
+{#                                    </p>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"#}
+{#                                aria-labelledby="v-pills-profile-tab">#}
+{#                                <div class="modal-body">#}
+{#                                    <div class="d-flex flex-wrap justify-content-center img-container"#}
+{#                                        id="body-target--showed-ratio" style="border: 1px solid var(--para-link); border-radius: 10px">#}
+{#                                        <img width="512" height="512" id="xray-img-ratio" src="/static/img/body-target.png" alt=""#}
+{#                                            srcset="" />#}
+{#                                    </div>#}
+{##}
+{#                                </div>#}
+{#                                <div class="modal-footer mt-4">#}
+{#                                    <button type="button" class="btn btn-secondary mr-3" id="btn__upload-ratio">#}
+{#                                        Check#}
+{#                                    </button>#}
+{#                                        <div class="xray-btn-upload">#}
+{#                                            <label for="upload-ratio" onclick="" id="upload_button-body"#}
+{#                                                class="btn btn-info" style="width: 105px">Upload</label>#}
+{#                                            <input id="upload-ratio" type="file" name="file" style="display: none"#}
+{#                                                accept="image/*" class="form-control"#}
+{#                                                onchange="handleUploadImgRatio('upload-ratio', 'xray-img-ratio')" />#}
+{#                                        </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <div class="tab-pane fade" id="v-pills-contours" role="tabpanel" aria-labelledby="pills-contact-tab">#}
+{#                                <div class="modal-body">#}
+{#                                    <div class="d-flex flex-wrap justify-content-center img-container overflow-hidden"#}
+{#                                        id="body-target--showed-contours" style="border: 1px solid var(--para-link); border-radius: 10px">#}
+{#                                        <img width="" height="512" style="" id="xray-img-contours" src="/static/img/body-target.png" alt=""#}
+{#                                            srcset="" />#}
+{#                                    </div>#}
+{##}
+{#                                </div>#}
+{#                                <div class="modal-footer mt-4">#}
+{#                                    <button type="button" class="btn btn-secondary mr-3" id="btn__upload-contours">#}
+{#                                        Check#}
+{#                                    </button>#}
+{#                                        <div class="xray-btn-upload" id="btn__upload-angle">#}
+{#                                            <label for="upload-contours" onclick="" id="upload_button-body"#}
+{#                                                class="btn btn-info" style="width: 105px">Upload</label>#}
+{#                                            <input id="upload-contours" type="file" name="file" style="display: none"#}
+{#                                                accept="image/*" class="form-control"#}
+{#                                                onchange="handleUploadImgRatio('upload-contours', 'xray-img-contours')" />#}
+{#                                        </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                                <!-- overlay -->#}
+{#                <div id="overlay__show-body" class="overlay d-none">#}
+{#                    <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">#}
+{#                        <div class="w-100 text-center" style="height: 200px">#}
+{#                            <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">#}
+{#                                <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div style="font-size: 25px"#}
+{#                                class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">#}
+{#                                Đang thực hiện tính toán#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
         </div>
 {#        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>#}
     </div>
 
-
+    <div id="overlay__show-body" class="overlay d-none">
+        <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">
+            <div class="w-100 text-center" style="height: 200px">
+                <div class="w-100 mb-4 d-flex flex-wrap justify-content-center">
+                    <div class="loader col-lg-12 col-md-12 col-sm-12" style="width: 100px; height: 100px">
+                    </div>
+                </div>
+                <div style="font-size: 25px"
+                     class="font-weight-bold text-warning loading-text enter-loading col-lg-12 col-md-12 col-sm-12">
+                    Đang thực hiện tính toán
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- overlay -->
     <div id="overlay" class="overlay d-none">
         <div class="loader-wrapper d-flex flex-wrap w-100 h-100 justify-content-center align-items-center">

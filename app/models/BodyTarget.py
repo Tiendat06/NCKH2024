@@ -14,6 +14,8 @@ from skimage.measure import find_contours
 from skimage.transform import resize
 from skimage.feature import canny
 from skimage.morphology import closing, square
+from skimage.io import imread
+from flask import render_template, session, redirect, request, url_for, current_app, sessions, send_file, jsonify
 
 class BodyTarget:
     def __init__(self, body_target_id, body_target_name):
@@ -289,3 +291,5 @@ class BodyTargetModel:
         except Exception as e:
             print(f"Error processing the image: {e}")
         return None, None
+
+
