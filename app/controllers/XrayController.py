@@ -494,6 +494,7 @@ class XrayController:
 
     # [POST, FETCH] /xray/combine_body_target
     def combine_body_target(self):
+        choice = 0;
         checkboxBodyOptions = request.form.get('body-options');
         checkboxFunctionOptions = request.form['function-options'];
         file = request.files['file'];
@@ -517,15 +518,25 @@ class XrayController:
 
         isAngle = False;
         if checkboxFunctionOptions:
-            if 'ratio' in checkboxFunctionOptions:
-                img_link_final = self.new_upload_ratio(img_link_final);
             if 'angle' in checkboxFunctionOptions:
+                print('hi world');
                 isAngle = True;
-                img_link_final = self.new_upload_contours(img_link_final, file.filename)
+                img_link_final = self.new_update_contours(img_link_final)
+            if 'ratio' in checkboxFunctionOptions:
+                choice = 1;
+            if 'mediastinum' in checkboxFunctionOptions:
+                if choice == 1:
+                    choice = 3;
+                else:
+                    choice = 2;
+            if choice != 0:
+                print('choice:', choice)
+                img_link_final = self.new_update_ratio(img_link_final, choice);
+
 
         return jsonify({
             'status': 'success',
-            'isAngle': isAngle,
+            'isAngle': False,
             'bodyOptions': checkboxBodyOptions,
             'functionOptions': checkboxFunctionOptions,
             'img_url': img_link_final
@@ -682,3 +693,205 @@ class XrayController:
             traceback.print_exc()
             # Handle exceptions and provide feedback
             return str(e), 500
+
+    def new_update_ratio(self, filepath, choice):
+        # Load the image
+        img = imread(filepath)
+
+        # Normalize the image
+        img = xrv.datasets.normalize(img, 255)
+
+        # If the image is 2D (grayscale), add an extra dimension to make it (height, width, 1)
+        if img.ndim == 2:
+            img = img[:, :, None]
+
+        # If the image has 4 channels (RGBA), discard the alpha channel
+        if img.shape[2] == 4:
+            img = img[:, :, :3]
+
+        # Transpose the image to move the channel dimension to the first position (1, height, width)
+        img = img.transpose((2, 0, 1))
+
+        # Apply the transforms
+        transform = torchvision.transforms.Compose([
+            xrv.datasets.XRayCenterCrop(),
+            xrv.datasets.XRayResizer(512)
+        ])
+        img = transform(img)
+
+        # Convert the image to a PyTorch tensor
+        img = torch.from_numpy(img)
+
+        with torch.no_grad():
+            pred = self.model(img)
+
+        pred = 1 / (1 + np.exp(-pred))  # sigmoid
+        pred[pred < 0.5] = 0
+        pred[pred > 0.5] = 1
+
+        # Calculate maximum diameters
+        def measure_maximum_diameter(mask):
+            contours = find_contours(mask, level=0.5)
+            max_diameter = 0
+            for contour in contours:
+                max_y, min_y = contour[:, 0].max(), contour[:, 0].min()
+                diameter = max_y - min_y
+                if diameter > max_diameter:
+                    max_diameter = diameter
+            return max_diameter
+
+        left_lung_mask = pred[0, 4].numpy()
+        right_lung_mask = pred[0, 5].numpy()
+        heart_mask = pred[0, 8].numpy()
+        aorta_mask = pred[0, 9].numpy()
+        diaphramatica_mask = pred[0, 10].numpy()
+        media_mask = pred[0, 11].numpy()
+
+        heart_max_diameter = measure_maximum_diameter(heart_mask)
+        lung_combined_mask = np.logical_or(left_lung_mask, right_lung_mask)
+        lung_max_diameter = measure_maximum_diameter(lung_combined_mask)
+        diaphramatica_max_diameter = measure_maximum_diameter(diaphramatica_mask)
+        media_max_diameter = measure_maximum_diameter(media_mask)
+        aorta_max_diameter = measure_maximum_diameter(aorta_mask)
+
+        # Calculate CTR
+        CTR = heart_max_diameter / lung_max_diameter
+
+        # Find contours for plotting
+        heart_contours = find_contours(heart_mask, level=0.5)
+        diaphramatica_contours = find_contours(diaphramatica_mask, level=0.5)
+        aorta_contours = find_contours(aorta_mask, level=0.5)
+        media_contours = find_contours(media_mask, level=0.5)
+
+        # Determine the center positions
+        heart_y_center = (heart_contours[0][:, 0].min() + heart_contours[0][:, 0].max()) // 2
+        diaphramatica_y_center = (diaphramatica_contours[0][:, 0].min() + diaphramatica_contours[0][:, 0].max()) // 2
+        aorta_y_center = (aorta_contours[0][:, 0].min() + aorta_contours[0][:, 0].max()) // 2
+        media_y_center = (media_contours[0][:, 0].min() + media_contours[0][:, 0].max()) // 2
+
+        # Plot the image and contours
+        plt.figure(figsize=(6, 6))
+        plt.imshow(img[0], cmap='gray')
+
+        # Draw contours and lines for heart, diaphramatica, aorta, and media
+        def plot_contour_and_line(contours, y_center, max_diameter, color, label):
+            for contour in contours:
+                intersection_points = np.array([point for point in contour if point[0] == y_center])
+                if intersection_points.size > 0:
+                    x_start = max(0, int(np.min(intersection_points[:, 1])))
+                    x_end = min(img.shape[2], int(np.max(intersection_points[:, 1])))
+                    plt.axhline(y=y_center, color=color, linestyle='--', linewidth=1, xmin=x_start / img.shape[2],
+                                xmax=x_end / img.shape[2])
+                    plt.plot([x_start, x_start], [y_center - 5, y_center + 5], color=color, linestyle='--', linewidth=1)
+                    plt.plot([x_end, x_end], [y_center - 5, y_center + 5], color=color, linestyle='--', linewidth=1)
+                    plt.text(x_start + (x_end - x_start) / 2, y_center - 10, f"{max_diameter} px", color=color,
+                             fontsize=8, ha='center')
+
+        if choice == 1:
+            plot_contour_and_line(heart_contours, heart_y_center, heart_max_diameter, 'r', 'Heart')
+            plot_contour_and_line(diaphramatica_contours, diaphramatica_y_center, diaphramatica_max_diameter, 'blue','Diaphramatica')
+        elif choice == 2:
+            plot_contour_and_line(aorta_contours, aorta_y_center, aorta_max_diameter, 'green', 'Aorta')
+            plot_contour_and_line(media_contours, media_y_center, media_max_diameter, 'purple', 'Media')
+        elif choice == 3:
+            plot_contour_and_line(heart_contours, heart_y_center, heart_max_diameter, 'r', 'Heart')
+            plot_contour_and_line(diaphramatica_contours, diaphramatica_y_center, diaphramatica_max_diameter, 'blue','Diaphramatica')
+            plot_contour_and_line(aorta_contours, aorta_y_center, aorta_max_diameter, 'green', 'Aorta')
+            plot_contour_and_line(media_contours, media_y_center, media_max_diameter, 'purple', 'Media')
+        # plt.title(f"Tỉ lệ tim ngực (CTR): {CTR:.2f}")
+        plt.axis('off')
+
+        # Save the image
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        image_path = os.path.join(self.UPLOAD_FOLDER, f'{current_time}.png');
+            # f"/static/img/upload_ratio/{current_time}.png"
+        plt.savefig(image_path)
+        print(image_path)
+        # Return the URL to the saved image
+        # image_url = url_for('static', filename='processed_images/result.png', _external=True)
+        return image_path
+
+    def new_update_contours(self, filepath):
+        img = imread(filepath)
+
+        # Normalize the image
+        img = xrv.datasets.normalize(img, 255)
+
+        # Add extra dimension if 2D
+        if img.ndim == 2:
+            img = img[:, :, None]
+
+        # Discard alpha channel if present
+        if img.shape[2] == 4:
+            img = img[:, :, :3]
+
+        # Transpose image dimensions
+        img = img.transpose((2, 0, 1))
+
+        # Apply transforms
+        transform = torchvision.transforms.Compose([
+            xrv.datasets.XRayCenterCrop(),
+            xrv.datasets.XRayResizer(512)
+        ])
+        img = transform(img)
+
+        # Convert image to PyTorch tensor
+        img = torch.from_numpy(img).unsqueeze(0)
+
+        # Load model
+        model = xrv.baseline_models.chestx_det.PSPNet()
+        with torch.no_grad():
+            pred = model(img)
+
+        # Apply sigmoid and thresholding
+        pred = 1 / (1 + np.exp(-pred.numpy()))  # Convert to numpy
+        pred[pred < 0.5] = 0
+        pred[pred > 0.5] = 1
+
+        # Create a figure
+        plt.figure(figsize=(18, 9))
+        plt.imshow(img[0].numpy().transpose((1, 2, 0)), cmap='gray')
+        plt.title('Contours')
+        plt.axis('off')
+
+        # Create a blank canvas to combine the masks
+        combined_mask = np.zeros_like(pred[0, 0], dtype=np.uint8)
+        target_indices = [4, 5]  # Indices for left lung
+
+        # Iterate through the predicted masks and combine them
+        for idx, i in enumerate(target_indices):
+            mask = pred[0, i]
+            combined_mask[mask > 0] = idx + 1
+            contours = find_contours(combined_mask, level=idx + 0.1)
+            for contour in contours:
+                if i == 4:
+                    bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
+                    point1 = contour[bottom_right_idx]
+                    point2 = contour[(bottom_right_idx - 25) % len(contour)]
+                    point3 = contour[(bottom_right_idx + 25) % len(contour)]
+                    angle = self.body_target.calculate_angle(point1, point2, point3)
+                    plt.plot([point1[1], point2[1]], [point1[0], point2[0]], 'r-', linewidth=1)
+                    plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
+                    mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
+                    plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center', va='center')
+                else:
+                    bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
+                    point4 = contour[bottom_left_idx]
+                    point5 = contour[(bottom_left_idx - 25) % len(contour)]
+                    point6 = contour[(bottom_left_idx + 25) % len(contour)]
+                    angle = self.body_target.calculate_angle(point4, point5, point6)
+                    plt.plot([point4[1], point5[1]], [point4[0], point5[0]], 'r-', linewidth=1)
+                    plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
+                    mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
+                    plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center', va='center')
+
+        # Save the plot
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        contour_filename = f'contour_{current_time}.png'
+        contour_filepath = os.path.join(self.PROCESSED_FOLDER_CONTOURS, contour_filename)
+        plt.savefig(contour_filepath)
+        plt.close()
+
+        # Return the URL of the saved image
+        return contour_filepath

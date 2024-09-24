@@ -973,7 +973,7 @@ function jsInXray() {
             // console.log(data)
             img_url = data['img_url']
             console.log(data)
-            if (data['isAngle'] == true){
+            if (data['isAngle'] === true){
               document.getElementById('body-target__img').style = 'margin-right: 450px; width: 100%; height: 100%';
             } else{
               document.getElementById('body-target__img').style = 'margin-right: 0';

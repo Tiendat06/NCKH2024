@@ -13,17 +13,17 @@
 
     <ul class="nav nav-pills mb-3 col-lg-12 col-md-12 col-sm-12" id="pills-tab" role="tablist">
         <li class="nav-item col-lg-6 col-md-6 col-sm-6" role="presentation">
-            <button style="font-size: 17px" class="nav-link w-100 p-2" id="pills-main-tab" data-toggle="pill" data-target="#pills-main" type="button" role="tab" aria-controls="pills-main" aria-selected="true">Home</button>
+            <button style="font-size: 17px" class="nav-link w-100 p-2 active" id="pills-main-tab" data-toggle="pill" data-target="#pills-main" type="button" role="tab" aria-controls="pills-main" aria-selected="true">Home</button>
         </li>
         <li class="nav-item col-lg-6 col-md-6 col-sm-6" role="presentation">
-            <button style="font-size: 17px" class="nav-link w-100 p-2 active" id="pills-body-target-tab" data-toggle="pill" data-target="#pills-body-target" type="button" role="tab" aria-controls="pills-body-target" aria-selected="false">Body target</button>
+            <button style="font-size: 17px" class="nav-link w-100 p-2 " id="pills-body-target-tab" data-toggle="pill" data-target="#pills-body-target" type="button" role="tab" aria-controls="pills-body-target" aria-selected="false">Body target</button>
         </li>
 {#        <li class="nav-item col-lg-4 col-md-4 col-sm-4" role="presentation">#}
 {#            <button class="nav-link w-100" id="pills-contact-tab" data-toggle="pill" data-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>#}
 {#        </li>#}
     </ul>
     <div class="tab-content col-lg-12 col-md-12 col-sm-12" id="pills-tabContent">
-        <div class="tab-pane fade " id="pills-main" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-home-tab">
             <form style="" id="form" action="/xray" method="post" class="xray d-flex w-100 flex-wrap p-2"
                 enctype="multipart/form-data">
                 <div style="background-color: #fff; border-radius: 10px"
@@ -190,7 +190,7 @@
             </form>
         </div>
 
-        <div class="tab-pane fade show active" id="pills-body-target" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="tab-pane fade" id="pills-body-target" role="tabpanel" aria-labelledby="pills-profile-tab">
 
             <div class="body-target p-5 d-flex flex-wrap justify-content-between" style="background-color: #fff">
                 <div style="border-radius: 20px; border: 1px solid var(--para-link)" class="overflow-hidden p-3 col-lg-8 col-md-8 col-sm-8 d-flex flex-wrap justify-content-center">
@@ -224,6 +224,14 @@
                                                    id="check-Diaphragm" />
                                             <label class="form-check-label"
                                                    for="check-Diaphragm">Diaphragm angle</label>
+                                        </div>
+
+                                        <div class="form-group form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="checkbox__body-target--function" value="mediastinum"
+                                                   id="check-mediastinum" />
+                                            <label class="form-check-label"
+                                                   for="check-mediastinum">Mediastinum ratio</label>
                                         </div>
                                     </div>
                                 </div>
