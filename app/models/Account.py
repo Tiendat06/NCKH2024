@@ -74,7 +74,7 @@ class Account:
 class AccountModel(DataBaseUtils):
     # __conn = DataBaseUtils.get_connection();
     def __init__(self):
-        self.__conn = DataBaseUtils.get_connection();
+        self.__conn = DataBaseUtils()
     
     def checkLogin(self, data):
         acc_email = self.__conn.get_collection('user').find_one({'email': data['email']});

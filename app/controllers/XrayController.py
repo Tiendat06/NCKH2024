@@ -1,23 +1,20 @@
 import json
 
-from flask import render_template, session, redirect, request, url_for, current_app, sessions, send_file, jsonify
-from datetime import datetime
+from flask import render_template, session, request, url_for, send_file, jsonify
 import requests
 import random
 from io import BytesIO
-from models.Account import AccountModel
-from models.Disease import DiseaseModel
-from models.Patient import PatientModel
-from models.MedicalRecord import MedicalRecordModel
-from models.User import UserModel
-from models.BodyTarget import BodyTargetModel
+from app.models.Account import AccountModel
+from app.models.Disease import DiseaseModel
+from app.models.Patient import PatientModel
+from app.models.MedicalRecord import MedicalRecordModel
+from app.models.User import UserModel
+from app.models.BodyTarget import BodyTargetModel
 import os
 from random import random
 import cv2
 from my_yolov6 import my_yolov6
 import cloudinary.uploader
-import io
-from datetime import datetime
 import numpy as np
 import torch
 import torchvision
@@ -27,9 +24,7 @@ import matplotlib.pyplot as plt
 matplotlib.use('Agg')  # Sử dụng backend 'Agg' cho matplotlib
 from skimage.io import imread
 from skimage.measure import find_contours
-import base64
 # from io import BytesIO
-from PIL import Image
 from datetime import datetime
 
 class XrayController:

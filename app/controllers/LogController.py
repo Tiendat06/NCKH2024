@@ -1,14 +1,13 @@
-from flask import abort, render_template, request, session, redirect, make_response, jsonify, url_for
+from flask import abort, render_template, request, session, redirect, make_response, url_for
 from datetime import datetime
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
 import requests
-from models.Account import Account, AccountModel
-from models.User import User, UserModel
+from app.models.Account import Account, AccountModel
+from app.models.User import User, UserModel
 from google.oauth2 import id_token
-from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from itsdangerous import SignatureExpired, URLSafeTimedSerializer

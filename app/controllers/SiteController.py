@@ -1,7 +1,7 @@
 from flask import render_template, session, redirect, request
-from models.Account import AccountModel
-from models.Patient import Patient, PatientModel
-from models.builder.BuilderPatient import BuilderPatient
+from app.models.Account import AccountModel
+from app.models.Patient import PatientModel
+
 
 class SiteController:
     def __init__(self):

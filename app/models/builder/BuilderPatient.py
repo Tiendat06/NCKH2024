@@ -1,4 +1,4 @@
-from models.builder.IBuilderPatient import IBuilderPatient
+from app.models.builder.IBuilderPatient import IBuilderPatient
 
 class BuilderPatient(IBuilderPatient):
 
@@ -47,6 +47,6 @@ class BuilderPatient(IBuilderPatient):
         return self
     
     def build(self):
-        from models.Patient import Patient
+        from app.models.Patient import Patient
         return Patient(self.__patient_id, self.__patient_name, self.__patient_age, self.__img, 
         self.__phone, self.__PID, self.__gender, self.__address, self.__date_created, self.__dob, self.__email);

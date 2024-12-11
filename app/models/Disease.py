@@ -36,7 +36,7 @@ class Disease:
 class DiseaseModel(DataBaseUtils):
     # __conn = DataBaseUtils.get_connection();
     def __init__(self):
-        self.__conn = DataBaseUtils.get_connection();
+        self.__conn = DataBaseUtils()
     
     def getAllDisease(self):
         disease_data = self.__conn.get_collection('disease').find();

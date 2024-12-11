@@ -1,8 +1,7 @@
 from database import DataBaseUtils
-from flask import request
-from models.builder.BuilderPatient import BuilderPatient
-from models.MedicalRecord import MedicalRecord
-from models.User import UserModel, User
+from app.models.builder.BuilderPatient import BuilderPatient
+from app.models.MedicalRecord import MedicalRecord
+from app.models.User import UserModel, User
 
 class Patient():
     def __init__(self, patient_id, name, age, img, phone, PID, gender, address, date_created, dob, email):
@@ -109,20 +108,20 @@ class Patient():
 
 class PatientModel(DataBaseUtils):
     def __init__(self):
-        self.__conn = DataBaseUtils();
-        self.__user_db = UserModel();
+        self.__conn = DataBaseUtils()
+        self.__user_db = UserModel()
     
     def addPatient(self, patient: Patient):
         result = self.__conn.get_collection('patient').insert_one(patient)
         if result.acknowledged:
-            return True;
-        return False;
+            return True
+        return False
 
     def checkPatientIsContainByPID(self, PID):
-        result = self.__conn.get_collection('patient').find_one({'PID': PID});
+        result = self.__conn.get_collection('patient').find_one({'PID': PID})
         if result:
-            return True;
-        return False;
+            return True
+        return False
 
     def getPatientByPID(self, PID):
         result = self.__conn.get_collection('patient').find_one({'PID': PID});

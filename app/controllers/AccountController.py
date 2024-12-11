@@ -1,6 +1,6 @@
-from flask import render_template, request, session, redirect
-from models.Account import Account, AccountModel
-from models.User import User, UserModel
+from flask import render_template, redirect
+from app.models.Account import AccountModel
+from app.models.User import UserModel
 
 class AccountController:
     def __init__(self):

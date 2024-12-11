@@ -1,6 +1,6 @@
 from database import DataBaseUtils
-from models.Account import AccountModel, Account
-from models.Role import Role, RoleModel
+from app.models.Account import Account
+from app.models.Role import Role
 import secrets
 
 class User:
@@ -89,7 +89,7 @@ class User:
 
 class UserModel(DataBaseUtils):
     def __init__(self):
-        self.__conn = DataBaseUtils();
+        self.__conn = DataBaseUtils()
     
     def checkEmailIsContain(self, email):
         user_data = self.__conn.get_collection('user').find_one({'email': email})

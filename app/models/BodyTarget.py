@@ -39,9 +39,9 @@ class BodyTarget:
         self.__body_target_name = value
 
 
-class BodyTargetModel:
+class BodyTargetModel(DataBaseUtils):
     def __init__(self):
-        self.__conn = DataBaseUtils.get_connection();
+        self.__conn = DataBaseUtils()
         self.model = xrv.baseline_models.chestx_det.PSPNet();
         self.PROCESSED_FOLDER = 'static/img/upload_ratio';
 

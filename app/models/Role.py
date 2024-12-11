@@ -32,7 +32,7 @@ class Role:
 
 class RoleModel(DataBaseUtils):
     def __init__(self):
-        self.__conn = DataBaseUtils();
+        self.__conn = DataBaseUtils()
 
     def AUTO_ROL_ID(self):
         result = self.__conn.get_collection('role').find_one({}, sort=[("role_id", -1)])  #asc

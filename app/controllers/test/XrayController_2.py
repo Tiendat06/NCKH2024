@@ -1,13 +1,13 @@
-from flask import render_template, session, redirect, request, url_for, current_app, sessions, send_file, jsonify
+from flask import render_template, session, request, send_file, jsonify
 from datetime import datetime
 import requests
 import random
 from io import BytesIO
-from models.Account import AccountModel
-from models.Disease import DiseaseModel
-from models.Patient import PatientModel
-from models.MedicalRecord import MedicalRecordModel
-from models.User import UserModel
+from app.models.Account import AccountModel
+from app.models.Disease import DiseaseModel
+from app.models.Patient import PatientModel
+from app.models.MedicalRecord import MedicalRecordModel
+from app.models.User import UserModel
 import os
 from random import random
 import cv2

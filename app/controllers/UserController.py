@@ -1,6 +1,6 @@
 from flask import request, render_template, redirect, jsonify, session
-from models.User import UserModel, User
-from models.Account import Account, AccountModel
+from app.models.User import UserModel, User
+from app.models.Account import Account, AccountModel
 import cloudinary.uploader
 
 class UserController:

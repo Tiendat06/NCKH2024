@@ -1,6 +1,6 @@
 from flask import request, render_template, jsonify
-from models.Patient import PatientModel, Patient
-from models.builder.BuilderPatient import BuilderPatient
+from app.models.Patient import PatientModel
+from app.models.builder.BuilderPatient import BuilderPatient
 
 class PatientController:
     def __init__(self):
