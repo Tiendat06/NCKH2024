@@ -398,6 +398,250 @@
     </div>
 </div>
 
+<div class="modal fade" id="login-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form onsubmit="return false" method="post">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="PID_log">Personal ID</label>
+                            <input class="form-control" type="text" name="PID_log" id="PID_log"
+                                placeholder="Enter personal ID" required>
+                        </div>
+                    </div>
+                    <div data-target="#register-modal" data-toggle="modal" class="sign-up__text d-flex ">
+                        <p style="margin-right: 5px" class="mb-0">Do not have an account yet?</p>
+                        <div style="text-decoration: underline; cursor: pointer" class="sign-up">Register</div>
+                    </div>
+                </div>
+
+                <div id="error_login_patient_outer" style="width: 90%;"
+                    class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert">
+                    <p id="error_login_patient" class="login-form__para mb-0 text-danger">
+
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                    <button id="btn_add-login" class="btn btn-primary">Login</button>
+{#                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>#}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="register-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form onsubmit="return false" method="post">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Register</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="name_register">Full name</label>
+                            <input class="form-control" type="text" name="name_register" id="name_register"
+                                placeholder="Enter full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PID_register">Personal ID</label>
+                            <input class="form-control" type="text" name="PID_register" id="PID_register"
+                                placeholder="Enter personal ID" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone_register">Phone number</label>
+                            <input class="form-control" type="text" name="phone_register" id="phone_register"
+                                placeholder="Enter phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_register">Email</label>
+                            <input class="form-control" type="text" name="email_register" id="email_register"
+                                placeholder="Enter email" required>
+                        </div>
+                    </div>
+{#                    <div class="sign-up__text d-flex ">#}
+{#                        <p style="margin-right: 5px" class="mb-0">Have an account yet?</p>#}
+{#                        <div data-toggle="modal" data-target="#login-modal" style="text-decoration: underline; cursor: pointer" class="sign-up">Login</div>#}
+{#                    </div>#}
+                </div>
+
+                <div id="error_adding_user_outer" style="width: 90%;"
+                    class="form-group ml-auto mr-auto mb-3 d-none login-form--error text-center alert alert-danger">
+                    <p id="error_adding_user" class="login-form__para mb-0 text-danger">
+
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                    <button id="btn_add" class="btn btn-primary">Register</button>
+{#                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>#}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="floating-btn">
+    <button id="floating-btn--inner" data-toggle="modal" data-target="#login-modal" class="btn-primary">
+        <i class="fa-solid fa-comments"></i>
+    </button>
+</div>
+
+<div class="floating-chat d-none">
+    <div id="floating-chat__content" class="floating-chat__content">
+        <ul id="floating-chat__content-text" class="floating-chat__content-text">
+
+        </ul>
+    </div>
+
+    <div class="floating-chat__text position-relative">
+        <input id="home-chat__inp" placeholder="Text here..." class="floating-chat__input" type="text">
+        <i class="fa-solid fa-location-arrow position-absolute"></i>
+    </div>
+</div>
+
+<script>
+    window.onload = () => {
+        const socket = io({autoConnect: false});
+        socket.on('connect', () => {
+            console.log("Server connected !");
+        })
+
+        socket.on('disconnect', () => {
+            console.log('Server disconnected !')
+        });
+
+        socket.on('error', err => {
+            console.log(err)
+        })
+
+        socket.on('message from admin', data => {
+            const message = data.message
+            $('#floating-chat__content-text').append(`
+                <li class="floating-chat__content-item" style="float: right; clear: right">
+                    ${message}
+                </li>
+            `)
+            let chatContainer = document.getElementById('floating-chat__content');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        })
+
+        socket.on('load current client chat', data => {
+            const patient_chats = data.data
+            $('#floating-chat__content-text').html('')
+
+            for (const chat of patient_chats) {
+                $('#floating-chat__content-text').append(`
+                    <li class="floating-chat__content-item"
+                        ${chat.user_id !== '' ? 'style="float: right; clear: right"': ''}>
+                        ${chat.content}
+                    </li>
+                `)
+            }
+        })
+
+        $('#floating-btn--inner').click(() => {
+            if(localStorage.getItem('PID')){
+                socket.connect()
+
+                const userPID = localStorage.getItem('PID');
+                socket.emit('user_login', {'PID': userPID});
+
+                const floating_chat = $('.floating-chat')
+                if(floating_chat.hasClass('d-none')){
+                    floating_chat.removeClass('d-none')
+                } else {
+                    floating_chat.addClass('d-none')
+                }
+                $('#login-modal').removeClass('modal fade')
+                {#socket.emit('user_login', $('#PID_log').val())#}
+            }
+        })
+
+        $('#btn_add-login').click(() => {
+            let PID = $('#PID_log').val()
+            fetch('/patient/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    PID: PID
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    {#console.log(data)#}
+                    if(data.status){
+                        socket.connect()
+                        {#socket.emit('user_login', PID)#}
+                        localStorage.setItem('PID', PID)
+                        socket.emit('user_login', {'PID': PID});
+
+                        $('#error_login_patient_outer').removeClass('d-none').addClass('alert-success')
+                        $('#error_login_patient').html(data.msg);
+                    } else{
+                        $('#error_login_patient_outer').removeClass('d-none').addClass('alert-danger')
+                        $('#error_login_patient').html(data.msg);
+                    }
+                })
+                .catch(err => console.error(err))
+
+        })
+
+        $('#home-chat__inp').keydown(event => {
+            if(event.key === 'Enter'){
+                event.preventDefault();
+                let PID = localStorage.getItem('PID')
+                let msg = $('#home-chat__inp').val();
+                if(msg === '') return
+
+                $('#floating-chat__content-text').append(`
+                    <li class="floating-chat__content-item">
+                        ${msg}
+                    </li>
+                `)
+
+                let chatContainer = document.getElementById('floating-chat__content');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                {#console.log('Enter clicked !!');#}
+                socket.emit('message to admin', {
+                    PID,
+                    message: msg
+                });
+                $('#home-chat__inp').val('')
+            }
+        })
+    }
+
+
+
+</script>
 
 <script>
     jsInHome();

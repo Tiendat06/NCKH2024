@@ -1381,11 +1381,12 @@ function getUserInformationForHeader() {
       var userName = data.user_name;
       var userImg = data.user_img;
       var roleId = data.role_id;
+      localStorage.setItem('user_info', JSON.stringify(data))
       $("#navbar_username").text(userName);
       $("#dashboard-username").text(userName);
       $("#navbar_user_img").attr("src", userImg);
       $("#dashboard_userimg").attr("src", userImg);
-      console.log(roleId);
+      // console.log(roleId);
       if (roleId == 'ROL0000002') {
         $("#side-bar__account").addClass("d-none");
         $("#side-bar__user").addClass("d-none");

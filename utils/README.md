@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="utils/assets/banner-YOLO.png" align="middle" width = "1000" />
+  <img src="assets/banner-YOLO.png" align="middle" width = "1000" />
 </p>
 
 English | [简体中文](README_cn.md)
@@ -20,18 +20,18 @@ Implementation of paper:
 - [YOLOv6: A Single-Stage Object Detection Framework for Industrial Applications](https://arxiv.org/abs/2209.02976)
 
 <p align="center">
-  <img src="utils/assets/speed_comparision_v3.png" align="middle" width = "1000" />
+  <img src="assets/speed_comparision_v3.png" align="middle" width = "1000" />
 </p>
 
 
 ## What's New
 - [2023.09.15] Release [YOLOv6-Segmentation](https://github.com/meituan/YOLOv6/tree/yolov6-seg). 🚀 [Performance](https://github.com/meituan/YOLOv6/tree/yolov6-seg#yolov6-segmentation)
-- [2023.04.28] Release [YOLOv6Lite](configs/yolov6_lite/README.md) models on mobile or CPU. ⭐️ [Mobile Benchmark](#Mobile-Benchmark)
+- [2023.04.28] Release [YOLOv6Lite](../configs/yolov6_lite/README.md) models on mobile or CPU. ⭐️ [Mobile Benchmark](#Mobile-Benchmark)
 - [2023.03.10] Release [YOLOv6-Face](https://github.com/meituan/YOLOv6/tree/yolov6-face). 🔥 [Performance](https://github.com/meituan/YOLOv6/tree/yolov6-face#performance-on-widerface)
-- [2023.03.02] Update [base models](configs/base/README.md) to version 3.0.
+- [2023.03.02] Update [base models](../configs/base/README.md) to version 3.0.
 - [2023.01.06] Release P6 models and enhance the performance of P5 models. ⭐️ [Benchmark](#Benchmark)
-- [2022.11.04] Release [base models](configs/base/README.md) to simplify the training and deployment process.
-- [2022.09.06] Customized quantization methods. 🚀 [Quantization Tutorial](utils/tools/qat/README.md)
+- [2022.11.04] Release [base models](../configs/base/README.md) to simplify the training and deployment process.
+- [2022.09.06] Customized quantization methods. 🚀 [Quantization Tutorial](tools/qat/README.md)
 - [2022.09.05] Release M/L models and update N/T/S models with enhanced performance.
 - [2022.06.23] Release N/T/S models with excellent performance.
 
@@ -53,7 +53,7 @@ Implementation of paper:
 - All checkpoints are trained with self-distillation except for YOLOv6-N6/S6 models trained to 300 epochs without distillation.
 - Results of the mAP and speed are evaluated on [COCO val2017](https://cocodataset.org/#download) dataset with the input resolution of 640×640 for P5 models and 1280x1280 for P6 models.
 - Speed is tested with TensorRT 7.2 on T4.
-- Refer to [Test speed](utils/docs/Test_speed.md) tutorial to reproduce the speed results of YOLOv6.
+- Refer to [Test speed](docs/Test_speed.md) tutorial to reproduce the speed results of YOLOv6.
 - Params and FLOPs of YOLOv6 are estimated on deployed models.
 </details>
 
@@ -102,7 +102,7 @@ Implementation of paper:
 - Results of the mAP and speed are evaluated on [COCO val2017](https://cocodataset.org/#download) dataset, and the input resolution is the Size in the table.
 - Speed is tested on MNN 2.3.0 AArch64 with 2 threads by arm82 acceleration. The inference warm-up is performed 10 times, and the cycle is performed 100 times.
 - Qualcomm 888(sm8350), Dimensity 720(mt6853) and Qualcomm 660(sdm660) correspond to chips with different performances at the high, middle and low end respectively, which can be used as a reference for model capabilities under different chips.
-- Refer to [Test NCNN Speed](utils/docs/Test_NCNN_speed.md) tutorial to reproduce the NCNN speed results of YOLOv6Lite.
+- Refer to [Test NCNN Speed](docs/Test_NCNN_speed.md) tutorial to reproduce the NCNN speed results of YOLOv6Lite.
 
 </details>
 
@@ -123,7 +123,7 @@ pip install -r requirements.txt
 <details>
 <summary> Reproduce our results on COCO</summary>
 
-Please refer to [Train COCO Dataset](utils/docs/Train_coco_data.md).
+Please refer to [Train COCO Dataset](docs/Train_coco_data.md).
 
 </details>
 
@@ -166,7 +166,7 @@ python -m torch.distributed.launch --nproc_per_node 8 tools/train.py --batch 128
 │   ├── README.txt
 ```
 
-YOLOv6 supports different input resolution modes. For details, see [How to Set the Input Size](utils/docs/About_training_size.md).
+YOLOv6 supports different input resolution modes. For details, see [How to Set the Input Size](docs/About_training_size.md).
 
 </details>
 
@@ -206,7 +206,7 @@ python tools/eval.py --data data/coco.yaml --batch 32 --weights yolov6s6.pt --ta
 - verbose: set True to print mAP of each classes.
 - do_coco_metric: set True / False to enable / disable pycocotools evaluation method.
 - do_pr_metric: set True / False to print or not to print the precision and recall metrics.
-- config-file: specify a config file to define all the eval params, for example: [yolov6n_with_eval_params.py](configs/experiment/yolov6n_with_eval_params.py)
+- config-file: specify a config file to define all the eval params, for example: [yolov6n_with_eval_params.py](../configs/experiment/yolov6n_with_eval_params.py)
 </details>
 
 
@@ -236,22 +236,22 @@ python tools/infer.py --weights yolov6s6.pt --img 1280 1280 --webcam --webcam-ad
 <details>
 <summary> Deployment</summary>
 
-*  [ONNX](utils/deploy/ONNX)
-*  [OpenCV Python/C++](utils/deploy/ONNX/OpenCV)
-*  [OpenVINO](utils/deploy/OpenVINO)
-*  [TensorRT](utils/deploy/TensorRT)
-*  [NCNN](utils/deploy/NCNN)
-*  [Android](utils/deploy/NCNN/Android)
+*  [ONNX](deploy/ONNX)
+*  [OpenCV Python/C++](deploy/ONNX/OpenCV)
+*  [OpenVINO](deploy/OpenVINO)
+*  [TensorRT](deploy/TensorRT)
+*  [NCNN](deploy/NCNN)
+*  [Android](deploy/NCNN/Android)
 </details>
 
 <details open>
 <summary> Tutorials</summary>
 
 *  [User Guide(zh_CN)](https://yolov6-docs.readthedocs.io/zh_CN/latest/)
-*  [Train COCO Dataset](utils/docs/Train_coco_data.md)
-*  [Train custom data](utils/docs/Train_custom_data.md)
-*  [Test speed](utils/docs/Test_speed.md)
-*  [Tutorial of Quantization for YOLOv6](utils/docs/Tutorial%20of%20Quantization.md)
+*  [Train COCO Dataset](docs/Train_coco_data.md)
+*  [Train custom data](docs/Train_custom_data.md)
+*  [Test speed](docs/Test_speed.md)
+*  [Tutorial of Quantization for YOLOv6](docs/Tutorial of Quantization.md)
 </details>
 
 <details>
@@ -285,5 +285,5 @@ python tools/infer.py --weights yolov6s6.pt --img 1280 1280 --webcam --webcam-ad
 
 If you have any questions, welcome to join our WeChat group to discuss and exchange.
 <p align="center">
-  <img src="utils/assets/wechat_qrcode.png" align="middle" width = "1000" />
+  <img src="assets/wechat_qrcode.png" align="middle" width = "1000" />
 </p>

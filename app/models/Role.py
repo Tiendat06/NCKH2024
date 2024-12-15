@@ -38,9 +38,9 @@ class RoleModel(DataBaseUtils):
         result = self.__conn.get_collection('role').find_one({}, sort=[("role_id", -1)])  #asc
 
         if result:
-            max_role_id = result['role_id'];
+            max_role_id = result['role_id']
         else:
-            max_role_id = None;
+            max_role_id = None
 
         if max_role_id:
             next_role_id = int(max_role_id[3:]) + 1

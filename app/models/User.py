@@ -5,15 +5,15 @@ import secrets
 
 class User:
     def __init__(self, _id, user_id, acc_id, name, gender, email, dob, phone, img_profile):
-        self.___id = _id;
-        self.__user_id = user_id;
-        self.__acc_id = acc_id;
-        self.__name = name;
-        self.__gender = gender;
-        self.__email = email;
-        self.__dob = dob;
-        self.__phone = phone;
-        self.__img_profile = img_profile;
+        self.___id = _id
+        self.__user_id = user_id
+        self.__acc_id = acc_id
+        self.__name = name
+        self.__gender = gender
+        self.__email = email
+        self.__dob = dob
+        self.__phone = phone
+        self.__img_profile = img_profile
     
     @property
     def __id(self):
@@ -109,10 +109,10 @@ class UserModel(DataBaseUtils):
         return False
     
     def get_total_users(self):
-        return self.__conn.get_collection('account').count_documents({});
+        return self.__conn.get_collection('account').count_documents({})
     
     def get_account(self):
-        acc_data = self.__conn.get_collection('account').find();
+        acc_data = self.__conn.get_collection('account').find()
         acc_list = []
         user_list = []
         role_list = []
@@ -138,29 +138,35 @@ class UserModel(DataBaseUtils):
 
                 acc_model = Account(_id, acc_name, acc_pwd, acc_id, role_id)
                 user_model = User('', user_id, acc_id, user_name, user_gender, user_mail, user_dob, user_phone, user_img_profile)
-                role_model = Role('', role_id, role_name);
+                role_model = Role('', role_id, role_name)
                 acc_list.append(acc_model)
                 user_list.append(user_model)
                 role_list.append(role_model)
-            return acc_list, user_list, role_list;
+            return acc_list, user_list, role_list
         return None
 
     def get_user_by_id(self, user_id):
         user_data = self.__conn.get_collection('user').find_one({'user_id': user_id})
         if user_data:
-            return user_data;
-        return None;
+            return user_data
+        return None
+
+    def getUserBy_Id(self, _id):
+        user_data = self.__conn.get_collection('user').find_one({'_id': _id})
+        if user_data:
+            return user_data
+        return None
 
     def get_user_by_email(self, user_email):
-        user_data = self.__conn.get_collection('user').find_one({'email': user_email});
+        user_data = self.__conn.get_collection('user').find_one({'email': user_email})
         if user_data:
-            user_data = User('', user_data['user_id'], user_data['acc_id'], user_data['name'], user_data['gender'], user_email, user_data['dob'], user_data['phone'], user_data['img_profile']);
-            return user_data;
-        return None;
+            user_data = User('', user_data['user_id'], user_data['acc_id'], user_data['name'], user_data['gender'], user_email, user_data['dob'], user_data['phone'], user_data['img_profile'])
+            return user_data
+        return None
 
     def createAccount(self, user, account):
-        # user_id = self.AUTO_USE_ID();
-        # acc_id = AccountModel().AUTO_ACC_ID();
+        # user_id = self.AUTO_USE_ID()
+        # acc_id = AccountModel().AUTO_ACC_ID()
         user_json = {
             'user_id': user._user_id,
             'acc_id': account._acc_id,
@@ -178,18 +184,18 @@ class UserModel(DataBaseUtils):
             'username': account.get_username(),
             'role_id': account.get_role_id(),
         }
-        result_acc = self.__conn.get_collection('account').insert_one(account_json);
-        result_user = self.__conn.get_collection('user').insert_one(user_json);
+        result_acc = self.__conn.get_collection('account').insert_one(account_json)
+        result_user = self.__conn.get_collection('user').insert_one(user_json)
 
 
         if result_user.acknowledged and result_acc.acknowledged:
-            return 'Register Successfully!! Check your email to confirm';
-        return 'Register Failed!!';
+            return 'Register Successfully!! Check your email to confirm'
+        return 'Register Failed!!'
 
     def generateOTPcode(self, length=6):
         digits = "0123456789"
         otp = ''.join(secrets.choice(digits) for _ in range(length))
-        return otp;
+        return otp
 
     def edit_user(self, user):
 
@@ -207,28 +213,28 @@ class UserModel(DataBaseUtils):
         return False
 
     def delete_user(self, id):
-        user_data = self.__conn.get_collection('user').find_one({'user_id': id});
-        acc_id = user_data.get('acc_id');
+        user_data = self.__conn.get_collection('user').find_one({'user_id': id})
+        acc_id = user_data.get('acc_id')
 
-        result = self.__conn.get_collection('user').delete_one({'user_id': id});
-        result_2 = self.__conn.get_collection('account').delete_one({'acc_id': acc_id});
+        result = self.__conn.get_collection('user').delete_one({'user_id': id})
+        result_2 = self.__conn.get_collection('account').delete_one({'acc_id': acc_id})
         if(result and result_2):
-            return 'Delete Successfully';
-        return 'Delete Failed';
+            return 'Delete Successfully'
+        return 'Delete Failed'
         
     def AUTO_USE_ID(self):
         result = self.__conn.get_collection('user').find_one({}, sort=[("user_id", -1)])  #desc
 
         if result:
-            max_user_id = result['user_id'];
+            max_user_id = result['user_id']
         else:
-            max_user_id = None;
+            max_user_id = None
 
         if max_user_id:
             next_user_id = int(max_user_id[3:]) + 1
         else:
             next_user_id = 1
 
-        format_user_id = f'USE{next_user_id:07d}';
-        return format_user_id;
+        format_user_id = f'USE{next_user_id:07d}'
+        return format_user_id
         

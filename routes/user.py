@@ -30,16 +30,16 @@ def delete_user():
 
 @user.route('/user/profile', methods=['get'])
 def user_profile():
-    return UserController().user_profile();
+    return UserController().user_profile()
 
 @user.route('/user/profile/edit_personal_information', methods=['post'])
 def edit_personal_information():
-    return UserController().edit_personal_information();
+    return UserController().edit_personal_information()
 
 @user.route('/user/get_user_info', methods=['get'])
 def get_user_info():
-    return UserController().get_user_info();
+    return UserController().get_user_info()
 
 @user.route('/user/profile/change_pwd', methods=['post'])
 def change_pwd():
-    return UserController().change_pwd();
+    return UserController().change_pwd()

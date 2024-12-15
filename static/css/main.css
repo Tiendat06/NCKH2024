@@ -299,6 +299,82 @@
     font-size: 0.7rem;
 }
 
+.floating-btn button {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    /*background-color: var(--main-color-update);*/
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    color: #ffffff;
+}
+
+.floating-chat{
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.floating-chat__text{
+
+}
+
+.floating-chat__input{
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
+    padding: 10px;
+    padding-right: 20px;
+    border: 1px solid var(--chat-background);
+    font-size: 12px;
+}
+
+.floating-chat__text i {
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.floating-chat__content{
+    height: 300px;
+    overflow-y: scroll;
+    padding: 15px;
+    background-color: var(--chat-background);
+}
+
+.floating-chat__content::-webkit-scrollbar{
+    display: none;
+}
+
+.floating-chat__content-text{
+    list-style: none;
+    padding-left: 0;
+    height: 100%;
+}
+
+.floating-chat__content-item{
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    background-color: #ffffff;
+    margin-bottom: 5px;
+    clear: both;
+}
+
+.floating-chat__text{
+    padding: 15px;
+    border-top: 1px solid #cccccc;
+    /*margin-top: 15px;*/
+}
+
 /* account */
 
 .account-col{
@@ -367,3 +443,162 @@
     align-items: center;
 }
 
+/*chat*/
+.chat{
+}
+
+.chat-inner{
+    display: flex;
+    background-color: #ffffff;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 2px solid var(--chat-background);
+}
+
+.chat-contact{
+    padding: 20px;
+    border-right: 1px solid var(--chat-background);
+    height: 500px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.chat-contact__header{
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0;
+}
+
+.chat-contact__header h4{
+    /*border-bottom: 1px solid #cccccc;*/
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.chat-contact__list{
+    list-style: none;
+}
+
+.chat-contact__item{
+    /*padding-top: 10px;*/
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 20px 10px 20px;
+    /*margin-bottom: 15px;*/
+    /*border-bottom: 1px solid #cccccc;*/
+    /*padding-bottom: 10px;*/
+}
+
+.chat-contact__item:hover{
+    background-color: #f9f9f9;
+}
+
+.chat-contact__item img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--main-color-update);
+}
+
+.chat-contact__content{
+    max-width: 280px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+}
+
+.chat-content{
+    height: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.chat-content__text{
+    height: auto;
+    width: 100%;
+    padding: 10px !important;
+}
+
+.chat-content__msg{
+    background-color: var(--main-bg-color);
+    height: 320px;
+    overflow-y: scroll;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
+}
+
+.chat-content__msg::-webkit-scrollbar{
+    display: none;
+}
+
+.chat-content__item{
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 5px;
+    clear: both;
+}
+
+.chat-content__item-img{
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    padding: 20px;
+}
+
+.chat-content__text{
+    padding-left: 0;
+    list-style: none;
+}
+
+.chat-content__item-img img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.chat-text{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.chat-text__send{
+    width: 100%;
+}
+
+.chat-text__inp{
+    width: 100%;
+    border-radius: 10px;
+    /*border-radius: 10px;*/
+    outline: none;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    padding-right: 30px;
+}
+
+.chat-text__inp:focus-visible{
+    outline: none;
+    border: 1px solid var(--chat-background) !important;
+}
+
+.chat-text__icon-send{
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.chat-text__icon-send i{
+    cursor: pointer;
+}

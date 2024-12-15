@@ -29,21 +29,21 @@ from datetime import datetime
 
 class XrayController:
     def __init__(self):
-        self.account = AccountModel();
-        self.disease = DiseaseModel();
-        self.patient = PatientModel();
-        self.medicalRecord = MedicalRecordModel();
-        self.body_target = BodyTargetModel();
-        self.user = UserModel();
-        base_dir = os.path.dirname(os.path.abspath(__file__));
-        weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt");
-        config_path = os.path.join(base_dir, "data", "vinbigdata.yaml");
-        self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True);
-        self.PROCESSED_FOLDER = os.path.join('static', 'img', 'body_target');# 'static/img/body_target';
-        self.UPLOAD_FOLDER = os.path.join('static', 'img', 'ratio'); # 'static/img/ratio';
-        self.PROCESSED_FOLDER_CONTOURS = os.path.join('static', 'img', 'contours');# 'static/img/body_target';
-        self.UPLOAD_FOLDER_CONTOURS = os.path.join('static', 'img', 'upload_contours'); # 'static/img/ratio';
-        self.model = xrv.baseline_models.chestx_det.PSPNet();
+        self.account = AccountModel() 
+        self.disease = DiseaseModel() 
+        self.patient = PatientModel() 
+        self.medicalRecord = MedicalRecordModel() 
+        self.body_target = BodyTargetModel() 
+        self.user = UserModel() 
+        base_dir = os.path.dirname(os.path.abspath(__file__)) 
+        weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt") 
+        config_path = os.path.join(base_dir, "data", "vinbigdata.yaml") 
+        self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True) 
+        self.PROCESSED_FOLDER = os.path.join('static', 'img', 'body_target') # 'static/img/body_target' 
+        self.UPLOAD_FOLDER = os.path.join('static', 'img', 'ratio')  # 'static/img/ratio' 
+        self.PROCESSED_FOLDER_CONTOURS = os.path.join('static', 'img', 'contours') # 'static/img/body_target' 
+        self.UPLOAD_FOLDER_CONTOURS = os.path.join('static', 'img', 'upload_contours')  # 'static/img/ratio' 
+        self.model = xrv.baseline_models.chestx_det.PSPNet() 
 
     # [GET] 
     def index(self):
@@ -53,14 +53,14 @@ class XrayController:
     # [GET, POST] /xray
     def load_data(self, app):
         ndet = 0
-        body_list = [];
-        body_list = self.body_target.getAllBodyTarget();
+        body_list = [] 
+        body_list = self.body_target.getAllBodyTarget() 
         # Nếu là POST (gửi file)
         if request.method == "POST":
-            # current_path = request.path;
-            # print(current_path);
+            # current_path = request.path 
+            # print(current_path) 
             # path_pt = url_for('static', filename='weights/best_ckpt.pt')
-            # print(path_pt);
+            # print(path_pt) 
             # path_yaml = url_for('static', filename='data/vinbigdata.yaml')
             # print(path_yaml)
             # print("YLv6: ", yolov6_model)
@@ -72,20 +72,20 @@ class XrayController:
                     # Lưu file
                     # path_save = url_for('static', filename='img')
                     # path_to_save = os.path.join(path_save, image.filename)
-                    # res = cloudinary.uploader.upload(image);
-                    # path_to_save = res['secure_url'];
+                    # res = cloudinary.uploader.upload(image) 
+                    # path_to_save = res['secure_url'] 
                     # print(path_to_save)
-                    # print("Path to save:", path_to_save);
+                    # print("Path to save:", path_to_save) 
                     # print("Save = ", path_to_save)
                     # path_to_save = "../static/img/"+image.filename
                     static_folder_path = os.path.join(app.root_path, 'static')
                     path_to_save = (os.path.join(static_folder_path, 'img', image.filename))
                     path_to_save_local = (os.path.join(static_folder_path, 'img', 'data', image.filename))
                     # image.save(path_to_save_local)
-                    session['relative_path_to_save_local'] = path_to_save_local;
+                    session['relative_path_to_save_local'] = path_to_save_local 
 
                     print((path_to_save))
-                    session['image_name'] = image.filename;
+                    session['image_name'] = image.filename 
                     session['relative_path_to_save'] = '/static/img/'+image.filename
                     session['path_to_save'] = path_to_save
 
@@ -100,10 +100,10 @@ class XrayController:
                     if ndet!=0:
 
                         disease_list = []
-                        disease_list = self.disease.getAllDisease();
+                        disease_list = self.disease.getAllDisease() 
                         # lưu hình ảnh
                         # cv2.imwrite(path_to_save, frame)
-                        cv2.imwrite(path_to_save_local, frame);
+                        cv2.imwrite(path_to_save_local, frame) 
 
                         # resize img
                         image_re = cv2.imread(path_to_save_local)
@@ -119,10 +119,10 @@ class XrayController:
                         # Chuyển đổi mảng NumPy thành định dạng hình ảnh
                         image_data = cv2.imencode('.png', frame)[1].tobytes()
 
-                        res = cloudinary.uploader.upload(image_data);
-                        path_ = res['secure_url'];
+                        res = cloudinary.uploader.upload(image_data) 
+                        path_ = res['secure_url'] 
                         print(path_)
-                        session['path_predict'] = path_;
+                        session['path_predict'] = path_ 
                         real_percentage = []
                         for i in range(len(percentage)):
                             float_percentage = float((percentage[i])) * 100
@@ -130,8 +130,8 @@ class XrayController:
                             real_percentage.append((round(float_percentage, 2)))
                             # real_percentage.append(int(percentage[i]))
                         
-                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
-                        doctor_zip_data = zip_data;
+                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors)) 
+                        doctor_zip_data = zip_data 
 
                         return render_template("index.html", user_image = path_ , body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image_local = img_local, disease_list = disease_list, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
@@ -157,13 +157,13 @@ class XrayController:
 
         if request.method == "POST": 
             try:
-                data = request.form;
+                data = request.form 
                 # image = request.files['file']
                 # print(image.filename)
                 
                 if data:
-                    path_ = data.get('img_link');
-                    conf_thres_ajax = float(data.get('range'));
+                    path_ = data.get('img_link') 
+                    conf_thres_ajax = float(data.get('range')) 
                     # print(path_)
                     # print(conf_thres_ajax)
                     # static_folder_path = os.path.join(app.root_path, 'static')
@@ -174,7 +174,7 @@ class XrayController:
                     # Tìm đường dẫn tương đối của thư mục static
                     # static_path = os.path.relpath(path_to_save, os.path.join(os.getcwd(), 'app'))
 
-                    path_ = session.get('path_predict');
+                    path_ = session.get('path_predict')
 
                     # Convert image to dest size tensor
                     frame = cv2.imread(path_to_save)
@@ -185,20 +185,20 @@ class XrayController:
                     doctor_zip_data = []
 
                     if ndet!=0:
-                        # os.remove(session.get('path_to_save_local'));
-                        path_to_save_local = session.get('relative_path_to_save_local');
+                        # os.remove(session.get('path_to_save_local')) 
+                        path_to_save_local = session.get('relative_path_to_save_local') 
                         cv2.imwrite(path_to_save_local, frame)
 
-                        image_re = cv2.imread(path_to_save_local);
+                        image_re = cv2.imread(path_to_save_local) 
                         # height, width, channels = image_re.shape
 
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
-                        image_name = session.get('image_name');
-                        random_string = self.medicalRecord.generate_random_string(8);
-                        img_local = '/static/img/data/'+image_name+"?random_string="+random_string;
-
+                        image_name = session.get('image_name') 
+                        random_string = self.medicalRecord.generate_random_string(8) 
+                        img_local = '/static/img/data/'+image_name+"?random_string="+random_string 
+                        session['img_local'] = img_local
 
                         real_percentage = []
                         for i in range(len(percentage)):
@@ -210,18 +210,18 @@ class XrayController:
                         # with open('/static/img/image.png', 'wb') as f:
                         #     f.write(image_data)
 
-                        # res = cloudinary.uploader.upload(image_data);
-                        # path_ = res['secure_url'];
+                        # res = cloudinary.uploader.upload(image_data) 
+                        # path_ = res['secure_url'] 
                         
                         # print(path_)
                         
-                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors));
-                        doctor_zip_data = zip_data;
+                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors)) 
+                        doctor_zip_data = zip_data 
 
                         return render_template("/xray/change_range.html", origin_img = session.get('relative_path_to_save'), user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
                     else:
-                        return render_template('/xray/change_range.html',user_image = img_local , origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
+                        return render_template('/xray/change_range.html',user_image = session['img_local'] , origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
                         rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi
@@ -243,23 +243,23 @@ class XrayController:
     
     # [POST, AJAX] /xray/saveRecord
     def saveRecord(self):
-        data = request.get_json();
-        patient_id = self.patient.AUTO_PAT_ID();
-        patient_name = data.get('name');
-        patient_PID = data.get('PID');
-        patient_age = data.get('age');
-        patient_phone = data.get('phone');
-        patient_gender = data.get('gender');
-        patient_address = data.get('address');
-        patient_dob = data.get('dob');
-        patient_email = data.get('email');
-        date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
-        user_id = session.get("user_id");
+        data = request.get_json() 
+        patient_id = self.patient.AUTO_PAT_ID() 
+        patient_name = data.get('name') 
+        patient_PID = data.get('PID') 
+        patient_age = data.get('age') 
+        patient_phone = data.get('phone') 
+        patient_gender = data.get('gender') 
+        patient_address = data.get('address') 
+        patient_dob = data.get('dob') 
+        patient_email = data.get('email') 
+        date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+        user_id = session.get("user_id") 
 
-        medical_record_id = self.medicalRecord.AUTO_MDR_ID();
-        img_before = session.get('relative_path_to_save');
-        img_last = session.get('path_to_save_local');
-        medical_predict = data.get('predict');
+        medical_record_id = self.medicalRecord.AUTO_MDR_ID() 
+        img_before = session.get('relative_path_to_save') 
+        img_last = session.get('path_to_save_local') 
+        medical_predict = data.get('predict') 
 
         result = {
             'empty': 'Please fill out all fields !',
@@ -270,7 +270,7 @@ class XrayController:
         }     
 
         if not all([patient_name, patient_PID, patient_age, patient_phone, patient_gender, patient_address, patient_dob, patient_email, medical_predict, img_before, img_last]):
-            return jsonify(result.get('empty'));
+            return jsonify(result.get('empty')) 
 
         patient = {
             'patient_id': patient_id,
@@ -300,19 +300,19 @@ class XrayController:
 
         if not self.patient.checkPatientIsContainByPID(patient_PID):
             # if self.patient.checkEmailIsContain(patient_email):
-                # return jsonify(result.get('email_not_contain'));
-            result_patient = self.patient.addPatient(patient);
+                # return jsonify(result.get('email_not_contain')) 
+            result_patient = self.patient.addPatient(patient) 
             if not result_patient:
-                return jsonify(result.get('fail'));
+                return jsonify(result.get('fail')) 
         else:
-            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'];
+            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'] 
 
         
-        result_medical_record = self.medicalRecord.addMedicalRecord(medical_record);
+        result_medical_record = self.medicalRecord.addMedicalRecord(medical_record) 
         if not result_medical_record:
-            return jsonify(result.get('fail'));
+            return jsonify(result.get('fail')) 
         
-        return jsonify(result.get('success'));
+        return jsonify(result.get('success')) 
 
     # [POST, AJAX] /xray/show_body_target
     def show_body_target(self):
@@ -380,7 +380,7 @@ class XrayController:
             # Tạo tên file duy nhất bằng timestamp
             filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
             filepath = os.path.join(self.PROCESSED_FOLDER, filename)
-            # print(filepath);
+            # print(filepath) 
             plt.savefig(filepath)
             # print(filepath)
             plt.close()
@@ -408,7 +408,7 @@ class XrayController:
             file_path = os.path.join(self.UPLOAD_FOLDER, file.filename)
             file.save(file_path)
             processed_image_path = self.body_target.process_image(file_path)
-            return jsonify({"processed_image_url": processed_image_path});
+            return jsonify({"processed_image_url": processed_image_path}) 
 
     # [POST, AJAX] /xray/upload_contours
     def uploadContours(self):
@@ -489,14 +489,14 @@ class XrayController:
 
     # [POST, FETCH] /xray/combine_body_target
     def combine_body_target(self):
-        choice = 0;
-        checkboxBodyOptions = request.form.get('body-options');
-        checkboxFunctionOptions = request.form['function-options'];
-        file = request.files['file'];
+        choice = 0 
+        checkboxBodyOptions = request.form.get('body-options') 
+        checkboxFunctionOptions = request.form['function-options'] 
+        file = request.files['file'] 
         file_path = os.path.join('static', 'img', 'new_body_target', file.filename)
         file.save(file_path)
 
-        img_link_final = '';
+        img_link_final = '' 
         selected_indices = []
         print(json.loads(checkboxBodyOptions))
         # print(checkboxFunctionOptions)
@@ -506,27 +506,27 @@ class XrayController:
 
         if checkboxBodyOptions:
             # str_numbers = checkboxBodyOptions.split(',')
-            # print(str_numbers);
+            # print(str_numbers) 
             selected_indices = [int(num_str) for num_str in json.loads(checkboxBodyOptions) if num_str.isdigit()]
-            print(selected_indices);
+            print(selected_indices) 
             img_link_final = self.new_show_body_target(file, selected_indices)
 
-        isAngle = False;
+        isAngle = False 
         if checkboxFunctionOptions:
             if 'angle' in checkboxFunctionOptions:
-                print('hi world');
-                isAngle = True;
+                print('hi world') 
+                isAngle = True 
                 img_link_final = self.new_update_contours(img_link_final)
             if 'ratio' in checkboxFunctionOptions:
-                choice = 1;
+                choice = 1 
             if 'mediastinum' in checkboxFunctionOptions:
                 if choice == 1:
-                    choice = 3;
+                    choice = 3 
                 else:
-                    choice = 2;
+                    choice = 2 
             if choice != 0:
                 print('choice:', choice)
-                img_link_final = self.new_update_ratio(img_link_final, choice);
+                img_link_final = self.new_update_ratio(img_link_final, choice) 
 
 
         return jsonify({
@@ -601,12 +601,12 @@ class XrayController:
         plt.savefig(contour_filepath)
         plt.close()
 
-        return contour_filepath;
+        return contour_filepath 
         # return jsonify({"processed_image_url": f'/static/img/contours/{contour_filename}'})
 
     def new_upload_ratio(self, filepath):
         processed_image_path = self.body_target.process_image(filepath)
-        return processed_image_path;
+        return processed_image_path 
 
     def new_show_body_target(self, file, selected_indices):
         try:
@@ -673,13 +673,13 @@ class XrayController:
             # Tạo tên file duy nhất bằng timestamp
             filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
             filepath = os.path.join(self.PROCESSED_FOLDER, filename)
-            # print(filepath);
+            # print(filepath) 
             plt.savefig(filepath)
             # print(filepath)
             plt.close()
 
             # Trả về URL của hình ảnh đã lưu
-            return filepath;
+            return filepath 
             # return render_template('xray/body_target.html',
             #                        img_after=url_for('static', filename=f'img/body_target/{filename}', _external=True))
 
@@ -799,7 +799,7 @@ class XrayController:
         # Save the image
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        image_path = os.path.join(self.UPLOAD_FOLDER, f'{current_time}.png');
+        image_path = os.path.join(self.UPLOAD_FOLDER, f'{current_time}.png') 
             # f"/static/img/upload_ratio/{current_time}.png"
         plt.savefig(image_path)
         print(image_path)

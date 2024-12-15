@@ -3,7 +3,7 @@ from app.models.builder.IBuilderPatient import IBuilderPatient
 class BuilderPatient(IBuilderPatient):
 
     def setPatientIdBuilder(self, id) -> 'IBuilderPatient':
-        self.__patient_id = id;
+        self.__patient_id = id
         return self
     
     def setPatientNameBuilder(self, name)-> 'IBuilderPatient':
@@ -45,8 +45,9 @@ class BuilderPatient(IBuilderPatient):
     def setPatientMailBuilder(self, email)-> 'IBuilderPatient':
         self.__email = email;
         return self
+
     
     def build(self):
         from app.models.Patient import Patient
         return Patient(self.__patient_id, self.__patient_name, self.__patient_age, self.__img, 
-        self.__phone, self.__PID, self.__gender, self.__address, self.__date_created, self.__dob, self.__email);
+        self.__phone, self.__PID, self.__gender, self.__address, self.__date_created, self.__dob, self.__email)

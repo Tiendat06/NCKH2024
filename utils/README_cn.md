@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="utils/assets/banner-YOLO.png" align="middle" width = "1000" />
+  <img src="assets/banner-YOLO.png" align="middle" width = "1000" />
 </p>
 
 简体中文 | [English](README.md)
@@ -11,17 +11,17 @@
 - [YOLOv6: A Single-Stage Object Detection Framework for Industrial Applications](https://arxiv.org/abs/2209.02976)
 
 <p align="center">
-  <img src="utils/assets/speed_comparision_v3.png" align="middle" width = "1000" />
+  <img src="assets/speed_comparision_v3.png" align="middle" width = "1000" />
 </p>
 
 
 ## 更新日志
-- [2023.04.28] 发布 移动端轻量级模型 [YOLOv6Lite](configs/yolov6_lite/README.md). ⭐️ [移动端模型指标](#移动端模型指标)
+- [2023.04.28] 发布 移动端轻量级模型 [YOLOv6Lite](../configs/yolov6_lite/README.md). ⭐️ [移动端模型指标](#移动端模型指标)
 - [2023.03.10] 发布 [YOLOv6-Face](https://github.com/meituan/YOLOv6/tree/yolov6-face). 🔥 [人脸检测模型指标](https://github.com/meituan/YOLOv6/blob/yolov6-face/README_cn.md#widerface-%E6%A8%A1%E5%9E%8B%E6%8C%87%E6%A0%87)
-- [2023.03.02] 更新 [基础版模型](configs/base/README_cn.md) 到 3.0 版本
+- [2023.03.02] 更新 [基础版模型](../configs/base/README_cn.md) 到 3.0 版本
 - [2023.01.06] 发布大分辨率 P6 模型以及对 P5 模型做了全面的升级 ⭐️ [模型指标](#模型指标)
-- [2022.11.04] 发布 [基础版模型](configs/base/README_cn.md) 简化训练部署流程
-- [2022.09.06] 定制化的模型量化加速方法 🚀 [量化教程](utils/tools/qat/README.md)
+- [2022.11.04] 发布 [基础版模型](../configs/base/README_cn.md) 简化训练部署流程
+- [2022.09.06] 定制化的模型量化加速方法 🚀 [量化教程](tools/qat/README.md)
 - [2022.09.05] 发布 M/L 模型，并且进一步提高了 N/T/S 模型的性能
 - [2022.06.23] 发布 N/T/S v1.0 版本模型
 
@@ -44,7 +44,7 @@
 - 除了 YOLOv6-N6/S6 模型是训练了300轮的结果，其余模型均为自蒸馏训练之后的结果；
 - mAP 和速度指标是在 [COCO val2017](https://cocodataset.org/#download)  数据集上评估的，P5模型输入分辨率为 640×640，P6模型输入分辨率为 1280×1280；
 - 速度是在 T4 上测试的，TensorRT 版本为 7.2；
-- 复现 YOLOv6 的速度指标，请查看 [速度测试](utils/docs/Test_speed.md) 教程；
+- 复现 YOLOv6 的速度指标，请查看 [速度测试](docs/Test_speed.md) 教程；
 - YOLOv6 的参数和计算量是在推理模式下计算的；
 </details>
 
@@ -95,7 +95,7 @@
 -  mAP 和速度指标是在 COCO val2017 数据集上评估的，输入分辨率为表格中对应展示的。
 - 使用 MNN 2.3.0 AArch64 进行速度测试。测速时，采用2个线程，并开启arm82加速，推理预热10次，循环100次。
 - 高通888(sm8350)、天玑720(mt6853)和高通660(sdm660)分别对应高中低端不同性能的芯片，可以作为不同芯片下机型能力的参考。
-- [NCNN 速度测试](utils/docs/Test_NCNN_speed.md)教程可以帮助展示及复现 YOLOv6Lite 的 NCNN 速度结果。
+- [NCNN 速度测试](docs/Test_NCNN_speed.md)教程可以帮助展示及复现 YOLOv6Lite 的 NCNN 速度结果。
 
 </details>
 
@@ -115,7 +115,7 @@ pip install -r requirements.txt
 <details>
 <summary> 在 COCO 数据集上复现我们的结果</summary>
 
-请参考教程 [训练 COCO 数据集](utils/docs/Train_coco_data.md).
+请参考教程 [训练 COCO 数据集](docs/Train_coco_data.md).
 
 </details>
 
@@ -156,7 +156,7 @@ python -m torch.distributed.launch --nproc_per_node 8 tools/train.py --batch 128
 │   │   ├── val2017
 ```
 
-YOLOv6 支持不同的输入分辨率模式，详情请参见 [如何设置输入大小](utils/docs/About_training_size_cn.md).
+YOLOv6 支持不同的输入分辨率模式，详情请参见 [如何设置输入大小](docs/About_training_size_cn.md).
 
 </details>
 
@@ -197,7 +197,7 @@ python tools/eval.py --data data/coco.yaml --batch 32 --weights yolov6s6.pt --ta
 - verbose: 如果要打印每一类的精度信息，请设置为 True；
 - do_coco_metric: 设置 True / False 来打开或关闭 pycocotools 的评估；
 - do_pr_metric: 设置 True / False 来显示或不显示精度和召回的指标；
-- config-file: 指定一个包含所有评估参数的配置文件，例如 [yolov6n_with_eval_params.py](configs/experiment/yolov6n_with_eval_params.py)
+- config-file: 指定一个包含所有评估参数的配置文件，例如 [yolov6n_with_eval_params.py](../configs/experiment/yolov6n_with_eval_params.py)
 </details>
 
 
@@ -227,22 +227,22 @@ python tools/infer.py --weights yolov6s6.pt --img 1280 1280 --webcam --webcam-ad
 <details>
 <summary> 部署 </summary>
 
-*  [ONNX](utils/deploy/ONNX)
-*  [OpenCV Python/C++](utils/deploy/ONNX/OpenCV)
-*  [OpenVINO](utils/deploy/OpenVINO)
-*  [TensorRT](utils/deploy/TensorRT)
-*  [NCNN](utils/deploy/NCNN)
-*  [Android](utils/deploy/NCNN/Android)
+*  [ONNX](deploy/ONNX)
+*  [OpenCV Python/C++](deploy/ONNX/OpenCV)
+*  [OpenVINO](deploy/OpenVINO)
+*  [TensorRT](deploy/TensorRT)
+*  [NCNN](deploy/NCNN)
+*  [Android](deploy/NCNN/Android)
 </details>
 
 <details open>
 <summary> 教程 </summary>
 
 *  [用户手册（中文版）](https://yolov6-docs.readthedocs.io/zh_CN/latest/)
-*  [训练 COCO 数据集](utils/docs/Train_coco_data.md)
-*  [训练自定义数据集](utils/docs/Train_custom_data.md)
-*  [测速](utils/docs/Test_speed.md)
-*  [ YOLOv6 量化教程](utils/docs/Tutorial%20of%20Quantization.md)
+*  [训练 COCO 数据集](docs/Train_coco_data.md)
+*  [训练自定义数据集](docs/Train_custom_data.md)
+*  [测速](docs/Test_speed.md)
+*  [ YOLOv6 量化教程](docs/Tutorial of Quantization.md)
 </details>
 
 
@@ -262,5 +262,5 @@ python tools/infer.py --weights yolov6s6.pt --img 1280 1280 --webcam --webcam-ad
 
 如果您有任何问题，欢迎加入我们的微信群一起讨论交流！
 <p align="center">
-  <img src="utils/assets/wechat_qrcode.png" align="middle" width = "1000" />
+  <img src="assets/wechat_qrcode.png" align="middle" width = "1000" />
 </p>

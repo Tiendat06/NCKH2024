@@ -1,0 +1,251 @@
+<script>
+    let intervalIds = {};
+
+    function setLatestChatTime(patient_id, latest_chat, options=1) {
+        // Nếu có interval cũ, dừng nó
+        console.log(latest_chat)
+        if (intervalIds[patient_id]) {
+            clearInterval(intervalIds[patient_id]);
+        }
+
+        // Tạo một setInterval mới cho bệnh nhân này
+        intervalIds[patient_id] = setInterval(() => {
+            const now = Date.now();
+            const targetDate = new Date(`${latest_chat}`).getTime();
+            const vietnamOffset = 7 * 60 * 60 * 1000;
+            let targetDateVietnam = new Date(now + vietnamOffset);
+            if(options !== 1){
+                targetDateVietnam = now
+            }
+
+            const difference = targetDateVietnam - targetDate;
+            let timeDifference;
+            if (difference < 0) {
+                timeDifference = "--:--";
+            } else if (difference < 60000) {
+                //${Math.floor(difference / 1000)}
+                timeDifference = `a few seconds`;
+            } else if (difference < 3600000) {
+                timeDifference = `${Math.floor(difference / 60000)}min`;
+            } else if (difference < 86400000) {
+                timeDifference = `${Math.floor(difference / 3600000)}h`;
+            } else {
+                timeDifference = `${Math.floor(difference / 86400000)}day`;
+            }
+            $(`.${patient_id}`).html(timeDifference);
+        }, 1000);
+    }
+
+</script>
+<div class="chat p-5">
+    <div class="chat-inner">
+        <div class="chat-contact col-lg-4 col-md-4 col-sm-4">
+            <div class="chat-contact__header">
+                <h4 class="mb-0">Chats</h4>
+            </div>
+
+            <ul id="chat-contact__list" class="chat-contact__list pl-0">
+                {% for patient in patients_data %}
+                    <li class="chat-contact__item"
+                        data-patient_id='{{patient.patient_id}}'
+                        data-patient_request_id='-1'
+                    >
+                        <div class="chat-contact__item-img">
+                            <img src="{{patient.img}}" alt="">
+                        </div>
+                        <div class="ml-2">
+                            <h6>{{patient.name}}</h6>
+                            <div class="d-flex align-items-center">
+                                <p id="{{patient.patient_id}}-chat-content" class="mb-0 chat-contact__content">{{patient.chat_content}}</p>
+                                <i style="font-size: 2px" class="fa-solid fa-circle mr-1 ml-1 mb-0"></i>
+                                <p id="{{patient.patient_id}}-chat-time" class="mb-0 {{patient.patient_id}}">--:--</p>
+                            </div>
+                            <script>
+                                setLatestChatTime('{{patient.patient_id}}', '{{patient.latest_chat}}')
+                            </script>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="chat-screen" class="chat-content col-lg-8 col-md-8 col-sm-8">
+            <div id="chat-content__item-img" class="chat-content__item-img col-lg-12 col-md-12 col-sm-12">
+                <img src="{{latest_chat[0].patient_id.img}}" alt="">
+                <h6 class="mb-0 d-flex align-items-center">{{latest_chat[0].patient_id.name}}</h6>
+            </div>
+            <div id="chat-content__msg" class="chat-content__msg col-lg-12 col-md-12 col-sm-12">
+                <ul id="chat-content__text" class="chat-content__guest chat-content__text">
+                    {% for chat in latest_chat %}
+                        <li class="chat-content__item"
+                        {% if chat.user_id != '' %} style="float:right; clear: right" {% endif %}
+                        >
+                            {{chat.content}}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="chat-text col-lg-12 col-md-12 col-sm-12">
+                <div class="chat-text__send position-relative">
+                    <input id="chat-text__inp" placeholder="Text message..." class="chat-text__inp" type="text">
+                    <div class="chat-text__icon-send position-absolute">
+                        <i class="fa-solid fa-location-arrow"></i>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="{{latest_chat[0].patient_id.patient_id}}" id="patient-content__id" >
+            <input type="hidden" value="-1" id="patient-content__request-id" >
+        </div>
+    </div>
+<script>
+    let patientID = "{{latest_chat[0].patient_id.patient_id}}"
+    let currentChatRequestId = '-1'
+
+    window.onload = () => {
+        const adminSocket = io({ query: { user_type: 'admin' } });
+
+        adminSocket.on('connect', () => {
+            console.log('Server connected !');
+        })
+
+        adminSocket.on('disconnect', () => {
+            console.log('Server disconnected !');
+        })
+
+        adminSocket.on('private message from client', privateMessageFromClient);
+
+        adminSocket.on('load patient chat', loadPatientData);
+
+        adminSocket.on('load current admin chat', data => {
+            const newestChatByAdmin = data.data
+            const raw_data = data.raw_data
+            $('#chat-content__text').append(`
+                <li class="chat-content__item" style="float:right; clear: right">
+                    ${newestChatByAdmin['content']}
+                </li>
+            `)
+
+            $(`#${raw_data.patient_id}-chat-content`).html(raw_data.chat_content)
+            {#$(`#${patient_id}-chat-time`).html(chat_content)#}
+            setLatestChatTime(raw_data.patient_id, newestChatByAdmin.created_at, 2)
+        })
+
+        $('#chat-text__inp').keydown(event => {
+            if (event.key === 'Enter'){
+                event.preventDefault();
+                const patient_id = $('#patient-content__id').val()
+                const patient_request_id = $('#patient-content__request-id').val()
+                const chat_content = $('#chat-text__inp').val()
+                const user_info = JSON.parse(localStorage.getItem('user_info'))
+                const user_id = user_info.user_id
+                if(chat_content === '') return
+
+                let chatContainer = document.getElementById('chat-content__msg');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                adminSocket.emit('message to client', {
+                    patient_id,
+                    user_id,
+                    patient_request_id,
+                    chat_content
+                })
+
+                $('#chat-text__inp').val('')
+            }
+        })
+
+        $('#chat-contact__list').on('click', '.chat-contact__item', function (){
+            const patient_id = $(this).data('patient_id')
+            const patient_request_id = $(this).data('patient_request_id')
+            console.log({
+                patient_id, patient_request_id
+            })
+            currentChatRequestId = patient_request_id
+            patientID = patient_id
+            localStorage.setItem('currentChatPatient', patient_request_id)
+            adminSocket.emit('click patient chat', {
+                patient_id,
+                patient_request_id
+            })
+
+        })
+
+    }
+
+    const privateMessageFromClient = data => {
+        for (const patient of data.data) {
+            if (intervalIds[patient.patient_id]) {
+                clearInterval(intervalIds[patient.patient_id]);
+            }
+        }
+
+        const patient_data = data.data;
+
+        {#update sidebar#}
+        $('#chat-contact__list').html('');
+        let count = 0
+        for (const patient of patient_data) {
+            $('#chat-contact__list').append(`
+                <li class="chat-contact__item"
+                    data-patient_id='${patient.patient_id}'
+                    ${count === 0 ? `data-patient_request_id=${data.from}`: 'data-patient_request_id="-1"'}
+                    >
+                    <div class="chat-contact__item-img">
+                        <img src='${patient.img}' alt="">
+                    </div>
+                    <div class="ml-2">
+                        <h6>${patient.name}</h6>
+                        <div class="d-flex align-items-center">
+                            <p id="${patient.patient_id}-chat-content" class="mb-0 chat-contact__content">${patient.chat_content}</p>
+                            <i style="font-size: 2px" class="fa-solid fa-circle mr-1 ml-1 mb-0"></i>
+                            <p id="${patient.patient_id}-chat-time" class="mb-0 ${patient.patient_id}">--:--</p>
+                        </div>
+                    </div>
+                </li>
+            `);
+            // Gọi lại hàm setLatestChatTime cho mỗi bệnh nhân
+            console.log(patient.latest_chat)
+            setLatestChatTime(patient.patient_id, patient.latest_chat);
+            count++
+        }
+
+        if (patient_data[0].patient_id === patientID){
+             $('#chat-content__text').append(`
+                <li class="chat-content__item">
+                    ${patient_data[0]['chat_content']}
+                </li>
+            `)
+            $('#patient-content__request-id').val(data.from+"")
+        }
+
+        let chatContainer = document.getElementById('chat-content__msg');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        //console.log(`Message from ${data.from}: ${data.message}`)
+    }
+
+    const loadPatientData = data => {
+        const patient_chats = data.patient_chats
+        const patient_request_id = data.patient_request_id
+        $('#chat-content__text').html('')
+        $('#chat-content__item-img').html(`
+            <img src="${patient_chats[0]?.patient_id?.img}" alt="">
+            <h6 class="mb-0 d-flex align-items-center">${patient_chats[0]?.patient_id?.name}</h6>
+        `)
+        for (const chat of patient_chats) {
+            $('#chat-content__text').append(`
+                <li class="chat-content__item"
+                ${chat['user_id'] !== '' ? 'style="float:right; clear: right"': ''}
+                >
+                    ${chat['content']}
+                </li>
+            `)
+        }
+        $('#patient-content__id').val(patient_chats[0]?.patient_id?.patient_id)
+        $('#patient-content__request-id').val(patient_request_id)
+    }
+
+
+
+
+</script>
+</div>

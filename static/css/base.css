@@ -4,7 +4,8 @@
     --main-bg-color: #eff7f8;
     --text-link: #939393;
     --para-link: #003e7d;
-    --header-height: 78px
+    --header-height: 78px;
+    --chat-background: #dbeafe;
 }
 
 *{
@@ -16,13 +17,15 @@ html{
     /* font-size: 62.5%; */
     /* => 1rem = 10px */
     /* line-height: 1.6rem; */
-    font-family: 'Roboto', sans-serif;
+    /*font-family: 'Roboto', sans-serif;*/
+    font-family: "Poppins", sans-serif;
     box-sizing: border-box;
     scroll-behavior: smooth;
     /* overflow-x: auto; */
 }
 
 body{
+    font-family: "Poppins", sans-serif;
     margin: 0;
 }
 

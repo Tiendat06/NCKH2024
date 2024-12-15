@@ -19,8 +19,8 @@ from flask import render_template, session, redirect, request, url_for, current_
 
 class BodyTarget:
     def __init__(self, body_target_id, body_target_name):
-        self.__body_target_id = body_target_id;
-        self.__body_target_name = body_target_name;
+        self.__body_target_id = body_target_id 
+        self.__body_target_name = body_target_name 
 
     @property
     def _body_target_id(self):
@@ -42,27 +42,27 @@ class BodyTarget:
 class BodyTargetModel(DataBaseUtils):
     def __init__(self):
         self.__conn = DataBaseUtils()
-        self.model = xrv.baseline_models.chestx_det.PSPNet();
-        self.PROCESSED_FOLDER = 'static/img/upload_ratio';
+        self.model = xrv.baseline_models.chestx_det.PSPNet() 
+        self.PROCESSED_FOLDER = 'static/img/upload_ratio' 
 
 
     def getAllBodyTarget(self):
-        result = self.__conn.get_collection('body_target').find();
-        data = [];
+        result = self.__conn.get_collection('body_target').find() 
+        data = [] 
 
         if result:
             for body_target in result:
-                id = body_target.get('body_target_id');
-                name = body_target.get('body_target_name');
-                body_target_models = BodyTarget(id, name);
-                data.append(body_target_models);
-            return data;
-        return None;
+                id = body_target.get('body_target_id') 
+                name = body_target.get('body_target_name') 
+                body_target_models = BodyTarget(id, name) 
+                data.append(body_target_models) 
+            return data 
+        return None 
 
     def load_image_from_url(self, url):
         try:
             response = requests.get(url)
-            print(response.status_code);
+            print(response.status_code) 
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
                 return np.array(image)  # Convert PIL Image to numpy array
@@ -220,7 +220,7 @@ class BodyTargetModel(DataBaseUtils):
         plt.savefig(processed_image_path)
         plt.close()
 
-        return processed_image_path;
+        return processed_image_path 
 
     def calculate_angle(self, p1, p2, p3):
         vector1 = np.array(p2) - np.array(p1)

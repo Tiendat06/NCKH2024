@@ -7,7 +7,7 @@ def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             # return abort(401)  # Authorization required
-            return redirect("/home");
+            return redirect("/home")
         else:
             return function()
 
@@ -16,7 +16,7 @@ def login_is_required(function):
 # [GET]
 @site.route('/home', methods=['get'])
 def index():
-    return SiteController().home();
+    return SiteController().home()
 
 # [GET]
 @site.route('/', methods=['get'])
@@ -26,4 +26,4 @@ def home():
 
 @site.route('/home/medical_record', methods=['post'])
 def home_medical_record():
-    return SiteController().home_medical_record();
+    return SiteController().home_medical_record()
