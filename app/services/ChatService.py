@@ -7,6 +7,7 @@ from app.models.User import UserModel
 from utils.utils import JSONEncoder
 from datetime import datetime
 from bson.json_util import dumps
+import pytz
 
 class ChatService:
     def __init__(self):
@@ -17,7 +18,15 @@ class ChatService:
     def index(self):
         patients_data = self.patient_model.getAllPatientSortByLastChat()
         latest_chat = self.chat_model.getNewestChat()
-        print(latest_chat[0])
+
+        vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        for chat in latest_chat:
+            created_at = str(chat['created_at'])
+            created_at_obj = datetime.fromisoformat(created_at)
+            created_at_obj_vn = created_at_obj.astimezone(vietnam_tz)
+            formatted_created_at = created_at_obj_vn.strftime('%d %B %Y at %H:%M')
+            chat['formatted_created_at'] = formatted_created_at
+        # print(latest_chat[0])
         return {
             'patients_data': patients_data,
             'latest_chat': latest_chat,

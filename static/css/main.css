@@ -362,7 +362,7 @@
 
 .floating-chat__content-item{
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 15px;
     width: fit-content;
     background-color: #ffffff;
     margin-bottom: 5px;
@@ -543,7 +543,7 @@
 .chat-content__item{
     background-color: #ffffff;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 15px;
     width: fit-content;
     margin-bottom: 5px;
     clear: both;

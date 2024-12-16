@@ -520,13 +520,36 @@
 
     <div class="floating-chat__text position-relative">
         <input id="home-chat__inp" placeholder="Text here..." class="floating-chat__input" type="text">
-        <i class="fa-solid fa-location-arrow position-absolute"></i>
+        <i id="floating-chat__icon-send" class="fa-solid fa-location-arrow position-absolute"></i>
     </div>
 </div>
 
 <script>
+    function convertCreatedAt (created_at, opt=1) {
+        let dateObj = new Date()
+        if(opt === 1){
+            const inputDate = created_at+"";
+            dateObj = new Date(inputDate);
+        }
+
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        };
+
+        const formattedDate = dateObj.toLocaleString('en-GB', {
+            ...options,
+            timeZone: 'Asia/Ho_Chi_Minh'
+        }).replace(',', '');
+        return formattedDate
+    }
+    const socket = io({autoConnect: false});
+
     window.onload = () => {
-        const socket = io({autoConnect: false});
         socket.on('connect', () => {
             console.log("Server connected !");
         })
@@ -539,44 +562,23 @@
             console.log(err)
         })
 
-        socket.on('message from admin', data => {
-            const message = data.message
-            $('#floating-chat__content-text').append(`
-                <li class="floating-chat__content-item" style="float: right; clear: right">
-                    ${message}
-                </li>
-            `)
-            let chatContainer = document.getElementById('floating-chat__content');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        })
+        socket.on('message from admin', messageFromAdmin)
 
-        socket.on('load current client chat', data => {
-            const patient_chats = data.data
-            $('#floating-chat__content-text').html('')
-
-            for (const chat of patient_chats) {
-                $('#floating-chat__content-text').append(`
-                    <li class="floating-chat__content-item"
-                        ${chat.user_id !== '' ? 'style="float: right; clear: right"': ''}>
-                        ${chat.content}
-                    </li>
-                `)
-            }
-        })
+        socket.on('load current client chat', loadCurrentClientChat)
 
         $('#floating-btn--inner').click(() => {
             if(localStorage.getItem('PID')){
-                socket.connect()
-
-                const userPID = localStorage.getItem('PID');
-                socket.emit('user_login', {'PID': userPID});
 
                 const floating_chat = $('.floating-chat')
                 if(floating_chat.hasClass('d-none')){
+                    socket.connect()
+                    const userPID = localStorage.getItem('PID');
+                    socket.emit('user_login', {'PID': userPID});
                     floating_chat.removeClass('d-none')
                 } else {
                     floating_chat.addClass('d-none')
                 }
+
                 $('#login-modal').removeClass('modal fade')
                 {#socket.emit('user_login', $('#PID_log').val())#}
             }
@@ -616,30 +618,67 @@
         $('#home-chat__inp').keydown(event => {
             if(event.key === 'Enter'){
                 event.preventDefault();
-                let PID = localStorage.getItem('PID')
-                let msg = $('#home-chat__inp').val();
-                if(msg === '') return
-
-                $('#floating-chat__content-text').append(`
-                    <li class="floating-chat__content-item">
-                        ${msg}
-                    </li>
-                `)
-
-                let chatContainer = document.getElementById('floating-chat__content');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-
-                {#console.log('Enter clicked !!');#}
-                socket.emit('message to admin', {
-                    PID,
-                    message: msg
-                });
-                $('#home-chat__inp').val('')
+                enterMessage()
+            } else{
+                $('#floating-chat__icon-send').click(() => {
+                    enterMessage()
+                })
             }
         })
     }
 
+    const messageFromAdmin = data => {
+        {#console.log(data.data)#}
+        const chat = data.data
+        const message = data.message
+        let created_at = convertCreatedAt(chat.created_at)
+        $('#floating-chat__content-text').append(`
+            <li class="floating-chat__content-item" title="${created_at}" style="float: right; clear: right">
+                ${message}
+            </li>
+        `)
+        let chatContainer = document.getElementById('floating-chat__content');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
+    const loadCurrentClientChat = data => {
+        const patient_chats = data.data
+        $('#floating-chat__content-text').html('')
+
+        for (const chat of patient_chats) {
+            let created_at = convertCreatedAt(chat.created_at)
+            $('#floating-chat__content-text').append(`
+                <li class="floating-chat__content-item" title="${created_at}"
+                    ${chat.user_id !== '' ? 'style="float: right; clear: right"': ''}>
+                    ${chat.content}
+                </li>
+            `)
+        }
+        let chatContainer = document.getElementById('floating-chat__content');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    const enterMessage = () => {
+        let PID = localStorage.getItem('PID')
+        let msg = $('#home-chat__inp').val();
+        if(msg === '') return
+        const created_at = convertCreatedAt('', opt=2)
+        $('#floating-chat__content-text').append(`
+            <li class="floating-chat__content-item" title="${created_at}">
+                ${msg}
+            </li>
+        `)
+
+        let chatContainer = document.getElementById('floating-chat__content');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        {#console.log('Enter clicked !!');#}
+        socket.emit('message to admin', {
+            PID,
+            message: msg
+        });
+        $('#home-chat__inp').val('')
+    }
 
 </script>
 

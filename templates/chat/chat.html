@@ -36,6 +36,30 @@
         }, 1000);
     }
 
+    function convertCreatedAt (created_at, opt=1) {
+        let dateObj = new Date()
+        if(opt === 1){
+            const inputDate = created_at+"";
+            dateObj = new Date(inputDate);
+        }
+
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        };
+
+        const formattedDate = dateObj.toLocaleString('en-GB', {
+            ...options,
+            timeZone: 'Asia/Ho_Chi_Minh'
+        }).replace(',', '');
+        return formattedDate
+    }
+
+
 </script>
 <div class="chat p-5">
     <div class="chat-inner">
@@ -77,7 +101,7 @@
             <div id="chat-content__msg" class="chat-content__msg col-lg-12 col-md-12 col-sm-12">
                 <ul id="chat-content__text" class="chat-content__guest chat-content__text">
                     {% for chat in latest_chat %}
-                        <li class="chat-content__item"
+                        <li class="chat-content__item" title="{{chat.formatted_created_at}}"
                         {% if chat.user_id != '' %} style="float:right; clear: right" {% endif %}
                         >
                             {{chat.content}}
@@ -88,7 +112,7 @@
             <div class="chat-text col-lg-12 col-md-12 col-sm-12">
                 <div class="chat-text__send position-relative">
                     <input id="chat-text__inp" placeholder="Text message..." class="chat-text__inp" type="text">
-                    <div class="chat-text__icon-send position-absolute">
+                    <div id="chat-text__icon-send" class="chat-text__icon-send position-absolute">
                         <i class="fa-solid fa-location-arrow"></i>
                     </div>
                 </div>
@@ -100,11 +124,13 @@
 <script>
     let patientID = "{{latest_chat[0].patient_id.patient_id}}"
     let currentChatRequestId = '-1'
+    const adminSocket = io({ query: { user_type: 'admin' } });
 
     window.onload = () => {
-        const adminSocket = io({ query: { user_type: 'admin' } });
 
         adminSocket.on('connect', () => {
+            let chatContainer = document.getElementById('chat-content__msg');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
             console.log('Server connected !');
         })
 
@@ -116,59 +142,20 @@
 
         adminSocket.on('load patient chat', loadPatientData);
 
-        adminSocket.on('load current admin chat', data => {
-            const newestChatByAdmin = data.data
-            const raw_data = data.raw_data
-            $('#chat-content__text').append(`
-                <li class="chat-content__item" style="float:right; clear: right">
-                    ${newestChatByAdmin['content']}
-                </li>
-            `)
-
-            $(`#${raw_data.patient_id}-chat-content`).html(raw_data.chat_content)
-            {#$(`#${patient_id}-chat-time`).html(chat_content)#}
-            setLatestChatTime(raw_data.patient_id, newestChatByAdmin.created_at, 2)
-        })
+        adminSocket.on('load current admin chat', loadCurrentAdminChat)
 
         $('#chat-text__inp').keydown(event => {
             if (event.key === 'Enter'){
                 event.preventDefault();
-                const patient_id = $('#patient-content__id').val()
-                const patient_request_id = $('#patient-content__request-id').val()
-                const chat_content = $('#chat-text__inp').val()
-                const user_info = JSON.parse(localStorage.getItem('user_info'))
-                const user_id = user_info.user_id
-                if(chat_content === '') return
-
-                let chatContainer = document.getElementById('chat-content__msg');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-
-                adminSocket.emit('message to client', {
-                    patient_id,
-                    user_id,
-                    patient_request_id,
-                    chat_content
+                enterMessage()
+            } else{
+                $('#chat-text__icon-send').click(() => {
+                    enterMessage()
                 })
-
-                $('#chat-text__inp').val('')
             }
         })
 
-        $('#chat-contact__list').on('click', '.chat-contact__item', function (){
-            const patient_id = $(this).data('patient_id')
-            const patient_request_id = $(this).data('patient_request_id')
-            console.log({
-                patient_id, patient_request_id
-            })
-            currentChatRequestId = patient_request_id
-            patientID = patient_id
-            localStorage.setItem('currentChatPatient', patient_request_id)
-            adminSocket.emit('click patient chat', {
-                patient_id,
-                patient_request_id
-            })
-
-        })
+        $('#chat-contact__list').on('click', '.chat-contact__item', clickPatientContact)
 
     }
 
@@ -210,8 +197,10 @@
         }
 
         if (patient_data[0].patient_id === patientID){
+            console.log(patient_data[0])
+            const created_at = convertCreatedAt('', 2)
              $('#chat-content__text').append(`
-                <li class="chat-content__item">
+                <li class="chat-content__item" title="${created_at}">
                     ${patient_data[0]['chat_content']}
                 </li>
             `)
@@ -232,8 +221,9 @@
             <h6 class="mb-0 d-flex align-items-center">${patient_chats[0]?.patient_id?.name}</h6>
         `)
         for (const chat of patient_chats) {
+            const created_at = convertCreatedAt(chat['created_at'])
             $('#chat-content__text').append(`
-                <li class="chat-content__item"
+                <li class="chat-content__item" title="${created_at}"
                 ${chat['user_id'] !== '' ? 'style="float:right; clear: right"': ''}
                 >
                     ${chat['content']}
@@ -244,8 +234,57 @@
         $('#patient-content__request-id').val(patient_request_id)
     }
 
+    const enterMessage = () => {
+        const patient_id = $('#patient-content__id').val()
+        const patient_request_id = $('#patient-content__request-id').val()
+        const chat_content = $('#chat-text__inp').val()
+        const user_info = JSON.parse(localStorage.getItem('user_info'))
+        const user_id = user_info.user_id
+        if(chat_content === '') return
 
+        let chatContainer = document.getElementById('chat-content__msg');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
+        adminSocket.emit('message to client', {
+            patient_id,
+            user_id,
+            patient_request_id,
+            chat_content
+        })
+
+        $('#chat-text__inp').val('')
+    }
+
+    const clickPatientContact = function () {
+        const patient_id = $(this).data('patient_id')
+        const patient_request_id = $(this).data('patient_request_id')
+        console.log({
+        patient_id, patient_request_id
+        })
+        currentChatRequestId = patient_request_id
+        patientID = patient_id
+        localStorage.setItem('currentChatPatient', patient_request_id)
+        adminSocket.emit('click patient chat', {
+            patient_id,
+            patient_request_id
+        })
+    }
+
+    const loadCurrentAdminChat = data => {
+        const newestChatByAdmin = data.data
+        const raw_data = data.raw_data
+        {#console.log(raw_data)#}
+        const created_at = convertCreatedAt('', 2)
+        $('#chat-content__text').append(`
+            <li class="chat-content__item" title="${created_at}" style="float:right; clear: right">
+                ${newestChatByAdmin['content']}
+            </li>
+        `)
+
+        $(`#${raw_data.patient_id}-chat-content`).html(raw_data.chat_content)
+        {#$(`#${patient_id}-chat-time`).html(chat_content)#}
+        setLatestChatTime(raw_data.patient_id, newestChatByAdmin.created_at, 2)
+    }
 
 </script>
 </div>
