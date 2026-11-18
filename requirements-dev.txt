@@ -1,0 +1,13 @@
+# Extra tools for training, evaluating and exporting YOLOv6 (yolov6/core, utils/tools, utils/deploy).
+# Not needed to run the web app.
+#   .venv/Scripts/pip install -r requirements-dev.txt
+-r requirements.txt
+
+addict==2.4.0          # yolov6/utils/config.py (training configs)
+tensorboard==2.14.0    # yolov6/core/engine.py (training logs)
+pycocotools==2.0.7     # yolov6/core/evaler.py (COCO-style mAP)
+psutil==7.0.0          # yolov6/data/datasets.py (dataset caching)
+seaborn==0.13.2        # yolov6/utils/metrics.py (confusion-matrix plots)
+onnx==1.17.0           # utils/deploy/ONNX, utils/tools/qat (model export)
+onnxsim==0.4.36        # utils/deploy/ONNX/export_onnx.py (ONNX simplifier)
+# Optional, GPU/TensorRT only: pytorch_quantization, tensorrt, pycuda
