@@ -118,6 +118,12 @@ venv.bak/
 # *.pt
 *.engine
 
+# BMAD
+_bmad/
+_bmad-output/
+.claude/
+
+
 # Ảnh do app sinh ra lúc chạy (giữ thư mục bằng .gitkeep vì code ghi vào mà không tự tạo)
 static/img/body_target/*
 static/img/contours/*
