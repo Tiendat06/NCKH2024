@@ -8,7 +8,7 @@ import requests
 from app.models.Account import Account, AccountModel
 from app.models.User import User, UserModel
 from google.oauth2 import id_token
-from pip._vendor import cachecontrol
+import cachecontrol
 import google.auth.transport.requests
 from itsdangerous import SignatureExpired, URLSafeTimedSerializer
 from flask_mail import Message, Mail

@@ -1,0 +1,83 @@
+async-timeout==5.0.1      # via redis, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+bcrypt==3.2.2             # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+bidict==0.23.1            # via python-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+blinker==1.8.2            # via flask-mail, flask-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+cachecontrol==0.14.2      # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+cachelib==0.14.0          # via flask-session, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+certifi==2026.7.22        # via cloudinary, requests, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+cffi==1.15.1              # via bcrypt, cryptography, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+charset-normalizer==3.5.2  # via requests, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+click==8.1.3              # via flask, flask-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+cloudinary==1.46.3        # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+colorama==0.4.6           # via click, tqdm, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+contourpy==1.1.1          # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+cryptography==47.0.0      # via google-auth, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+cycler==0.12.1            # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+dnspython==2.2.1          # via eventlet, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+eventlet==0.39.1          # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+filelock==3.16.1          # via torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+flask==2.2.2              # via flask-cors, flask-mail, flask-session, flask-socketio, flask-sslify, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+flask-cors==5.0.0         # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+flask-mail==0.10.0        # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+flask-session==0.8.0      # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+flask-socketio==5.7.0     # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+flask-sslify==0.1.5       # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+fonttools==4.57.0         # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+fsspec==2025.3.0          # via torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+google-auth==2.50.0       # via google-auth-oauthlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+google-auth-oauthlib==1.0.0  # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+greenlet==3.1.1           # via eventlet, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+h11==0.16.0               # via wsproto, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+idna==3.15                # via requests, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+imageio==2.35.1           # via scikit-image, torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+importlib-metadata==8.5.0  # via flask, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+importlib-resources==6.4.5  # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+itsdangerous==2.1.2       # via flask, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+jinja2==3.1.2             # via flask, flask-socketio, torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+kiwisolver==1.4.7         # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+lazy-loader==0.4          # via scikit-image, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+markupsafe==2.1.1         # via jinja2, werkzeug, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+matplotlib==3.7.5         # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+mpmath==1.3.0             # via sympy, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+msgpack==1.1.1            # via cachecontrol, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+msgspec==0.18.6           # via flask-session, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+networkx==3.1             # via scikit-image, torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+numpy==1.24.4             # via contourpy, imageio, matplotlib, opencv-python, pandas, pywavelets, scikit-image, scipy, tifffile, torchvision, torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+oauthlib==3.3.1           # via requests-oauthlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+opencv-python==5.0.0.93   # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+packaging==26.2           # via lazy-loader, matplotlib, scikit-image, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+pandas==2.0.3             # via torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+pillow==10.4.0            # via imageio, matplotlib, scikit-image, torchvision, torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+pyasn1==0.6.4             # via pyasn1-modules, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+pyasn1-modules==0.4.2     # via google-auth, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+pycparser==2.21           # via cffi, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+pymongo==4.2.0            # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+pyparsing==3.1.4          # via matplotlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+python-dateutil==2.9.0.post0  # via matplotlib, pandas, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+python-dotenv==0.19.1     # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+python-engineio==4.14.0   # via python-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+python-socketio==5.17.0   # via flask-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+pytz==2026.5              # via pandas, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+pywavelets==1.4.1         # via scikit-image, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+pyyaml==6.0.3             # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+redis==6.1.1              # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+requests==2.32.4          # via cachecontrol, requests-oauthlib, torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+requests-oauthlib==2.0.0  # via google-auth-oauthlib, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+scikit-image==0.21.0      # via torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+scipy==1.10.1             # via scikit-image, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+setuptools==75.3.4        # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+simple-websocket==1.1.0   # via python-engineio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+six==1.17.0               # via cloudinary, python-dateutil, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+sympy==1.13.3             # via torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+thop==0.1.1.post2209072238  # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+tifffile==2023.7.10       # via scikit-image, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+torch==2.4.1              # via thop, torchvision, torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+torchvision==0.19.1       # via torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+torchxrayvision==1.5.5    # via -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+tqdm==4.70.1              # via torchxrayvision, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+typing-extensions==4.13.2  # via cryptography, torch, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+tzdata==2026.5            # via pandas, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+urllib3==2.2.3            # via cloudinary, requests, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+werkzeug==2.2.2           # via flask, flask-socketio, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt, -r requirements.txt
+wsproto==1.2.0            # via simple-websocket, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt
+zipp==3.20.2              # via importlib-metadata, importlib-resources, -c C:/Users/Windows/AppData/Local/Temp/claude/6e1de757b0feb148/084103cc-3f1a-4105-9aa3-8b189ae89f87/scratchpad/venv_constraints.txt

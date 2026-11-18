@@ -118,3 +118,25 @@ venv.bak/
 # *.pt
 *.engine
 
+# BMAD
+_bmad/
+_bmad-output/
+.claude/
+
+
+# Ảnh do app sinh ra lúc chạy (giữ thư mục bằng .gitkeep vì code ghi vào mà không tự tạo)
+static/img/body_target/*
+static/img/contours/*
+static/img/data/*
+static/img/new_body_target/*
+static/img/ratio/*
+static/img/upload_contours/*
+static/img/upload_ratio/*
+!static/img/*/.gitkeep
+# Ảnh mẫu được dữ liệu seed MongoDB tham chiếu (database/data/test.medical_record.json)
+!static/img/data/tdmp.jpg
+!static/img/data/img.png
+!static/img/data/img_xray.png
+!static/img/data/230px-Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg
+# Gradle build cache của ví dụ Android NCNN (vendored)
+utils/deploy/NCNN/Android/.gradle/

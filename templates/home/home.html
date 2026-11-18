@@ -628,12 +628,11 @@
     }
 
     const messageFromAdmin = data => {
-        {#console.log(data.data)#}
         const chat = data.data
         const message = data.message
         let created_at = convertCreatedAt(chat.created_at)
         $('#floating-chat__content-text').append(`
-            <li class="floating-chat__content-item" title="${created_at}" style="float: right; clear: right">
+            <li class="floating-chat__content-item" title="${created_at}">
                 ${message}
             </li>
         `)
@@ -649,7 +648,7 @@
             let created_at = convertCreatedAt(chat.created_at)
             $('#floating-chat__content-text').append(`
                 <li class="floating-chat__content-item" title="${created_at}"
-                    ${chat.user_id !== '' ? 'style="float: right; clear: right"': ''}>
+                    ${chat.user_id === '' ? 'style="float: right; clear: both"': ''}>
                     ${chat.content}
                 </li>
             `)
@@ -664,7 +663,7 @@
         if(msg === '') return
         const created_at = convertCreatedAt('', opt=2)
         $('#floating-chat__content-text').append(`
-            <li class="floating-chat__content-item" title="${created_at}">
+            <li class="floating-chat__content-item" style="float: right; clear: right" title="${created_at}">
                 ${msg}
             </li>
         `)

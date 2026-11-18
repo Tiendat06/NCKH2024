@@ -1,7 +1,38 @@
 version: '3.8'
+# Giữ tên project Compose cố định: nếu để mặc định, Compose lấy tên thư mục làm tên project,
+# đổi tên thư mục sẽ tạo project mới và không dùng lại container/volume MongoDB cũ.
+name: test
 services:
+#  app:
+#    build: .
+#    restart: unless-stopped
+#    ports:
+#      - "5000:5000"
+#    depends_on:
+#      - redis
+#    env_file: .env
+#    volumes:
+#      - .:/app
+#    networks:
+#      - webnet
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    networks:
+      - webnet
+
   redis:
     image: redis:alpine
+    restart: unless-stopped
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
