@@ -970,7 +970,12 @@ function jsInXray() {
       })
           .then(response => response.json())
           .then(data => {
-            // console.log(data)
+            if (data['error']) {
+              // Lỗi xử lý: báo cho người dùng, không gán ảnh rỗng/hỏng
+              console.error(data['error']);
+              alert(data['error']);
+              return;
+            }
             img_url = data['img_url']
             console.log(data)
             if (data['isAngle'] === true){

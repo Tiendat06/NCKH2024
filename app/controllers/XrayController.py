@@ -1,265 +1,253 @@
 import json
-
-from flask import render_template, session, request, url_for, send_file, jsonify
-import requests
-import random
-from io import BytesIO
-from app.models.Account import AccountModel
-from app.models.Disease import DiseaseModel
-from app.models.Patient import PatientModel
-from app.models.MedicalRecord import MedicalRecordModel
-from app.models.User import UserModel
-from app.models.BodyTarget import BodyTargetModel
 import os
+import posixpath
+import threading
+import uuid
+from datetime import datetime
+from io import BytesIO
 from random import random
-import cv2
-from my_yolov6 import my_yolov6
+from urllib.parse import urlparse
+
 import cloudinary.uploader
+import cv2
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
+import requests
 import torch
 import torchvision
 import torchxrayvision as xrv
-import matplotlib
-import matplotlib.pyplot as plt
-matplotlib.use('Agg')  # Sử dụng backend 'Agg' cho matplotlib
+from flask import render_template, session, request, url_for, send_file, send_from_directory, jsonify, current_app
 from skimage.io import imread
+from werkzeug.utils import secure_filename
 from skimage.measure import find_contours
-# from io import BytesIO
-from datetime import datetime
+
+from app.models.Account import AccountModel
+from app.models.BodyTarget import BodyTargetModel, get_pspnet
+from app.models.Disease import DiseaseModel
+from app.models.MedicalRecord import MedicalRecordModel
+from app.models.Patient import PatientModel
+from app.models.User import UserModel
+from my_yolov6 import my_yolov6
+
+matplotlib.use('Agg')  # Sử dụng backend 'Agg' cho matplotlib
+
+# Tiền xử lý chuẩn của torchxrayvision trước khi đưa ảnh vào PSPNet
+SEG_TRANSFORM = torchvision.transforms.Compose([
+    xrv.datasets.XRayCenterCrop(),
+    xrv.datasets.XRayResizer(512)
+])
+
+# Màu đường viền cho từng bộ phận khi vẽ phân đoạn
+CONTOUR_COLORS = ['red', 'red', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'black',
+                  'orange', 'purple', 'green', 'brown', 'gray', 'lime']
+
+# /xray/proxy-image chỉ được tải ảnh từ các host này (ngoài ảnh tĩnh của chính server)
+PROXY_ALLOWED_HOSTS = {'res.cloudinary.com'}
+
+# Mỗi request tạo một XrayController mới, nên model được nạp một lần cho cả tiến trình và dùng chung
+_YOLO_LOCK = threading.Lock()
+_YOLO_MODEL = None
+
+
+def get_yolov6():
+    """Trả về YOLOv6 dùng chung; lần gọi đầu tiên mới nạp checkpoint."""
+    global _YOLO_MODEL
+    with _YOLO_LOCK:
+        if _YOLO_MODEL is None:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            _YOLO_MODEL = my_yolov6(os.path.join(base_dir, "weights", "best_ckpt.pt"), "cpu",
+                                    os.path.join(base_dir, "data", "vinbigdata.yaml"), 640, True)
+    return _YOLO_MODEL
+
+
+def safe_upload_name(filename):
+    """Tên file an toàn cho ảnh upload: bỏ ký tự đường dẫn và thêm tiền tố ngẫu nhiên để không ghi đè nhau."""
+    name = secure_filename(filename or '') or 'upload.png'
+    return f"{uuid.uuid4().hex[:12]}_{name}"
+
 
 class XrayController:
     def __init__(self):
-        self.account = AccountModel() 
-        self.disease = DiseaseModel() 
-        self.patient = PatientModel() 
-        self.medicalRecord = MedicalRecordModel() 
-        self.body_target = BodyTargetModel() 
-        self.user = UserModel() 
-        base_dir = os.path.dirname(os.path.abspath(__file__)) 
-        weights_path = os.path.join(base_dir, "weights", "best_ckpt.pt") 
-        config_path = os.path.join(base_dir, "data", "vinbigdata.yaml") 
-        self.yolov6_model = my_yolov6(weights_path, "cpu", config_path, 640, True) 
-        self.PROCESSED_FOLDER = os.path.join('static', 'img', 'body_target') # 'static/img/body_target' 
-        self.UPLOAD_FOLDER = os.path.join('static', 'img', 'ratio')  # 'static/img/ratio' 
-        self.PROCESSED_FOLDER_CONTOURS = os.path.join('static', 'img', 'contours') # 'static/img/body_target' 
-        self.UPLOAD_FOLDER_CONTOURS = os.path.join('static', 'img', 'upload_contours')  # 'static/img/ratio' 
-        self.model = xrv.baseline_models.chestx_det.PSPNet() 
+        self.account = AccountModel()
+        self.disease = DiseaseModel()
+        self.patient = PatientModel()
+        self.medicalRecord = MedicalRecordModel()
+        self.body_target = BodyTargetModel()
+        self.user = UserModel()
+        self.yolov6_model = get_yolov6()
+        self.PROCESSED_FOLDER = os.path.join('static', 'img', 'body_target')
+        self.UPLOAD_FOLDER = os.path.join('static', 'img', 'ratio')
+        self.PROCESSED_FOLDER_CONTOURS = os.path.join('static', 'img', 'contours')
+        self.UPLOAD_FOLDER_CONTOURS = os.path.join('static', 'img', 'upload_contours')
+        # Các thư mục output bị gitignore (chỉ giữ .gitkeep): tự tạo nếu thiếu
+        for folder in (self.PROCESSED_FOLDER, self.UPLOAD_FOLDER, self.PROCESSED_FOLDER_CONTOURS,
+                       self.UPLOAD_FOLDER_CONTOURS, os.path.join('static', 'img', 'new_body_target'),
+                       self.body_target.PROCESSED_FOLDER):
+            os.makedirs(folder, exist_ok=True)
+        self.model = get_pspnet()
 
-    # [GET] 
-    def index(self):
-
-        return render_template("index.html", content = 'index', page = 'xray')
-    
     # [GET, POST] /xray
     def load_data(self, app):
         ndet = 0
-        body_list = [] 
-        body_list = self.body_target.getAllBodyTarget() 
+        body_list = self.body_target.getAllBodyTarget()
         # Nếu là POST (gửi file)
         if request.method == "POST":
-            # current_path = request.path 
-            # print(current_path) 
-            # path_pt = url_for('static', filename='weights/best_ckpt.pt')
-            # print(path_pt) 
-            # path_yaml = url_for('static', filename='data/vinbigdata.yaml')
-            # print(path_yaml)
-            # print("YLv6: ", yolov6_model)
-            
             try:
                 # Lấy file gửi lên
                 image = request.files['file']
                 if image:
-                    # Lưu file
-                    # path_save = url_for('static', filename='img')
-                    # path_to_save = os.path.join(path_save, image.filename)
-                    # res = cloudinary.uploader.upload(image) 
-                    # path_to_save = res['secure_url'] 
-                    # print(path_to_save)
-                    # print("Path to save:", path_to_save) 
-                    # print("Save = ", path_to_save)
-                    # path_to_save = "../static/img/"+image.filename
+                    # Lưu file dưới tên an toàn, không trùng
+                    filename = safe_upload_name(image.filename)
                     static_folder_path = os.path.join(app.root_path, 'static')
-                    path_to_save = (os.path.join(static_folder_path, 'img', image.filename))
-                    path_to_save_local = (os.path.join(static_folder_path, 'img', 'data', image.filename))
-                    # image.save(path_to_save_local)
-                    session['relative_path_to_save_local'] = path_to_save_local 
+                    path_to_save = os.path.join(static_folder_path, 'img', filename)
+                    path_to_save_local = os.path.join(static_folder_path, 'img', 'data', filename)
+                    session['relative_path_to_save_local'] = path_to_save_local
 
-                    print((path_to_save))
-                    session['image_name'] = image.filename 
-                    session['relative_path_to_save'] = '/static/img/'+image.filename
+                    session['image_name'] = filename
+                    session['relative_path_to_save'] = '/static/img/' + filename
                     session['path_to_save'] = path_to_save
+                    session.pop('img_local', None)
 
                     image.save(path_to_save)
 
-                    # Convert image to dest size tensor
                     frame = cv2.imread(path_to_save)
-
-                    # frame, ndet, label_name, percentage, sick_name = self.yolov6_model.infer(frame, conf_thres=0.2, iou_thres=0.4)
                     frame, ndet, label_name, percentage, sick_name, sick_name_eng, colors = self.yolov6_model.infer(frame, conf_thres=0.3, iou_thres=0.4)
 
-                    if ndet!=0:
-
-                        disease_list = []
-                        disease_list = self.disease.getAllDisease() 
-                        # lưu hình ảnh
-                        # cv2.imwrite(path_to_save, frame)
-                        cv2.imwrite(path_to_save_local, frame) 
-
-                        # resize img
+                    if ndet != 0:
+                        disease_list = self.disease.getAllDisease()
+                        # lưu hình ảnh kết quả, thu nhỏ còn 330x330
+                        cv2.imwrite(path_to_save_local, frame)
                         image_re = cv2.imread(path_to_save_local)
-                        # height, width, channels = image_re.shape
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
-                        img_local = '/static/img/data/'+image.filename
+                        img_local = '/static/img/data/' + filename
                         session['path_to_save_local'] = img_local
 
-                        # # Trả về kết quả
-                        # print("img: ",image)
                         # Chuyển đổi mảng NumPy thành định dạng hình ảnh
                         image_data = cv2.imencode('.png', frame)[1].tobytes()
 
-                        res = cloudinary.uploader.upload(image_data) 
-                        path_ = res['secure_url'] 
+                        res = cloudinary.uploader.upload(image_data)
+                        path_ = res['secure_url']
                         print(path_)
-                        session['path_predict'] = path_ 
-                        real_percentage = []
-                        for i in range(len(percentage)):
-                            float_percentage = float((percentage[i])) * 100
-                            # print(float_percentage)
-                            real_percentage.append((round(float_percentage, 2)))
-                            # real_percentage.append(int(percentage[i]))
-                        
-                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors)) 
-                        doctor_zip_data = zip_data 
+                        session['path_predict'] = path_
+                        real_percentage = [round(float(p) * 100, 2) for p in percentage]
+
+                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors))
+                        doctor_zip_data = zip_data
 
                         return render_template("index.html", user_image = path_ , body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image_local = img_local, disease_list = disease_list, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres = 0.3,
-                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
+                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray',
+                        result_status='detected')
                     else:
-                        return render_template('index.html', body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image = '/static/img/'+ image.filename, conf_thres = 0.3,
-                        rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
+                        return render_template('index.html', body_list=body_list, origin_img = session.get('relative_path_to_save'), user_image = '/static/img/' + filename, conf_thres = 0.3,
+                        rand = str(random()), msg='Không phát hiện bất thường', ndet = ndet, content = 'index', page = 'xray', result_status='normal')
                 else:
                     # Nếu không có file thì yêu cầu tải file
-                    return render_template('index.html', body_list=body_list, msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+                    return render_template('index.html', body_list=body_list, msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray', result_status='empty')
 
             except Exception as ex:
-                # Nếu lỗi thì thông báo
-                print(ex)
-                return render_template('index.html', body_list=body_list, msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+                # Lỗi xử lý (đọc ảnh, suy luận, Cloudinary...) phải báo là lỗi, không được hiển thị như "không bệnh"
+                print("Error:", ex)
+                return render_template('index.html', body_list=body_list, msg='Không xử lý được ảnh', content = 'index', page = 'xray', ndet = ndet, result_status='error')
 
         else:
             # Nếu là GET thì hiển thị giao diện upload
-            return render_template('index.html', body_list=body_list, content = 'index', page = 'xray')    
+            return render_template('index.html', body_list=body_list, content = 'index', page = 'xray')
 
     # [POST, AJAX] /xray/ajax/changeRange
     def load_data_ajax(self, app):
         ndet = 0
 
-        if request.method == "POST": 
+        if request.method == "POST":
             try:
-                data = request.form 
-                # image = request.files['file']
-                # print(image.filename)
-                
+                data = request.form
+
                 if data:
-                    path_ = data.get('img_link') 
-                    conf_thres_ajax = float(data.get('range')) 
-                    # print(path_)
-                    # print(conf_thres_ajax)
-                    # static_folder_path = os.path.join(app.root_path, 'static')
-                    # path_to_save = str(os.path.join(static_folder_path, 'img', image.filename))
+                    conf_thres_ajax = float(data.get('range'))
                     path_to_save = session.get('path_to_save')
                     print(path_to_save)
 
-                    # Tìm đường dẫn tương đối của thư mục static
-                    # static_path = os.path.relpath(path_to_save, os.path.join(os.getcwd(), 'app'))
-
-                    path_ = session.get('path_predict')
-
-                    # Convert image to dest size tensor
                     frame = cv2.imread(path_to_save)
-
-                    # frame, ndet, label_name, percentage, sick_name = self.yolov6_model.infer(frame, conf_thres=0.2, iou_thres=0.4)
                     frame, ndet, label_name, percentage, sick_name, sick_name_eng, colors = self.yolov6_model.infer(frame, conf_thres=conf_thres_ajax, iou_thres=0.4)
-                    zip_data = []
-                    doctor_zip_data = []
 
-                    if ndet!=0:
-                        # os.remove(session.get('path_to_save_local')) 
-                        path_to_save_local = session.get('relative_path_to_save_local') 
+                    if ndet != 0:
+                        path_to_save_local = session.get('relative_path_to_save_local')
                         cv2.imwrite(path_to_save_local, frame)
-
-                        image_re = cv2.imread(path_to_save_local) 
-                        # height, width, channels = image_re.shape
-
+                        image_re = cv2.imread(path_to_save_local)
                         resized_image = cv2.resize(image_re, (330, 330))
                         cv2.imwrite(path_to_save_local, resized_image)
 
-                        image_name = session.get('image_name') 
-                        random_string = self.medicalRecord.generate_random_string(8) 
-                        img_local = '/static/img/data/'+image_name+"?random_string="+random_string 
+                        image_name = session.get('image_name')
+                        random_string = self.medicalRecord.generate_random_string(8)
+                        img_local = '/static/img/data/' + image_name + "?random_string=" + random_string
                         session['img_local'] = img_local
 
-                        real_percentage = []
-                        for i in range(len(percentage)):
-                            float_percentage = float((percentage[i])) * 100
-                            real_percentage.append((round(float_percentage, 2)))
-                        
-                        # image_data = cv2.imencode('.png', frame)[1].tobytes()
-                        
-                        # with open('/static/img/image.png', 'wb') as f:
-                        #     f.write(image_data)
+                        real_percentage = [round(float(p) * 100, 2) for p in percentage]
 
-                        # res = cloudinary.uploader.upload(image_data) 
-                        # path_ = res['secure_url'] 
-                        
-                        # print(path_)
-                        
-                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors)) 
-                        doctor_zip_data = zip_data 
+                        zip_data = list(zip(sick_name, real_percentage, sick_name_eng, colors))
+                        doctor_zip_data = zip_data
 
-                        return render_template("/xray/change_range.html", origin_img = session.get('relative_path_to_save'), user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax, 
-                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray')
+                        return render_template("/xray/change_range.html", origin_img = session.get('relative_path_to_save'), user_image = img_local , user_image_local = img_local, rand = str(random()), percentage = percentage, sick_name = sick_name, conf_thres= conf_thres_ajax,
+                        real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray',
+                        result_status='detected')
                     else:
-                        return render_template('/xray/change_range.html',user_image = session['img_local'] , origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
-                        rand = str(random()), msg='Không nhận diện được bệnh', ndet = ndet, content = 'index', page = 'xray')
+                        user_image = session.get('img_local') or session.get('relative_path_to_save')
+                        return render_template('/xray/change_range.html', user_image = user_image, origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
+                        rand = str(random()), msg='Không phát hiện bất thường', ndet = ndet, content = 'index', page = 'xray', result_status='normal')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi
-                    return render_template('/xray/change_range.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray')
+                    return render_template('/xray/change_range.html', msg='Hãy chọn file để tải lên', ndet = ndet, content = 'index', page = 'xray', result_status='empty')
 
             except Exception as ex:
-                # Ghi log lỗi vào console hoặc tệp log
+                # Lỗi xử lý phải báo là lỗi, không được hiển thị như "không bệnh"
                 print("Error:", ex)
-                # Trả về một thông báo lỗi cho client
-                return render_template('/xray/change_range.html', msg='Không nhận diện được bệnh', content = 'index', page = 'xray', ndet = ndet)
+                return render_template('/xray/change_range.html', msg='Không xử lý được ảnh', content = 'index', page = 'xray', ndet = ndet, result_status='error')
 
     # [GET] /xray/proxy-image
     def sendImg(self):
-        image_url = request.args.get('url')
-        print(image_url)
-        response = requests.get(image_url)
+        """Trả ảnh cho nút Download. Chỉ phục vụ ảnh tĩnh của chính server hoặc ảnh trên Cloudinary (chống SSRF)."""
+        parsed = urlparse(request.args.get('url', ''))
 
-        return send_file(BytesIO(response.content), mimetype='image/jpeg')
-    
+        # Ảnh kết quả nằm trên chính server (/static/img/...): đọc thẳng từ đĩa, không gọi HTTP.
+        # Chuẩn hóa đường dẫn để "img/../.." không thoát ra khỏi static/img.
+        if parsed.netloc in ('', request.host) and parsed.path.startswith('/static/'):
+            relative = posixpath.normpath(parsed.path[len('/static/'):])
+            if not relative.startswith('img/'):
+                return jsonify({'error': 'URL ảnh không được phép.'}), 400
+            return send_from_directory(current_app.static_folder, relative)
+
+        if parsed.scheme == 'https' and parsed.hostname in PROXY_ALLOWED_HOSTS:
+            try:
+                response = requests.get(parsed.geturl(), timeout=10)
+            except requests.RequestException:
+                return jsonify({'error': 'Không tải được ảnh.'}), 502
+            if response.status_code != 200:
+                return jsonify({'error': 'Không tải được ảnh.'}), 502
+            return send_file(BytesIO(response.content), mimetype=response.headers.get('Content-Type', 'image/jpeg'))
+
+        return jsonify({'error': 'URL ảnh không được phép.'}), 400
+
     # [POST, AJAX] /xray/saveRecord
     def saveRecord(self):
-        data = request.get_json() 
-        patient_id = self.patient.AUTO_PAT_ID() 
-        patient_name = data.get('name') 
-        patient_PID = data.get('PID') 
-        patient_age = data.get('age') 
-        patient_phone = data.get('phone') 
-        patient_gender = data.get('gender') 
-        patient_address = data.get('address') 
-        patient_dob = data.get('dob') 
-        patient_email = data.get('email') 
-        date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-        user_id = session.get("user_id") 
+        data = request.get_json()
+        patient_id = self.patient.AUTO_PAT_ID()
+        patient_name = data.get('name')
+        patient_PID = data.get('PID')
+        patient_age = data.get('age')
+        patient_phone = data.get('phone')
+        patient_gender = data.get('gender')
+        patient_address = data.get('address')
+        patient_dob = data.get('dob')
+        patient_email = data.get('email')
+        date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        user_id = session.get("user_id")
 
-        medical_record_id = self.medicalRecord.AUTO_MDR_ID() 
-        img_before = session.get('relative_path_to_save') 
-        img_last = session.get('path_to_save_local') 
-        medical_predict = data.get('predict') 
+        medical_record_id = self.medicalRecord.AUTO_MDR_ID()
+        img_before = session.get('relative_path_to_save')
+        img_last = session.get('path_to_save_local')
+        medical_predict = data.get('predict')
 
         result = {
             'empty': 'Please fill out all fields !',
@@ -267,10 +255,10 @@ class XrayController:
             'success': 'Add Successfully !',
             'fail': 'Add Failed !',
             'not_checking': 'You must check your image first',
-        }     
+        }
 
         if not all([patient_name, patient_PID, patient_age, patient_phone, patient_gender, patient_address, patient_dob, patient_email, medical_predict, img_before, img_last]):
-            return jsonify(result.get('empty')) 
+            return jsonify(result.get('empty'))
 
         patient = {
             'patient_id': patient_id,
@@ -299,99 +287,104 @@ class XrayController:
         }
 
         if not self.patient.checkPatientIsContainByPID(patient_PID):
-            # if self.patient.checkEmailIsContain(patient_email):
-                # return jsonify(result.get('email_not_contain')) 
-            result_patient = self.patient.addPatient(patient) 
+            result_patient = self.patient.addPatient(patient)
             if not result_patient:
-                return jsonify(result.get('fail')) 
+                return jsonify(result.get('fail'))
         else:
-            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id'] 
+            medical_record['patient_id'] = self.patient.getPatientByPID(patient_PID)['patient_id']
 
-        
-        result_medical_record = self.medicalRecord.addMedicalRecord(medical_record) 
+        result_medical_record = self.medicalRecord.addMedicalRecord(medical_record)
         if not result_medical_record:
-            return jsonify(result.get('fail')) 
-        
-        return jsonify(result.get('success')) 
+            return jsonify(result.get('fail'))
+
+        return jsonify(result.get('success'))
+
+    # ---------- Phân đoạn cơ quan (torchxrayvision PSPNet) ----------
+
+    def _segment(self, source):
+        """Đọc ảnh (đường dẫn hoặc file upload), tiền xử lý và chạy PSPNet.
+
+        Trả về (img, pred): img là tensor (1, 1, 512, 512) đã tiền xử lý,
+        pred là mặt nạ 0/1 dạng numpy (1, 14, 512, 512).
+        """
+        img = imread(source)
+        img = xrv.datasets.normalize(img, 255)
+        if img.ndim == 2:          # ảnh xám -> (H, W, 1)
+            img = img[:, :, None]
+        if img.shape[2] == 4:      # bỏ kênh alpha
+            img = img[:, :, :3]
+        img = img.transpose((2, 0, 1))
+        img = torch.from_numpy(SEG_TRANSFORM(img)).unsqueeze(0)
+
+        with torch.no_grad():
+            pred = torch.sigmoid(self.model(img)).numpy()
+        pred[pred < 0.5] = 0
+        pred[pred > 0.5] = 1
+        return img, pred
+
+    def _draw_body_target(self, source, selected_indices):
+        """Vẽ đường viền các bộ phận được chọn, lưu PNG và trả về (filename, filepath)."""
+        img, pred = self._segment(source)
+
+        fig, ax = plt.subplots()
+        ax.imshow(img[0, 0], cmap='gray')
+        combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
+
+        for idx, i in enumerate(selected_indices[:len(CONTOUR_COLORS)]):
+            combined_mask[pred[0, i] > 0] = idx + 1
+            for contour in find_contours(combined_mask, level=idx + 0.1):
+                ax.plot(contour[:, 1], contour[:, 0], linestyle='--', linewidth=1, color=CONTOUR_COLORS[idx])
+
+        ax.axis('off')
+
+        # Tạo tên file duy nhất bằng timestamp
+        filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
+        filepath = os.path.join(self.PROCESSED_FOLDER, filename)
+        plt.savefig(filepath)
+        plt.close()
+        return filename, filepath
+
+    def _plot_costophrenic_angles(self, pred, draw_both_sides):
+        """Vẽ góc sườn hoành hai bên phổi (mặt nạ 4 = phổi trái, 5 = phổi phải)."""
+        combined_mask = np.zeros_like(pred[0, 0], dtype=np.uint8)
+        for idx, i in enumerate([4, 5]):
+            combined_mask[pred[0, i] > 0] = idx + 1
+            for contour in find_contours(combined_mask, level=idx + 0.1):
+                if i == 4:
+                    corner = np.argmax(contour[:, 1] + contour[:, 0])  # góc dưới phải
+                    text_dx, text_dy = -10, -10
+                else:
+                    corner = np.argmin(contour[:, 1] - contour[:, 0])  # góc dưới trái
+                    text_dx, text_dy = 15, -12
+                p1 = contour[corner]
+                p2 = contour[(corner - 25) % len(contour)]
+                p3 = contour[(corner + 25) % len(contour)]
+                angle = self.body_target.calculate_angle(p1, p2, p3)
+                if draw_both_sides:
+                    plt.plot([p1[1], p2[1]], [p1[0], p2[0]], 'r-', linewidth=1)
+                plt.plot([p1[1], p3[1]], [p1[0], p3[0]], 'r-', linewidth=1)
+                mid_x, mid_y = (p1[1] + p3[1]) / 2, (p1[0] + p3[0]) / 2
+                plt.text(mid_x + text_dx, mid_y + text_dy, f'{angle:.1f}°', color='r', fontsize=8, ha='center', va='center')
 
     # [POST, AJAX] /xray/show_body_target
     def show_body_target(self):
         try:
             file = request.files['file']
-            img = imread(file)
-            
-            # Get selected indices from checkboxes
+
+            # Lấy chỉ số các bộ phận được chọn từ checkbox
             checkbox = request.form.getlist('checkbox')
             selected_indices = []
             if checkbox:
-                str_numbers = checkbox[0].split(',')
-                selected_indices = [int(num_str) for num_str in str_numbers if num_str.isdigit()]
-            
-            # Normalize the image
-            img = xrv.datasets.normalize(img, 255)
+                selected_indices = [int(num_str) for num_str in checkbox[0].split(',') if num_str.isdigit()]
 
-            # If the image is 2D (grayscale), add an extra dimension to make it (height, width, 1)
-            if img.ndim == 2:
-                img = img[:, :, None]
-
-            # If the image has 4 channels (RGBA), discard the alpha channel
-            if img.shape[2] == 4:
-                img = img[:, :, :3]
-
-            # Transpose the image to move the channel dimension to the first position (1, height, width)
-            img = img.transpose((2, 0, 1))
-
-            # Apply the transforms
-            transform = torchvision.transforms.Compose([
-                xrv.datasets.XRayCenterCrop(),
-                xrv.datasets.XRayResizer(512)
-            ])
-            img = transform(img)
-
-            # Convert the image to a PyTorch tensor
-            img = torch.from_numpy(img).unsqueeze(0)
-
-            with torch.no_grad():
-                pred = self.model(img)
-
-            pred = 1 / (1 + np.exp(-pred))  # sigmoid
-            pred[pred < 0.5] = 0
-            pred[pred > 0.5] = 1
-
-            # Plot the contours on the image
-            fig, ax = plt.subplots()
-            ax.imshow(img[0, 0], cmap='gray')
-            combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
-
-            contour_colors = ['red', 'red', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'black',
-                            'orange', 'purple', 'green', 'brown', 'gray', 'lime']
-
-            for idx, i in enumerate(selected_indices):
-                if idx >= len(contour_colors):
-                    break  # Ensure we don't go out of bounds
-                mask = pred[0, i].numpy()
-                combined_mask[mask > 0] = idx + 1
-                contours = find_contours(combined_mask, level=idx + 0.1)
-                for contour in contours:
-                    ax.plot(contour[:, 1], contour[:, 0], linestyle='--', linewidth=1, color=contour_colors[idx])
-
-            ax.axis('off')
-
-            # Tạo tên file duy nhất bằng timestamp
-            filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
-            filepath = os.path.join(self.PROCESSED_FOLDER, filename)
-            # print(filepath) 
-            plt.savefig(filepath)
-            # print(filepath)
-            plt.close()
+            filename, _ = self._draw_body_target(file, selected_indices)
 
             # Trả về URL của hình ảnh đã lưu
             return render_template('xray/body_target.html', img_after=url_for('static', filename=f'img/body_target/{filename}', _external=True))
-        
+
         except Exception as e:
             import traceback
             traceback.print_exc()
-            # Handle exceptions and provide feedback
             return str(e), 500
 
     # [POST, AJAX] /xray/upload_ratio
@@ -405,10 +398,10 @@ class XrayController:
             return jsonify({"error": "No selected file"}), 400
 
         if file:
-            file_path = os.path.join(self.UPLOAD_FOLDER, file.filename)
+            file_path = os.path.join(self.UPLOAD_FOLDER, safe_upload_name(file.filename))
             file.save(file_path)
             processed_image_path = self.body_target.process_image(file_path)
-            return jsonify({"processed_image_url": processed_image_path}) 
+            return jsonify({"processed_image_url": processed_image_path})
 
     # [POST, AJAX] /xray/upload_contours
     def uploadContours(self):
@@ -418,66 +411,17 @@ class XrayController:
         if file.filename == '':
             return 'No selected file'
         if file:
-            filename = file.filename
+            filename = safe_upload_name(file.filename)
             filepath = os.path.join(self.UPLOAD_FOLDER_CONTOURS, filename)
             file.save(filepath)
 
-            # Load and process the image
-            img = imread(filepath)
-            img = xrv.datasets.normalize(img, 255)
-            if img.ndim == 2:
-                img = img[:, :, None]
-            if img.shape[2] == 4:
-                img = img[:, :, :3]
-            img = img.transpose((2, 0, 1))
-
-            transform = torchvision.transforms.Compose([
-                xrv.datasets.XRayCenterCrop(),
-                xrv.datasets.XRayResizer(512)
-            ])
-            img = transform(img)
-            img = torch.from_numpy(img).unsqueeze(0)  # Add batch dimension
-
-            with torch.no_grad():
-                pred = self.model(img)
-
-            pred = torch.sigmoid(pred).numpy()
-            pred[pred < 0.5] = 0
-            pred[pred >= 0.5] = 1
+            img, pred = self._segment(filepath)
 
             plt.figure(figsize=(12, 6))
-            combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
             plt.subplot(1, 2, 2)
             plt.imshow(img[0, 0], cmap='gray')
-            # plt.title('Contours')
             plt.axis('off')
-
-            target_indices = [4, 5]
-            for idx, i in enumerate(target_indices):
-                mask = pred[0, i]
-                combined_mask[mask > 0] = idx + 1
-                contours = find_contours(combined_mask, level=idx + 0.1)
-                for contour in contours:
-                    if i == 4:
-                        bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
-                        point1 = contour[bottom_right_idx]
-                        point2 = contour[(bottom_right_idx - 25) % len(contour)]
-                        point3 = contour[(bottom_right_idx + 25) % len(contour)]
-                        angle = self.body_target.calculate_angle(point1, point2, point3)
-                        plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
-                        mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
-                        plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
-                                 va='center')
-                    else:
-                        bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
-                        point4 = contour[bottom_left_idx]
-                        point5 = contour[(bottom_left_idx - 25) % len(contour)]
-                        point6 = contour[(bottom_left_idx + 25) % len(contour)]
-                        angle = self.body_target.calculate_angle(point4, point5, point6)
-                        plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
-                        mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
-                        plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
-                                 va='center')
+            self._plot_costophrenic_angles(pred, draw_both_sides=False)
 
             plt.tight_layout()
             contour_filename = f'contour_{filename}'
@@ -489,45 +433,38 @@ class XrayController:
 
     # [POST, FETCH] /xray/combine_body_target
     def combine_body_target(self):
-        choice = 0 
-        checkboxBodyOptions = request.form.get('body-options') 
-        checkboxFunctionOptions = request.form['function-options'] 
-        file = request.files['file'] 
-        file_path = os.path.join('static', 'img', 'new_body_target', file.filename)
-        file.save(file_path)
-
-        img_link_final = '' 
-        selected_indices = []
-        print(json.loads(checkboxBodyOptions))
-        # print(checkboxFunctionOptions)
-        # print(file_path)
+        choice = 0
+        checkboxBodyOptions = request.form.get('body-options')
+        try:
+            body_options = json.loads(checkboxBodyOptions)
+        except (TypeError, ValueError):
+            return jsonify({'error': 'body-options phải là một mảng JSON.'}), 400
+        checkboxFunctionOptions = request.form['function-options']
         if 'file' not in request.files:
             return jsonify({'error': 'Không có tệp nào được gửi.'}), 400
+        file = request.files['file']
+        file_path = os.path.join('static', 'img', 'new_body_target', safe_upload_name(file.filename))
+        file.save(file_path)
 
-        if checkboxBodyOptions:
-            # str_numbers = checkboxBodyOptions.split(',')
-            # print(str_numbers) 
-            selected_indices = [int(num_str) for num_str in json.loads(checkboxBodyOptions) if num_str.isdigit()]
-            print(selected_indices) 
-            img_link_final = self.new_show_body_target(file, selected_indices)
+        img_link_final = ''
+        try:
+            if checkboxBodyOptions:
+                selected_indices = [int(num_str) for num_str in body_options if num_str.isdigit()]
+                img_link_final = self.new_show_body_target(file, selected_indices)
 
-        isAngle = False 
-        if checkboxFunctionOptions:
-            if 'angle' in checkboxFunctionOptions:
-                print('hi world') 
-                isAngle = True 
-                img_link_final = self.new_update_contours(img_link_final)
-            if 'ratio' in checkboxFunctionOptions:
-                choice = 1 
-            if 'mediastinum' in checkboxFunctionOptions:
-                if choice == 1:
-                    choice = 3 
-                else:
-                    choice = 2 
-            if choice != 0:
-                print('choice:', choice)
-                img_link_final = self.new_update_ratio(img_link_final, choice) 
-
+            if checkboxFunctionOptions:
+                if 'angle' in checkboxFunctionOptions:
+                    img_link_final = self.new_update_contours(img_link_final)
+                if 'ratio' in checkboxFunctionOptions:
+                    choice = 1
+                if 'mediastinum' in checkboxFunctionOptions:
+                    choice = 3 if choice == 1 else 2
+                if choice != 0:
+                    img_link_final = self.new_update_ratio(img_link_final, choice)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return jsonify({'status': 'error', 'error': f'Không xử lý được ảnh: {e}'}), 500
 
         return jsonify({
             'status': 'success',
@@ -537,356 +474,88 @@ class XrayController:
             'img_url': img_link_final
         })
 
-    def new_upload_contours(self, filepath, filename):
-        # Load and process the image
-        img = imread(filepath)
-        img = xrv.datasets.normalize(img, 255)
-        if img.ndim == 2:
-            img = img[:, :, None]
-        if img.shape[2] == 4:
-            img = img[:, :, :3]
-        img = img.transpose((2, 0, 1))
-
-        transform = torchvision.transforms.Compose([
-            xrv.datasets.XRayCenterCrop(),
-            xrv.datasets.XRayResizer(512)
-        ])
-        img = transform(img)
-        img = torch.from_numpy(img).unsqueeze(0)  # Add batch dimension
-
-        with torch.no_grad():
-            pred = self.model(img)
-
-        pred = torch.sigmoid(pred).numpy()
-        pred[pred < 0.5] = 0
-        pred[pred >= 0.5] = 1
-
-        plt.figure(figsize=(12, 6))
-        combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
-        plt.subplot(1, 2, 2)
-        plt.imshow(img[0, 0], cmap='gray')
-        # plt.title('Contours')
-        plt.axis('off')
-
-        target_indices = [4, 5]
-        for idx, i in enumerate(target_indices):
-            mask = pred[0, i]
-            combined_mask[mask > 0] = idx + 1
-            contours = find_contours(combined_mask, level=idx + 0.1)
-            for contour in contours:
-                if i == 4:
-                    bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
-                    point1 = contour[bottom_right_idx]
-                    point2 = contour[(bottom_right_idx - 25) % len(contour)]
-                    point3 = contour[(bottom_right_idx + 25) % len(contour)]
-                    angle = self.body_target.calculate_angle(point1, point2, point3)
-                    plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
-                    mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
-                    plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
-                             va='center')
-                else:
-                    bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
-                    point4 = contour[bottom_left_idx]
-                    point5 = contour[(bottom_left_idx - 25) % len(contour)]
-                    point6 = contour[(bottom_left_idx + 25) % len(contour)]
-                    angle = self.body_target.calculate_angle(point4, point5, point6)
-                    plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
-                    mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
-                    plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center',
-                             va='center')
-
-        plt.tight_layout()
-        contour_filename = f'contour_{filename}'
-        contour_filepath = os.path.join(self.PROCESSED_FOLDER_CONTOURS, contour_filename)
-        plt.savefig(contour_filepath)
-        plt.close()
-
-        return contour_filepath 
-        # return jsonify({"processed_image_url": f'/static/img/contours/{contour_filename}'})
-
-    def new_upload_ratio(self, filepath):
-        processed_image_path = self.body_target.process_image(filepath)
-        return processed_image_path 
-
     def new_show_body_target(self, file, selected_indices):
-        try:
-            # file = request.files['file']
-            img = imread(file)
-
-            # Get selected indices from checkboxes
-            # checkbox = request.form.getlist('checkbox')
-            # selected_indices = []
-            # if checkbox:
-            #     str_numbers = checkbox[0].split(',')
-            #     selected_indices = [int(num_str) for num_str in str_numbers if num_str.isdigit()]
-
-            # Normalize the image
-            img = xrv.datasets.normalize(img, 255)
-
-            # If the image is 2D (grayscale), add an extra dimension to make it (height, width, 1)
-            if img.ndim == 2:
-                img = img[:, :, None]
-
-            # If the image has 4 channels (RGBA), discard the alpha channel
-            if img.shape[2] == 4:
-                img = img[:, :, :3]
-
-            # Transpose the image to move the channel dimension to the first position (1, height, width)
-            img = img.transpose((2, 0, 1))
-
-            # Apply the transforms
-            transform = torchvision.transforms.Compose([
-                xrv.datasets.XRayCenterCrop(),
-                xrv.datasets.XRayResizer(512)
-            ])
-            img = transform(img)
-
-            # Convert the image to a PyTorch tensor
-            img = torch.from_numpy(img).unsqueeze(0)
-
-            with torch.no_grad():
-                pred = self.model(img)
-
-            pred = 1 / (1 + np.exp(-pred))  # sigmoid
-            pred[pred < 0.5] = 0
-            pred[pred > 0.5] = 1
-
-            # Plot the contours on the image
-            fig, ax = plt.subplots()
-            ax.imshow(img[0, 0], cmap='gray')
-            combined_mask = np.zeros_like(img[0, 0], dtype=np.uint8)
-
-            contour_colors = ['red', 'red', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'black',
-                              'orange', 'purple', 'green', 'brown', 'gray', 'lime']
-
-            for idx, i in enumerate(selected_indices):
-                if idx >= len(contour_colors):
-                    break  # Ensure we don't go out of bounds
-                mask = pred[0, i].numpy()
-                combined_mask[mask > 0] = idx + 1
-                contours = find_contours(combined_mask, level=idx + 0.1)
-                for contour in contours:
-                    ax.plot(contour[:, 1], contour[:, 0], linestyle='--', linewidth=1, color=contour_colors[idx])
-
-            ax.axis('off')
-
-            # Tạo tên file duy nhất bằng timestamp
-            filename = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}.png"
-            filepath = os.path.join(self.PROCESSED_FOLDER, filename)
-            # print(filepath) 
-            plt.savefig(filepath)
-            # print(filepath)
-            plt.close()
-
-            # Trả về URL của hình ảnh đã lưu
-            return filepath 
-            # return render_template('xray/body_target.html',
-            #                        img_after=url_for('static', filename=f'img/body_target/{filename}', _external=True))
-
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            # Handle exceptions and provide feedback
-            return str(e), 500
+        # Lỗi được ném lên để combine_body_target trả 500, không trả tuple lẫn vào img_url như trước
+        _, filepath = self._draw_body_target(file, selected_indices)
+        return filepath
 
     def new_update_ratio(self, filepath, choice):
-        # Load the image
-        img = imread(filepath)
+        img, pred = self._segment(filepath)
+        img = img[0]  # (1, 512, 512): kênh 0 để vẽ
 
-        # Normalize the image
-        img = xrv.datasets.normalize(img, 255)
-
-        # If the image is 2D (grayscale), add an extra dimension to make it (height, width, 1)
-        if img.ndim == 2:
-            img = img[:, :, None]
-
-        # If the image has 4 channels (RGBA), discard the alpha channel
-        if img.shape[2] == 4:
-            img = img[:, :, :3]
-
-        # Transpose the image to move the channel dimension to the first position (1, height, width)
-        img = img.transpose((2, 0, 1))
-
-        # Apply the transforms
-        transform = torchvision.transforms.Compose([
-            xrv.datasets.XRayCenterCrop(),
-            xrv.datasets.XRayResizer(512)
-        ])
-        img = transform(img)
-
-        # Convert the image to a PyTorch tensor
-        img = torch.from_numpy(img)
-
-        with torch.no_grad():
-            pred = self.model(img)
-
-        pred = 1 / (1 + np.exp(-pred))  # sigmoid
-        pred[pred < 0.5] = 0
-        pred[pred > 0.5] = 1
-
-        # Calculate maximum diameters
+        # Đường kính lớn nhất (pixel) của mỗi vùng
         def measure_maximum_diameter(mask):
-            contours = find_contours(mask, level=0.5)
             max_diameter = 0
-            for contour in contours:
-                max_y, min_y = contour[:, 0].max(), contour[:, 0].min()
-                diameter = max_y - min_y
-                if diameter > max_diameter:
-                    max_diameter = diameter
+            for contour in find_contours(mask, level=0.5):
+                diameter = contour[:, 0].max() - contour[:, 0].min()
+                max_diameter = max(max_diameter, diameter)
             return max_diameter
 
-        left_lung_mask = pred[0, 4].numpy()
-        right_lung_mask = pred[0, 5].numpy()
-        heart_mask = pred[0, 8].numpy()
-        aorta_mask = pred[0, 9].numpy()
-        diaphramatica_mask = pred[0, 10].numpy()
-        media_mask = pred[0, 11].numpy()
+        heart_mask = pred[0, 8]
+        aorta_mask = pred[0, 9]
+        diaphramatica_mask = pred[0, 10]
+        media_mask = pred[0, 11]
 
         heart_max_diameter = measure_maximum_diameter(heart_mask)
-        lung_combined_mask = np.logical_or(left_lung_mask, right_lung_mask)
-        lung_max_diameter = measure_maximum_diameter(lung_combined_mask)
         diaphramatica_max_diameter = measure_maximum_diameter(diaphramatica_mask)
         media_max_diameter = measure_maximum_diameter(media_mask)
         aorta_max_diameter = measure_maximum_diameter(aorta_mask)
 
-        # Calculate CTR
-        CTR = heart_max_diameter / lung_max_diameter
-
-        # Find contours for plotting
         heart_contours = find_contours(heart_mask, level=0.5)
         diaphramatica_contours = find_contours(diaphramatica_mask, level=0.5)
         aorta_contours = find_contours(aorta_mask, level=0.5)
         media_contours = find_contours(media_mask, level=0.5)
 
-        # Determine the center positions
-        heart_y_center = (heart_contours[0][:, 0].min() + heart_contours[0][:, 0].max()) // 2
-        diaphramatica_y_center = (diaphramatica_contours[0][:, 0].min() + diaphramatica_contours[0][:, 0].max()) // 2
-        aorta_y_center = (aorta_contours[0][:, 0].min() + aorta_contours[0][:, 0].max()) // 2
-        media_y_center = (media_contours[0][:, 0].min() + media_contours[0][:, 0].max()) // 2
+        def y_center(contours):
+            return (contours[0][:, 0].min() + contours[0][:, 0].max()) // 2
 
-        # Plot the image and contours
         plt.figure(figsize=(6, 6))
         plt.imshow(img[0], cmap='gray')
 
-        # Draw contours and lines for heart, diaphramatica, aorta, and media
-        def plot_contour_and_line(contours, y_center, max_diameter, color, label):
+        # Vẽ đường đo ngang qua tâm của mỗi vùng
+        def plot_contour_and_line(contours, max_diameter, color):
+            y_c = y_center(contours)
             for contour in contours:
-                intersection_points = np.array([point for point in contour if point[0] == y_center])
+                intersection_points = np.array([point for point in contour if point[0] == y_c])
                 if intersection_points.size > 0:
                     x_start = max(0, int(np.min(intersection_points[:, 1])))
                     x_end = min(img.shape[2], int(np.max(intersection_points[:, 1])))
-                    plt.axhline(y=y_center, color=color, linestyle='--', linewidth=1, xmin=x_start / img.shape[2],
+                    plt.axhline(y=y_c, color=color, linestyle='--', linewidth=1, xmin=x_start / img.shape[2],
                                 xmax=x_end / img.shape[2])
-                    plt.plot([x_start, x_start], [y_center - 5, y_center + 5], color=color, linestyle='--', linewidth=1)
-                    plt.plot([x_end, x_end], [y_center - 5, y_center + 5], color=color, linestyle='--', linewidth=1)
-                    plt.text(x_start + (x_end - x_start) / 2, y_center - 10, f"{max_diameter} px", color=color,
+                    plt.plot([x_start, x_start], [y_c - 5, y_c + 5], color=color, linestyle='--', linewidth=1)
+                    plt.plot([x_end, x_end], [y_c - 5, y_c + 5], color=color, linestyle='--', linewidth=1)
+                    plt.text(x_start + (x_end - x_start) / 2, y_c - 10, f"{max_diameter} px", color=color,
                              fontsize=8, ha='center')
 
-        if choice == 1:
-            plot_contour_and_line(heart_contours, heart_y_center, heart_max_diameter, 'r', 'Heart')
-            plot_contour_and_line(diaphramatica_contours, diaphramatica_y_center, diaphramatica_max_diameter, 'blue','Diaphramatica')
-        elif choice == 2:
-            plot_contour_and_line(aorta_contours, aorta_y_center, aorta_max_diameter, 'green', 'Aorta')
-            plot_contour_and_line(media_contours, media_y_center, media_max_diameter, 'purple', 'Media')
-        elif choice == 3:
-            plot_contour_and_line(heart_contours, heart_y_center, heart_max_diameter, 'r', 'Heart')
-            plot_contour_and_line(diaphramatica_contours, diaphramatica_y_center, diaphramatica_max_diameter, 'blue','Diaphramatica')
-            plot_contour_and_line(aorta_contours, aorta_y_center, aorta_max_diameter, 'green', 'Aorta')
-            plot_contour_and_line(media_contours, media_y_center, media_max_diameter, 'purple', 'Media')
-        # plt.title(f"Tỉ lệ tim ngực (CTR): {CTR:.2f}")
+        if choice in (1, 3):  # tim và cơ hoành
+            plot_contour_and_line(heart_contours, heart_max_diameter, 'r')
+            plot_contour_and_line(diaphramatica_contours, diaphramatica_max_diameter, 'blue')
+        if choice in (2, 3):  # động mạch chủ và trung thất
+            plot_contour_and_line(aorta_contours, aorta_max_diameter, 'green')
+            plot_contour_and_line(media_contours, media_max_diameter, 'purple')
         plt.axis('off')
 
-        # Save the image
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        image_path = os.path.join(self.UPLOAD_FOLDER, f'{current_time}.png') 
-            # f"/static/img/upload_ratio/{current_time}.png"
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        image_path = os.path.join(self.UPLOAD_FOLDER, f'{current_time}.png')
         plt.savefig(image_path)
+        plt.close()
         print(image_path)
-        # Return the URL to the saved image
-        # image_url = url_for('static', filename='processed_images/result.png', _external=True)
         return image_path
 
     def new_update_contours(self, filepath):
-        img = imread(filepath)
+        img, pred = self._segment(filepath)
 
-        # Normalize the image
-        img = xrv.datasets.normalize(img, 255)
-
-        # Add extra dimension if 2D
-        if img.ndim == 2:
-            img = img[:, :, None]
-
-        # Discard alpha channel if present
-        if img.shape[2] == 4:
-            img = img[:, :, :3]
-
-        # Transpose image dimensions
-        img = img.transpose((2, 0, 1))
-
-        # Apply transforms
-        transform = torchvision.transforms.Compose([
-            xrv.datasets.XRayCenterCrop(),
-            xrv.datasets.XRayResizer(512)
-        ])
-        img = transform(img)
-
-        # Convert image to PyTorch tensor
-        img = torch.from_numpy(img).unsqueeze(0)
-
-        # Load model
-        model = xrv.baseline_models.chestx_det.PSPNet()
-        with torch.no_grad():
-            pred = model(img)
-
-        # Apply sigmoid and thresholding
-        pred = 1 / (1 + np.exp(-pred.numpy()))  # Convert to numpy
-        pred[pred < 0.5] = 0
-        pred[pred > 0.5] = 1
-
-        # Create a figure
         plt.figure(figsize=(18, 9))
         plt.imshow(img[0].numpy().transpose((1, 2, 0)), cmap='gray')
         plt.title('Contours')
         plt.axis('off')
+        self._plot_costophrenic_angles(pred, draw_both_sides=True)
 
-        # Create a blank canvas to combine the masks
-        combined_mask = np.zeros_like(pred[0, 0], dtype=np.uint8)
-        target_indices = [4, 5]  # Indices for left lung
-
-        # Iterate through the predicted masks and combine them
-        for idx, i in enumerate(target_indices):
-            mask = pred[0, i]
-            combined_mask[mask > 0] = idx + 1
-            contours = find_contours(combined_mask, level=idx + 0.1)
-            for contour in contours:
-                if i == 4:
-                    bottom_right_idx = np.argmax(contour[:, 1] + contour[:, 0])
-                    point1 = contour[bottom_right_idx]
-                    point2 = contour[(bottom_right_idx - 25) % len(contour)]
-                    point3 = contour[(bottom_right_idx + 25) % len(contour)]
-                    angle = self.body_target.calculate_angle(point1, point2, point3)
-                    plt.plot([point1[1], point2[1]], [point1[0], point2[0]], 'r-', linewidth=1)
-                    plt.plot([point1[1], point3[1]], [point1[0], point3[0]], 'r-', linewidth=1)
-                    mid_x2, mid_y2 = (point1[1] + point3[1]) / 2, (point1[0] + point3[0]) / 2
-                    plt.text(mid_x2 - 10, mid_y2 - 10, f'{angle:.1f}°', color='r', fontsize=8, ha='center', va='center')
-                else:
-                    bottom_left_idx = np.argmin(contour[:, 1] - contour[:, 0])
-                    point4 = contour[bottom_left_idx]
-                    point5 = contour[(bottom_left_idx - 25) % len(contour)]
-                    point6 = contour[(bottom_left_idx + 25) % len(contour)]
-                    angle = self.body_target.calculate_angle(point4, point5, point6)
-                    plt.plot([point4[1], point5[1]], [point4[0], point5[0]], 'r-', linewidth=1)
-                    plt.plot([point4[1], point6[1]], [point4[0], point6[0]], 'r-', linewidth=1)
-                    mid_x2, mid_y2 = (point4[1] + point6[1]) / 2, (point4[0] + point6[0]) / 2
-                    plt.text(mid_x2 + 15, mid_y2 - 12, f'{angle:.1f}°', color='r', fontsize=8, ha='center', va='center')
-
-        # Save the plot
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
         contour_filename = f'contour_{current_time}.png'
         contour_filepath = os.path.join(self.PROCESSED_FOLDER_CONTOURS, contour_filename)
         plt.savefig(contour_filepath)
         plt.close()
 
-        # Return the URL of the saved image
+        # Trả về đường dẫn của ảnh đã lưu
         return contour_filepath

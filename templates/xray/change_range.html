@@ -24,6 +24,7 @@
         </ul>
 
         <div class="tab-content w-100" id="myTabContent">
+            {% include 'xray/result_status.html' %}
             
             {% if zip_data %}
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -112,6 +113,7 @@
         </ul>
 
         <div class="tab-content w-100" id="myTabContent">
+            {% include 'xray/result_status.html' %}
             {% if zip_data %}
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 {% for sick_name, percentage, sick_name_eng, colors in zip_data %}
@@ -235,7 +237,8 @@
 {#            </li>#}
 {#        </ul>#}
 {##}
-{#        <div class="tab-content w-100" id="myTabContent">#}
+{#        <div class="tab-content w-100" id="myTabContent">
+            {% include 'xray/result_status.html' %}#}
 {#            <!-- { if zip_data %} -->#}
 {#            <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"#}
 {#                class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-3 d-flex flex-wrap justify-content-center">#}
@@ -304,6 +307,7 @@
             </li>
         </ul>
         <div class="tab-content w-100" id="myTabContent">
+            {% include 'xray/result_status.html' %}
             <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
                  class="col-lg-12 col-sm-12 col-md-12 mb-0 mt-5 d-flex flex-wrap justify-content-center">
                 <div style="display:{% if user_image %}none;{% else %}block;{% endif %}"
