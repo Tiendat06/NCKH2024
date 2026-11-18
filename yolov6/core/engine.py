@@ -42,7 +42,7 @@ class Trainer:
         self.max_epoch = args.epochs
 
         if args.resume:
-            self.ckpt = torch.load(args.resume, map_location='cpu')
+            self.ckpt = torch.load(args.resume, map_location='cpu', weights_only=False)
 
         self.rank = args.rank
         self.local_rank = args.local_rank
@@ -446,7 +446,7 @@ class Trainer:
         if not weights:
             LOGGER.error("ERROR: No scales provided to init RepOptimizer!")
         else:
-            ckpt = torch.load(weights, map_location=device)
+            ckpt = torch.load(weights, map_location=device, weights_only=False)
             scales = extract_scales(ckpt)
         return scales
 
