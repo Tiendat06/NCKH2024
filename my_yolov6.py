@@ -133,13 +133,16 @@ class my_yolov6():
             det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
             for *xyxy, conf, cls in reversed(det):
                 class_num = int(cls)  # integer class
-                label = f'{self.class_names[class_num]} {conf:.2f}'
-                label_name = f'{self.class_names[class_num]} ({label_mapping.get(class_num)})  {conf:.2f}'
+                # Cắt (không làm tròn) về 2 chữ số: 0.4988 phải hiện 0.49, không được hiện 0.50
+                # vì NMS lọc theo "> conf_thres", hiện 0.50 sẽ trông như vượt ngưỡng 0.5.
+                conf_shown = math.floor(float(conf) * 100) / 100
+                label = f'{self.class_names[class_num]} {conf_shown:.2f}'
+                label_name = f'{self.class_names[class_num]} ({label_mapping.get(class_num)})  {conf_shown:.2f}'
                 print(label.encode('utf-8').decode('utf-8'))
                 self.plot_box_and_label(img_src, max(round(sum(img_src.shape) / 2 * 0.003), 2), xyxy, label, color=(255,0,0))
                 print(color_global)
                 labels.append(label_name)  # Append label to the list
-                percentage.append(f'{conf:.2f}')
+                percentage.append(f'{conf:.4f}')  # giữ 4 chữ số để danh sách hiện 49.88% thay vì 50%
                 sick_name.append(f'{self.class_names[class_num]}')
                 sick_name_eng.append(f'{label_mapping.get(class_num)}')
                 colors.append(color_global)
