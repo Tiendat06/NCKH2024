@@ -51,7 +51,7 @@ python __init__.py
 - `routes/apis/client_secret.json` (gitignored) — Google OAuth client secrets, loaded by `routes/log.py`. The redirect URI is hardcoded to `http://127.0.0.1:5000/callback`.
 - Redis host is hardcoded to `host.docker.internal:6379` in `events/chat.py`.
 - MongoDB and Redis must be up before the app starts; there is no retry logic.
-- `database/data/test.*.json` are exports of the `account`, `disease`, `medical_record`, `patient`, `role`, `user` collections for seeding a fresh database.
+- `database/data/test.*.json` are exports of the `account`, `body_target`, `disease`, `medical_record`, `patient`, `role`, `user` collections for seeding a fresh database (`mongoimport --jsonArray --drop`). `body_target_id` values are the PSPNet target indices `"0"`–`"13"`: the UI posts them back and the controller uses them as mask indices.
 - Model weights live in `app/controllers/weights/best_ckpt.pt` with class names in `app/controllers/data/vinbigdata.yaml`. Inference runs on CPU.
 
 ## Architecture

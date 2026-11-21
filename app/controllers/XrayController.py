@@ -193,8 +193,14 @@ class XrayController:
                         real_percentage = real_percentage, zip_data = zip_data, doctor_zip_data = doctor_zip_data, msg="Tải file lên thành công", ndet = ndet, label=label_name, content = 'index', page = 'xray',
                         result_status='detected')
                     else:
-                        user_image = session.get('img_local') or session.get('relative_path_to_save')
-                        return render_template('/xray/change_range.html', user_image = user_image, origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
+                        # Không còn box nào: ghi lại ảnh hiện tại (không có box) để giao diện không giữ
+                        # ảnh kết quả cũ của ngưỡng thấp hơn, gây mâu thuẫn với thông báo.
+                        path_to_save_local = session.get('relative_path_to_save_local')
+                        cv2.imwrite(path_to_save_local, cv2.resize(frame, (330, 330)))
+                        random_string = self.medicalRecord.generate_random_string(8)
+                        user_image = '/static/img/data/' + session.get('image_name') + "?random_string=" + random_string
+                        session['img_local'] = user_image
+                        return render_template('/xray/change_range.html', user_image = user_image, user_image_local = user_image, origin_img = session.get('relative_path_to_save'), conf_thres= conf_thres_ajax,
                         rand = str(random()), msg='Không phát hiện bất thường', ndet = ndet, content = 'index', page = 'xray', result_status='normal')
                 else:
                     # Nếu không có dữ liệu, trả về thông báo lỗi

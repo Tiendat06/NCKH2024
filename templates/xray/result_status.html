@@ -2,7 +2,7 @@
    'detected' -> danh sách bệnh hiển thị bên dưới, không cần thông báo thêm. #}
 {% if result_status == 'normal' %}
 <div class="alert alert-success w-100 mt-3 mb-2">
-    <p class="mb-0">Không phát hiện bất thường: không có vùng nào có độ tin cậy &ge; {{ conf_thres }}.</p>
+    <p class="mb-0">Không phát hiện bất thường: không có vùng nào có độ tin cậy vượt ngưỡng {{ conf_thres }}.</p>
 </div>
 {% elif result_status == 'error' %}
 <div class="alert alert-warning w-100 mt-3 mb-2">

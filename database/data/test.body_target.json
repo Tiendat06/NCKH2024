@@ -1,0 +1,16 @@
+[
+  {"body_target_id": "0", "body_target_name": "Xương đòn trái"},
+  {"body_target_id": "1", "body_target_name": "Xương đòn phải"},
+  {"body_target_id": "2", "body_target_name": "Xương bả vai trái"},
+  {"body_target_id": "3", "body_target_name": "Xương bả vai phải"},
+  {"body_target_id": "4", "body_target_name": "Phổi trái"},
+  {"body_target_id": "5", "body_target_name": "Phổi phải"},
+  {"body_target_id": "6", "body_target_name": "Rốn phổi trái"},
+  {"body_target_id": "7", "body_target_name": "Rốn phổi phải"},
+  {"body_target_id": "8", "body_target_name": "Tim"},
+  {"body_target_id": "9", "body_target_name": "Động mạch chủ"},
+  {"body_target_id": "10", "body_target_name": "Cơ hoành"},
+  {"body_target_id": "11", "body_target_name": "Trung thất"},
+  {"body_target_id": "12", "body_target_name": "Khí quản"},
+  {"body_target_id": "13", "body_target_name": "Cột sống"}
+]
